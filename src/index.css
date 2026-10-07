@@ -1,0 +1,104 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --color-teal-50: #f0fdfa;
+  --color-teal-100: #ccfbf1;
+  --color-teal-500: #14b8a6;
+  --color-teal-600: #0d9488;
+  --color-teal-700: #087F8C;
+  --color-teal-800: #066670;
+  --color-teal-900: #044b53;
+}
+
+:root {
+  --brand-primary: #087F8C;
+  --brand-primary-hover: #066670;
+  --brand-accent: #65D5D8;
+  --brand-soft: #E8F8F8;
+  --brand-bg-soft: #F4F8F7;
+  --brand-bg-secondary: #F8FAFA;
+  --brand-text-main: #172026;
+  --brand-text-muted: #667085;
+  --brand-success: #2E8B57;
+  --brand-discount: #E05A47;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+body {
+  background-color: #FFFFFF;
+  color: #172026;
+  overflow-x: hidden;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #F8FAFA;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #CBD5E1;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94A3B8;
+}
+
+/* Hide scrollbar for carousel / horizontal scroll strips */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Subtle shadows */
+.shadow-soft-sm {
+  box-shadow: 0 2px 8px -2px rgba(15, 23, 42, 0.05), 0 1px 4px -1px rgba(15, 23, 42, 0.03);
+}
+
+.shadow-soft {
+  box-shadow: 0 10px 25px -5px rgba(8, 127, 140, 0.06), 0 8px 10px -6px rgba(0, 0, 0, 0.03);
+}
+
+.shadow-soft-lg {
+  box-shadow: 0 20px 35px -8px rgba(8, 127, 140, 0.09), 0 10px 15px -5px rgba(0, 0, 0, 0.04);
+}
+
+.shadow-card-hover {
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.shadow-card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 30px -8px rgba(8, 127, 140, 0.12), 0 8px 12px -4px rgba(0, 0, 0, 0.04);
+}
+
+/* Image zoom on hover helper */
+.group-hover-zoom {
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.group:hover .group-hover-zoom {
+  transform: scale(1.05);
+}
+
+/* Pulsing badge animation */
+@keyframes pulseSubtle {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.85; transform: scale(1.03); }
+}
+
+.animate-pulse-subtle {
+  animation: pulseSubtle 3s ease-in-out infinite;
+}
