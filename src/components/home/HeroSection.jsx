@@ -11,8 +11,7 @@ import {
   Layers,
   ChevronLeft,
   ChevronRight,
-  Zap,
-  Sparkle
+  Zap
 } from 'lucide-react';
 import { brandConfig } from '../../data/config';
 
@@ -25,58 +24,43 @@ export const HeroSection = () => {
     {
       id: 'bathroom',
       tag: 'BATHROOM & SHOWER GLASS',
-      headline: 'Stop Hard Water Stains.',
-      highlight: 'Before They Start.',
-      description: 'Invisible hydrophobic nano-shield for glass shower cubicles, tiles, and basins. Repels mineral limescale and soap scum for up to 180 days.',
-      bgImage: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1200&q=80',
-      badge: '99.4% Scale Resistance',
+      headline: 'India’s 1st Nano-Coating',
+      highlight: 'For Surface Protection',
+      description: 'Invisible hydrophobic nano-shield for glass shower partitions, taps, tiles & basins. Repels mineral limescale and soap scum for up to 180 days.',
+      bgImage: 'https://www.invisel.in/cdn/shop/files/desktop_1440_x_580.jpg?v=1784298766&width=1600',
+      badge: '180 Days Protection',
       icon: '🚿',
-      accentColor: '#087F8C',
       productLink: '/product/bathroom-protector-kit'
     },
     {
       id: 'sofa',
       tag: 'SOFA & FABRIC UPHOLSTERY',
-      headline: 'Coffee, Tea & Water Spills',
-      highlight: 'Bead Up & Roll Off.',
-      description: 'Breathable nano-coating for sofas, dining chairs, carpets, and mattresses. Liquids sit on top like mercury drops without soaking into fabric.',
-      bgImage: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1200&q=80',
-      badge: 'Zero Stain Penetration',
+      headline: 'Liquid Spills Bead Up',
+      highlight: '& Roll Off Instantly.',
+      description: 'Breathable liquid repellent spray for sofas, dining chairs, rugs, and mattresses. Spilled tea, coffee, and water sit on top without absorbing.',
+      bgImage: 'https://www.invisel.in/cdn/shop/files/Banner_03.jpg?v=1791117386&width=1600',
+      badge: 'Zero Stain Absorption',
       icon: '🛋️',
-      accentColor: '#0AA1B2',
       productLink: '/product/fabric-upholstery-nano-shield'
     },
     {
       id: 'marble',
-      tag: 'MARBLE & KITCHEN COUNTERS',
-      headline: 'Shield Natural Stone From',
-      highlight: 'Haldi, Oil & Citrus Acid.',
-      description: 'Deep-penetrating oleophobic nano-barrier for Italian marble, granite countertops, and dining tables. Blocks stains while keeping natural texture.',
-      bgImage: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80',
+      tag: 'MARBLE, WOOD & GRANITE',
+      headline: 'Preserve Natural Beauty',
+      highlight: 'Against Haldi, Oil & Stains.',
+      description: 'Deep-penetrating oleophobic nano-barrier for Italian marble, kitchen countertops, and fine wooden furniture. Blocks stains while keeping natural texture.',
+      bgImage: 'https://www.invisel.in/cdn/shop/files/02.jpg_1.jpg?v=1791440002&width=1600',
       badge: 'Food Safe & Non-Toxic',
       icon: '🍳',
-      accentColor: '#087F8C',
       productLink: '/product/marble-granite-nano-guard'
-    },
-    {
-      id: 'wood',
-      tag: 'WOOD & LUXURY FURNITURE',
-      headline: 'Water-Ring Proof Protection',
-      highlight: 'For Fine Wooden Surfaces.',
-      description: 'Preserve natural grain luster and protect tables, cabinets, and teak wood against cup water marks, moisture warping, and micro-scratches.',
-      bgImage: 'https://images.unsplash.com/photo-1538688525198-9b88f6f53126?auto=format&fit=crop&w=1200&q=80',
-      badge: 'UV & Moisture Defense',
-      icon: '🪑',
-      accentColor: '#066670',
-      productLink: '/product/wood-furniture-nano-polish-guard'
     }
   ];
 
-  // Auto-advance slides every 6 seconds
+  // Auto-advance slides every 5.5 seconds
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % slides.length);
-    }, 6000);
+    }, 5500);
     return () => clearInterval(timer);
   }, [slides.length]);
 
@@ -95,22 +79,22 @@ export const HeroSection = () => {
   const active = slides[currentSlide];
 
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-[#F0F9F9] via-[#F8FCFC] to-white py-8 sm:py-14 lg:py-20">
+    <section className="relative overflow-hidden bg-gradient-to-b from-[#F0F9F9] via-[#F8FCFC] to-white py-6 sm:py-12 lg:py-16">
       {/* Background Ambience Glows */}
       <div className="absolute -top-20 -left-20 w-96 h-96 bg-[#65D5D8]/20 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute top-1/2 -right-20 w-[30rem] h-[30rem] bg-[#087F8C]/10 rounded-full blur-3xl pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
-        {/* Top Interactive Surface Selector Tabs (Invisel Style) */}
+        {/* Top Surface Selector Tabs (Invisel Style) */}
         <div className="flex items-center justify-start sm:justify-center overflow-x-auto no-scrollbar gap-2 pb-6 sm:pb-8">
           {slides.map((s, idx) => (
             <button
               key={s.id}
               onClick={() => setCurrentSlide(idx)}
-              className={`flex items-center gap-2 px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full text-xs sm:text-sm font-bold whitespace-nowrap transition-all duration-300 cursor-pointer ${
+              className={`flex items-center gap-2 px-4 sm:px-6 py-2.5 rounded-full text-xs sm:text-sm font-bold whitespace-nowrap transition-all duration-300 cursor-pointer ${
                 currentSlide === idx
-                  ? 'bg-slate-900 text-white shadow-md shadow-slate-900/20 scale-105'
+                  ? 'bg-slate-900 text-white shadow-lg shadow-slate-900/25 scale-105'
                   : 'bg-white/80 hover:bg-white text-slate-700 border border-slate-200/80 hover:border-slate-300 shadow-2xs'
               }`}
             >
@@ -137,7 +121,7 @@ export const HeroSection = () => {
 
             {/* Main Headline */}
             <div className="space-y-2">
-              <h1 className="text-3xl sm:text-5xl lg:text-[3.5rem] font-black tracking-tight text-slate-900 leading-[1.1] min-h-[110px] sm:min-h-[140px] flex flex-col justify-center">
+              <h1 className="text-3xl sm:text-5xl lg:text-[3.6rem] font-black tracking-tight text-slate-900 leading-[1.1] min-h-[110px] sm:min-h-[140px] flex flex-col justify-center">
                 <span>{active.headline}</span>
                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#087F8C] via-[#0AA1B2] to-[#066670]">
                   {active.highlight}
@@ -217,8 +201,8 @@ export const HeroSection = () => {
               }}
             >
               
-              {/* Main Showcase Glass Card */}
-              <div className="relative rounded-3xl overflow-hidden shadow-2xl shadow-teal-950/15 border-4 border-white bg-slate-900 aspect-[4/3] sm:aspect-[16/11] group">
+              {/* Main Showcase Glass Card with Exact Invisel Banner */}
+              <div className="relative rounded-3xl overflow-hidden shadow-2xl shadow-teal-950/20 border-4 border-white bg-slate-900 aspect-[16/10] sm:aspect-[16/10] group">
                 <img
                   src={active.bgImage}
                   alt={active.headline}
@@ -226,7 +210,7 @@ export const HeroSection = () => {
                 />
                 
                 {/* High-Tech Gradient Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/15 to-transparent" />
 
                 {/* Hydrophobic Water Beading Simulation Overlay Indicator */}
                 <div className="absolute top-4 left-4 glass-panel px-3 py-1.5 rounded-full flex items-center gap-2 text-xs font-bold text-slate-800 shadow-md">
