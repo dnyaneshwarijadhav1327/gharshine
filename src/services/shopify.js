@@ -3,9 +3,9 @@
  * Connects your live Shopify store products, inventory, and checkout.
  */
 
-const SHOPIFY_DOMAIN = import.meta.env.VITE_SHOPIFY_STORE_DOMAIN || 'ky9j19-ee.myshopify.com';
-const SHOPIFY_CLIENT_ID = import.meta.env.VITE_SHOPIFY_CLIENT_ID || '73ae709bcc85b5bba4a444e3f2b2c02a';
-const SHOPIFY_TOKEN = import.meta.env.VITE_SHOPIFY_STOREFRONT_TOKEN || import.meta.env.VITE_SHOPIFY_CLIENT_SECRET || 'shpss_ac06e36d818d2cae4ebe80c1ff48d93';
+const SHOPIFY_DOMAIN = import.meta.env.VITE_SHOPIFY_STORE_DOMAIN || 'ufjxrx-gd.myshopify.com';
+const SHOPIFY_CLIENT_ID = import.meta.env.VITE_SHOPIFY_CLIENT_ID || 'e3161875df08b8b9289a501c8303f812';
+const SHOPIFY_TOKEN = import.meta.env.VITE_SHOPIFY_STOREFRONT_TOKEN || 'a01f7134ab7cee8066b2e15e0d6a533c';
 
 export async function shopifyFetch({ query, variables = {} }) {
   if (!SHOPIFY_DOMAIN) {
