@@ -8,29 +8,29 @@ export const HeroSection = () => {
   const slides = [
     {
       id: 'festive-coating-save800',
-      desktopImg: 'https://www.invisel.in/cdn/shop/files/02.jpg_1.jpg?v=1791440002&width=1800',
-      mobileImg: 'https://www.invisel.in/cdn/shop/files/01.jpg_1.jpg?v=1791440013&width=800',
+      desktopImg: '/images/hero-diwali-coating.jpg',
+      mobileImg: '/images/hero-diwali-coating-mobile.jpg',
       alt: 'GharShine - Iss baar Diwali cleaning ke sath coating bhi karo - Save up to ₹800',
       link: '/shop'
     },
     {
       id: 'stop-cleaning-protect-combo',
-      desktopImg: 'https://www.invisel.in/cdn/shop/files/Banner_03.jpg?v=1791117386&width=1800',
-      mobileImg: 'https://www.invisel.in/cdn/shop/files/Banner_03_Mobile_View.jpg?v=1791117397&width=800',
+      desktopImg: '/images/hero-stop-cleaning.jpg',
+      mobileImg: '/images/hero-stop-cleaning-mobile.jpg',
       alt: 'GharShine - Stop Cleaning Your Home. Start Protecting It. Explore Combo',
       link: '/shop'
     },
     {
       id: 'festive-gift-box',
-      desktopImg: 'https://www.invisel.in/cdn/shop/files/WhatsApp_Image_2026-10-02_at_11.38.57_AM_1.jpg?v=1790922331&width=1800',
-      mobileImg: 'https://www.invisel.in/cdn/shop/files/WhatsApp_Image_2026-10-02_at_11.38.57_AM.jpg?v=1790922317&width=800',
+      desktopImg: '/images/hero-diwali-giftbox.jpg',
+      mobileImg: '/images/hero-diwali-giftbox-mobile.jpg',
       alt: 'GharShine - Ye Diwali GharShine Wali - Copper, Brass, Silver, Wood & Multi-Surface Kit',
       link: '/shop'
     },
     {
       id: 'bundle-flat-1999',
-      desktopImg: 'https://www.invisel.in/cdn/shop/files/desktop_1440_x_580.jpg?v=1784298766&width=1800',
-      mobileImg: 'https://www.invisel.in/cdn/shop/files/45e30dc3d727f693aa789da432f90ad4acbf0b9a.png?v=1784297576&width=800',
+      desktopImg: '/images/hero-bundle-1999.jpg',
+      mobileImg: '/images/hero-bundle-1999-mobile.jpg',
       alt: 'GharShine - Choose any 6 products @just ₹1,999 FLAT Build your own bundle',
       link: '/combo-builder'
     }

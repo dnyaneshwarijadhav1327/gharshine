@@ -24,7 +24,7 @@ export const CleaningVsProtection = () => {
           </p>
         </div>
 
-        {/* 2-Column High-Tech Comparison Grid (Invisel Style) */}
+        {/* 2-Column High-Tech Comparison Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto items-stretch">
           
           {/* Card 1: Traditional Cleaners */}
@@ -69,7 +69,7 @@ export const CleaningVsProtection = () => {
             </div>
           </div>
 
-          {/* Card 2: GharShine Nano-Shield (Invisel Inspired) */}
+          {/* Card 2: GharShine Nano-Shield */}
           <div className="bg-gradient-to-b from-[#E8F8F8]/90 via-white to-white rounded-3xl p-6 sm:p-9 border-2 border-[#087F8C] shadow-xl shadow-teal-900/10 flex flex-col justify-between card-3d-hover relative overflow-hidden group">
             <div className="absolute top-0 right-0 w-48 h-48 bg-[#65D5D8]/20 rounded-full blur-2xl pointer-events-none" />
             
