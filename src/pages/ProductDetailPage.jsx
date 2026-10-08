@@ -116,14 +116,17 @@ export const ProductDetailPage = () => {
             
             {/* Badges & Surface tags */}
             <div className="flex items-center justify-between gap-2">
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 flex-wrap">
                 {product.badge && (
-                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-[#087F8C] text-white">
+                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-[#087F8C] text-white shadow-xs">
                     {product.badge}
                   </span>
                 )}
-                <span className="text-xs font-bold text-[#087F8C] uppercase tracking-wider bg-[#E8F8F8] px-2 py-0.5 rounded-md">
+                <span className="text-xs font-bold text-[#087F8C] uppercase tracking-wider bg-[#E8F8F8] px-2.5 py-0.5 rounded-md">
                   {product.surface ? product.surface.join(' • ') : product.category}
+                </span>
+                <span className="text-[11px] text-amber-700 font-bold bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200/60">
+                  🔥 14 viewing now
                 </span>
               </div>
 
@@ -159,17 +162,45 @@ export const ProductDetailPage = () => {
                 size="lg"
                 showTaxNote={true}
               />
-              {product.size && (
-                <span className="text-xs text-slate-500 font-medium block mt-1.5">
-                  Pack Size: <strong>{product.size}</strong>
-                </span>
-              )}
+              <span className="text-[11px] text-emerald-700 font-bold mt-1.5 block">
+                ✓ Free Shipping + Free High-GSM Microfiber Included
+              </span>
             </div>
 
             {/* Short Description */}
             <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
               {product.shortDescription}
             </p>
+
+            {/* Pack Size / Variant Selector */}
+            <div className="space-y-2">
+              <label className="text-xs font-bold text-slate-800 uppercase tracking-wide">
+                Select Option:
+              </label>
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                <button
+                  type="button"
+                  className="p-3 rounded-2xl border-2 border-[#087F8C] bg-[#E8F8F8]/40 text-left transition"
+                >
+                  <span className="text-xs font-black text-slate-900 block">Single Kit</span>
+                  <span className="text-[11px] font-bold text-[#087F8C]">₹{product.price}</span>
+                </button>
+                <button
+                  type="button"
+                  className="p-3 rounded-2xl border border-slate-200 hover:border-slate-300 bg-white text-left transition opacity-90"
+                >
+                  <span className="text-xs font-black text-slate-900 block">Pack of 2</span>
+                  <span className="text-[11px] font-bold text-emerald-700">Save ₹200</span>
+                </button>
+                <button
+                  type="button"
+                  className="p-3 rounded-2xl border border-slate-200 hover:border-slate-300 bg-white text-left transition opacity-90 col-span-2 sm:col-span-1"
+                >
+                  <span className="text-xs font-black text-slate-900 block">Family Pack</span>
+                  <span className="text-[11px] font-bold text-emerald-700">Save ₹500</span>
+                </button>
+              </div>
+            </div>
 
             {/* Quantity Selector + Add to Cart + Buy Now */}
             <div className="space-y-3 pt-2">
@@ -178,7 +209,7 @@ export const ProductDetailPage = () => {
                 <div className="flex items-center border border-slate-200 rounded-2xl overflow-hidden bg-slate-50">
                   <button
                     onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                    className="px-3.5 py-3 text-slate-600 hover:bg-slate-200 transition text-sm font-bold"
+                    className="px-3.5 py-3 text-slate-600 hover:bg-slate-200 transition text-sm font-bold cursor-pointer"
                     aria-label="Decrease quantity"
                   >
                     -
@@ -188,7 +219,7 @@ export const ProductDetailPage = () => {
                   </span>
                   <button
                     onClick={() => setQuantity((q) => q + 1)}
-                    className="px-3.5 py-3 text-slate-600 hover:bg-slate-200 transition text-sm font-bold"
+                    className="px-3.5 py-3 text-slate-600 hover:bg-slate-200 transition text-sm font-bold cursor-pointer"
                     aria-label="Increase quantity"
                   >
                     +
@@ -198,7 +229,7 @@ export const ProductDetailPage = () => {
                 {/* Add to Cart CTA */}
                 <button
                   onClick={handleAddToCart}
-                  className="flex-1 py-3.5 bg-white hover:bg-[#F8FAFA] text-[#087F8C] border-2 border-[#087F8C] rounded-2xl text-xs sm:text-sm font-bold transition flex items-center justify-center gap-2 shadow-xs"
+                  className="flex-1 py-3.5 bg-[#52D1DC] hover:bg-[#3ec4d0] active:scale-[0.98] text-slate-950 font-black rounded-2xl text-xs sm:text-sm transition flex items-center justify-center gap-2 shadow-xs cursor-pointer"
                 >
                   <ShoppingBag size={18} />
                   <span>Add to Cart</span>
@@ -208,7 +239,7 @@ export const ProductDetailPage = () => {
                 <button
                   onClick={() => toggleWishlist(product)}
                   aria-label="Wishlist"
-                  className={`p-3.5 rounded-2xl border transition ${
+                  className={`p-3.5 rounded-2xl border transition cursor-pointer ${
                     isWishlisted
                       ? 'border-rose-200 bg-rose-50 text-rose-500'
                       : 'border-slate-200 text-slate-500 hover:bg-slate-50'
@@ -218,18 +249,37 @@ export const ProductDetailPage = () => {
                 </button>
               </div>
 
-              {/* Instant Buy Now Button */}
+              {/* Instant Buy Now Button with Gokwik/UPI styling */}
               <button
                 onClick={handleBuyNow}
-                className="w-full py-4 bg-[#087F8C] hover:bg-[#066670] text-white rounded-2xl text-sm font-bold shadow-lg shadow-[#087F8C]/20 transition flex items-center justify-center gap-2"
+                className="w-full py-4 bg-slate-950 hover:bg-slate-800 text-white rounded-2xl text-sm font-black shadow-lg transition flex items-center justify-center gap-2 cursor-pointer"
               >
-                <Zap size={18} className="fill-white" />
-                <span>Buy Now • Instant Checkout</span>
+                <Zap size={18} className="fill-yellow-400 text-yellow-400" />
+                <span>Buy It Now • Quick Checkout</span>
               </button>
             </div>
 
+            {/* Trust & Safe Checkout Icons */}
+            <div className="grid grid-cols-3 gap-2 py-3 border-y border-slate-100 text-center">
+              <div className="flex flex-col items-center justify-center p-2 rounded-xl bg-slate-50">
+                <ShieldCheck size={18} className="text-[#087F8C] mb-1" />
+                <span className="text-[11px] font-bold text-slate-800">180-Day Shield</span>
+                <span className="text-[10px] text-slate-500">Hydrophobic Barrier</span>
+              </div>
+              <div className="flex flex-col items-center justify-center p-2 rounded-xl bg-slate-50">
+                <Truck size={18} className="text-[#087F8C] mb-1" />
+                <span className="text-[11px] font-bold text-slate-800">Free Express Delivery</span>
+                <span className="text-[10px] text-slate-500">Across All India</span>
+              </div>
+              <div className="flex flex-col items-center justify-center p-2 rounded-xl bg-slate-50">
+                <Droplets size={18} className="text-[#087F8C] mb-1" />
+                <span className="text-[11px] font-bold text-slate-800">100% Non-Toxic</span>
+                <span className="text-[10px] text-slate-500">Pet & Family Safe</span>
+              </div>
+            </div>
+
             {/* Delivery Pincode Checker */}
-            <div className="pt-2">
+            <div className="pt-1">
               <PincodeChecker />
             </div>
 
