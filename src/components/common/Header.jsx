@@ -73,23 +73,16 @@ export const Header = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between gap-4">
             
-            {/* BRAND LOGO */}
+            {/* BRAND LOGO (Invisel Style) */}
             <div className="flex items-center gap-6">
               <Link
                 to="/"
-                className="group flex items-center gap-2.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#087F8C] rounded-lg"
+                className="group flex items-center gap-1.5 focus:outline-none"
               >
-                <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#087F8C] to-[#0AA1B2] flex items-center justify-center text-white shadow-sm shadow-[#087F8C]/20 group-hover:scale-105 transition-transform duration-200">
-                  <Sparkles size={20} className="text-[#65D5D8]" />
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-xl sm:text-2xl font-black tracking-tight text-slate-900 leading-none">
-                    Ghar<span className="text-[#087F8C]">Shine</span>
-                  </span>
-                  <span className="text-[9px] tracking-widest uppercase font-bold text-slate-400 mt-0.5">
-                    Surface Care
-                  </span>
-                </div>
+                <span className="text-2xl sm:text-3xl font-black tracking-tight text-[#087F8C]">
+                  Ghar<span className="text-slate-900">Shine</span>
+                </span>
+                <Sparkles size={16} className="text-[#65D5D8] fill-[#65D5D8] -mt-2" />
               </Link>
             </div>
 
