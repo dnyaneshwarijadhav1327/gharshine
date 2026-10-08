@@ -6,7 +6,6 @@ import { CombosCarouselSection } from '../components/home/CombosCarouselSection'
 import { BestsellersSection } from '../components/home/BestsellersSection';
 import { HowItWorksSection } from '../components/home/HowItWorksSection';
 import { BeforeAfterSlider } from '../components/home/BeforeAfterSlider';
-import { FeaturedComboSection } from '../components/home/FeaturedComboSection';
 import { BuildYourOwnCombo } from '../components/home/BuildYourOwnCombo';
 import { WhyChooseUsSection } from '../components/home/WhyChooseUsSection';
 import { CustomerReviewsSection } from '../components/home/CustomerReviewsSection';
@@ -43,10 +42,7 @@ export const HomePage = () => {
       {/* 7. Before / After */}
       <BeforeAfterSlider />
 
-      {/* 8. Featured Combo */}
-      <FeaturedComboSection />
-
-      {/* 9. Build Your Own Combo */}
+      {/* 8. Build Your Own Combo */}
       <BuildYourOwnCombo />
 
       {/* 10. Why Choose Us */}
