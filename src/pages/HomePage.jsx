@@ -7,7 +7,6 @@ import { SurfaceGrid } from '../components/home/SurfaceGrid';
 import { BestsellersSection } from '../components/home/BestsellersSection';
 import { HowItWorksSection } from '../components/home/HowItWorksSection';
 import { BeforeAfterSlider } from '../components/home/BeforeAfterSlider';
-import { CleaningVsProtection } from '../components/home/CleaningVsProtection';
 import { RoomWiseSection } from '../components/home/RoomWiseSection';
 import { FeaturedComboSection } from '../components/home/FeaturedComboSection';
 import { BuildYourOwnCombo } from '../components/home/BuildYourOwnCombo';
@@ -49,9 +48,6 @@ export const HomePage = () => {
 
       {/* 9. Before / After */}
       <BeforeAfterSlider />
-
-      {/* 10. Cleaning vs Protection */}
-      <CleaningVsProtection />
 
       {/* 11. Room-wise Shopping */}
       <RoomWiseSection />
