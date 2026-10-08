@@ -99,6 +99,77 @@ body {
   50% { opacity: 0.85; transform: scale(1.03); }
 }
 
+@keyframes floatSlow {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-10px) rotate(1.5deg); }
+}
+
+@keyframes floatReverse {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(8px) rotate(-1.5deg); }
+}
+
+@keyframes waterBead {
+  0%, 100% { transform: scale(1) translateY(0); filter: drop-shadow(0 4px 6px rgba(8,127,140,0.2)); }
+  50% { transform: scale(1.08) translateY(-4px); filter: drop-shadow(0 8px 16px rgba(101,213,216,0.4)); }
+}
+
+@keyframes shimmerGlow {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
 .animate-pulse-subtle {
   animation: pulseSubtle 3s ease-in-out infinite;
+}
+
+.animate-float-slow {
+  animation: floatSlow 6s ease-in-out infinite;
+}
+
+.animate-float-reverse {
+  animation: floatReverse 7s ease-in-out infinite;
+}
+
+.animate-water-bead {
+  animation: waterBead 4s ease-in-out infinite;
+}
+
+.shimmer-btn {
+  background: linear-gradient(90deg, #087F8C 0%, #0AA1B2 40%, #65D5D8 50%, #0AA1B2 60%, #087F8C 100%);
+  background-size: 200% 100%;
+  animation: shimmerGlow 4s infinite linear;
+}
+
+/* 3D Transform Utilities */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.transform-style-3d {
+  transform-style: preserve-3d;
+}
+
+.card-3d-hover {
+  transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+  will-change: transform;
+}
+
+.card-3d-hover:hover {
+  transform: translateY(-8px) rotateX(4deg) rotateY(-2deg) scale(1.02);
+  box-shadow: 0 25px 40px -12px rgba(8, 127, 140, 0.2);
+}
+
+.glass-panel {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+}
+
+.glass-panel-dark {
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
