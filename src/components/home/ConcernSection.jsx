@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { Link } from 'react-router-dom';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 const homeConcerns = [
   {
@@ -33,20 +34,68 @@ const homeConcerns = [
 ];
 
 export const ConcernSection = () => {
+  const scrollContainerRef = useRef(null);
+
+  const scrollLeft = () => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollBy({ left: -340, behavior: 'smooth' });
+    }
+  };
+
+  const scrollRight = () => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollBy({ left: 340, behavior: 'smooth' });
+    }
+  };
+
   return (
     <section className="py-12 sm:py-16 bg-white">
-      <div className="max-w-[1360px] mx-auto px-4 sm:px-6">
-        {/* Section Header */}
-        <div className="text-center mb-8 sm:mb-12">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#111827] tracking-tight">
-            What Indian Homes Go Through Every Day
-          </h2>
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-6">
+        {/* Section Header with Left / Right arrows */}
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#111827] tracking-tight">
+              What Indian Homes Go Through Every Day
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-500 mt-1">
+              Common household stains & permanent surface damage solved
+            </p>
+          </div>
+
+          {/* Left / Right Scroll Buttons (Desktop & Tablet) */}
+          <div className="hidden sm:flex items-center gap-2">
+            <button
+              onClick={scrollLeft}
+              aria-label="Scroll Left"
+              className="w-10 h-10 rounded-full border border-slate-200 bg-white hover:bg-slate-50 active:scale-95 text-slate-700 flex items-center justify-center transition shadow-xs"
+            >
+              <ChevronLeft size={20} />
+            </button>
+            <button
+              onClick={scrollRight}
+              aria-label="Scroll Right"
+              className="w-10 h-10 rounded-full border border-slate-200 bg-white hover:bg-slate-50 active:scale-95 text-slate-700 flex items-center justify-center transition shadow-xs"
+            >
+              <ChevronRight size={20} />
+            </button>
+          </div>
         </div>
 
-        {/* 4 Cards Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+        {/* Horizontal Carousel (Manual Right-to-Left Scroll, NO Auto-Scrolling) */}
+        <div
+          ref={scrollContainerRef}
+          className="flex items-stretch gap-5 overflow-x-auto scroll-smooth pb-4 pt-1 no-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0"
+          style={{
+            scrollbarWidth: 'none',
+            msOverflowStyle: 'none',
+            WebkitOverflowScrolling: 'touch'
+          }}
+        >
           {homeConcerns.map((item) => (
-            <div key={item.id} className="flex flex-col group">
+            <div
+              key={item.id}
+              className="w-[285px] sm:w-[320px] md:w-[340px] shrink-0 flex flex-col group"
+            >
               {/* Image Card */}
               <Link
                 to={item.link}
@@ -87,4 +136,5 @@ export const ConcernSection = () => {
     </section>
   );
 };
+
 
