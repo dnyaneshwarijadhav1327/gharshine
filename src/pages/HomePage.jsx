@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import { HeroSection } from '../components/home/HeroSection';
 import { TrustStrip } from '../components/home/TrustStrip';
 import { ConcernSection } from '../components/home/ConcernSection';
+import { CombosCarouselSection } from '../components/home/CombosCarouselSection';
 import { SurfaceGrid } from '../components/home/SurfaceGrid';
 import { BestsellersSection } from '../components/home/BestsellersSection';
 import { HowItWorksSection } from '../components/home/HowItWorksSection';
@@ -31,10 +32,13 @@ export const HomePage = () => {
       {/* 4. Trust Strip */}
       <TrustStrip />
 
-      {/* 5. Everyday Problems / Concerns */}
+      {/* 5. Everyday Problems / Concerns (Section 2) */}
       <ConcernSection />
 
-      {/* 6. Shop By Surface */}
+      {/* 6. Combos Carousel / Products Slider (Section 3) */}
+      <CombosCarouselSection />
+
+      {/* 7. Shop By Surface */}
       <SurfaceGrid />
 
       {/* 7. Best Sellers */}
