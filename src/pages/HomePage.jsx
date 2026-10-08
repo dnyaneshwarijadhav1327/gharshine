@@ -9,7 +9,6 @@ import { BeforeAfterSlider } from '../components/home/BeforeAfterSlider';
 import { BuildYourOwnCombo } from '../components/home/BuildYourOwnCombo';
 import { WhyChooseUsSection } from '../components/home/WhyChooseUsSection';
 import { CustomerReviewsSection } from '../components/home/CustomerReviewsSection';
-import { VideoDemoSection } from '../components/home/VideoDemoSection';
 import { FAQSection } from '../components/home/FAQSection';
 import { NewsletterSection } from '../components/home/NewsletterSection';
 
@@ -45,19 +44,16 @@ export const HomePage = () => {
       {/* 8. Build Your Own Combo */}
       <BuildYourOwnCombo />
 
-      {/* 10. Why Choose Us */}
+      {/* 9. Why Choose Us */}
       <WhyChooseUsSection />
 
-      {/* 11. Customer Reviews */}
+      {/* 10. Customer Reviews */}
       <CustomerReviewsSection />
 
-      {/* 12. Video Demo */}
-      <VideoDemoSection />
-
-      {/* 13. FAQ */}
+      {/* 11. FAQ */}
       <FAQSection />
 
-      {/* 14. Newsletter */}
+      {/* 12. Newsletter */}
       <NewsletterSection />
     </div>
   );
