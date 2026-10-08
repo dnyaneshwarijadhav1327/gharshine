@@ -93,69 +93,34 @@ export const Header = () => {
               </Link>
             </div>
 
-            {/* DESKTOP NAVIGATION */}
-            <nav className="hidden lg:flex items-center gap-7">
-              <NavLink to="/" className={navLinkClasses} end>
+            {/* DESKTOP NAVIGATION (Invisel Style) */}
+            <nav className="hidden lg:flex items-center gap-6">
+              <NavLink
+                to="/"
+                end
+                className={({ isActive }) =>
+                  `text-sm font-bold transition-all px-4 py-1.5 rounded-full ${
+                    isActive
+                      ? 'bg-slate-100 text-slate-900 shadow-2xs'
+                      : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                  }`
+                }
+              >
                 Home
               </NavLink>
               
-              <NavLink to="/shop" className={navLinkClasses}>
+              <NavLink
+                to="/shop"
+                className={({ isActive }) =>
+                  `text-sm font-medium transition-colors ${
+                    isActive ? 'text-[#087F8C] font-bold' : 'text-slate-700 hover:text-[#087F8C]'
+                  }`
+                }
+              >
                 Shop All
               </NavLink>
 
-              {/* Shop By Surface Dropdown */}
-              <div
-                className="relative group"
-                onMouseEnter={() => setSurfaceDropdownOpen(true)}
-                onMouseLeave={() => setSurfaceDropdownOpen(false)}
-              >
-                <button
-                  type="button"
-                  className="flex items-center gap-1 text-[14px] font-medium text-slate-700 hover:text-[#087F8C] py-1 transition-colors"
-                  aria-expanded={surfaceDropdownOpen}
-                >
-                  <span>Shop By Surface</span>
-                  <ChevronDown
-                    size={14}
-                    className={`transition-transform duration-200 ${
-                      surfaceDropdownOpen ? 'rotate-180 text-[#087F8C]' : 'text-slate-400'
-                    }`}
-                  />
-                </button>
-
-                {/* Dropdown Menu */}
-                {surfaceDropdownOpen && (
-                  <div className="absolute top-full left-1/2 -translate-x-1/2 w-[540px] pt-3 animate-in fade-in zoom-in-95 duration-150">
-                    <div className="bg-white rounded-2xl shadow-xl border border-slate-100 p-4 grid grid-cols-3 gap-2">
-                      {surfaces.map((s) => (
-                        <Link
-                          key={s.id}
-                          to={`/shop?surface=${s.slug}`}
-                          className="flex items-center gap-2.5 p-2 rounded-xl hover:bg-[#F4F8F7] transition group/item"
-                          onClick={() => setSurfaceDropdownOpen(false)}
-                        >
-                          <img
-                            src={s.image}
-                            alt={s.name}
-                            className="w-8 h-8 rounded-lg object-cover group-hover/item:scale-105 transition"
-                            loading="lazy"
-                          />
-                          <div className="flex flex-col min-w-0">
-                            <span className="text-xs font-semibold text-slate-800 truncate group-hover/item:text-[#087F8C]">
-                              {s.name}
-                            </span>
-                            <span className="text-[10px] text-slate-400">
-                              From ₹{s.startingPrice}
-                            </span>
-                          </div>
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* Shop By Concern Dropdown */}
+              {/* Shop By Concerns Dropdown */}
               <div
                 className="relative group"
                 onMouseEnter={() => setConcernDropdownOpen(true)}
@@ -163,10 +128,10 @@ export const Header = () => {
               >
                 <button
                   type="button"
-                  className="flex items-center gap-1 text-[14px] font-medium text-slate-700 hover:text-[#087F8C] py-1 transition-colors"
+                  className="flex items-center gap-1 text-sm font-medium text-slate-700 hover:text-[#087F8C] py-1 transition-colors cursor-pointer"
                   aria-expanded={concernDropdownOpen}
                 >
-                  <span>Shop By Concern</span>
+                  <span>Shop By Concerns</span>
                   <ChevronDown
                     size={14}
                     className={`transition-transform duration-200 ${
@@ -176,7 +141,7 @@ export const Header = () => {
                 </button>
 
                 {concernDropdownOpen && (
-                  <div className="absolute top-full left-1/2 -translate-x-1/2 w-[480px] pt-3 animate-in fade-in zoom-in-95 duration-150">
+                  <div className="absolute top-full left-1/2 -translate-x-1/2 w-[480px] pt-3 animate-in fade-in zoom-in-95 duration-150 z-50">
                     <div className="bg-white rounded-2xl shadow-xl border border-slate-100 p-4 grid grid-cols-2 gap-2">
                       {concerns.map((c) => (
                         <Link
@@ -201,21 +166,49 @@ export const Header = () => {
                 )}
               </div>
 
-              <NavLink to="/combo-builder" className={navLinkClasses}>
-                <span className="flex items-center gap-1">
-                  <span>Build A Kit</span>
-                  <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-full bg-[#E8F8F8] text-[#087F8C]">
-                    Save 20%
-                  </span>
-                </span>
+              {/* How To Use Dropdown */}
+              <NavLink
+                to="/how-to-use"
+                className={({ isActive }) =>
+                  `text-sm font-medium transition-colors ${
+                    isActive ? 'text-[#087F8C] font-bold' : 'text-slate-700 hover:text-[#087F8C]'
+                  }`
+                }
+              >
+                How To Use ⌵
               </NavLink>
 
-              <NavLink to="/how-to-use" className={navLinkClasses}>
-                How To Use
+              <NavLink
+                to="/combo-builder"
+                className={({ isActive }) =>
+                  `text-sm font-medium transition-colors ${
+                    isActive ? 'text-[#087F8C] font-bold' : 'text-slate-700 hover:text-[#087F8C]'
+                  }`
+                }
+              >
+                Get Service
               </NavLink>
 
-              <NavLink to="/about" className={navLinkClasses}>
-                About Us
+              <NavLink
+                to="/about"
+                className={({ isActive }) =>
+                  `text-sm font-medium transition-colors ${
+                    isActive ? 'text-[#087F8C] font-bold' : 'text-slate-700 hover:text-[#087F8C]'
+                  }`
+                }
+              >
+                Our Story
+              </NavLink>
+
+              <NavLink
+                to="/contact"
+                className={({ isActive }) =>
+                  `text-sm font-medium transition-colors ${
+                    isActive ? 'text-[#087F8C] font-bold' : 'text-slate-700 hover:text-[#087F8C]'
+                  }`
+                }
+              >
+                Contact Us
               </NavLink>
             </nav>
 

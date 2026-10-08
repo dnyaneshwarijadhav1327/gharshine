@@ -1,314 +1,305 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import {
-  Sparkles,
-  ArrowRight,
-  ShieldCheck,
-  Droplets,
-  CheckCircle2,
-  Star,
-  Play,
-  Layers,
-  ChevronLeft,
-  ChevronRight,
-  Zap
-} from 'lucide-react';
-import { brandConfig } from '../../data/config';
+import { ChevronLeft, ChevronRight, Sparkles, ShoppingBag, ArrowRight } from 'lucide-react';
 
 export const HeroSection = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
   const slides = [
     {
-      id: 'bathroom',
-      tag: 'BATHROOM & SHOWER GLASS',
-      headline: 'India’s 1st Nano-Coating',
-      highlight: 'For Surface Protection',
-      description: 'Invisible hydrophobic nano-shield for glass shower partitions, taps, tiles & basins. Repels mineral limescale and soap scum for up to 180 days.',
-      bgImage: 'https://www.invisel.in/cdn/shop/files/desktop_1440_x_580.jpg?v=1784298766&width=1600',
-      badge: '180 Days Protection',
-      icon: '🚿',
-      productLink: '/product/bathroom-protector-kit'
+      id: 'festive-coating',
+      headlineTop: 'Iss baar ghar ki',
+      headlineMid: 'cleaning ke sath,',
+      headlineBot: 'coating bhi karo',
+      badgeDiscount: '20% OFF',
+      tagline: 'Clean Every Surface. Protect What Matters.',
+      tiers: [
+        { cart: 'Cart ₹2,000', save: 'Save ₹200' },
+        { cart: 'Cart ₹2,500', save: 'Save ₹500' },
+        { cart: 'Cart ₹4,000', save: 'Save ₹800' }
+      ],
+      ctaLink: '/shop',
+      ctaText: 'Shop Coating Combos'
     },
     {
-      id: 'sofa',
-      tag: 'SOFA & FABRIC UPHOLSTERY',
-      headline: 'Liquid Spills Bead Up',
-      highlight: '& Roll Off Instantly.',
-      description: 'Breathable liquid repellent spray for sofas, dining chairs, rugs, and mattresses. Spilled tea, coffee, and water sit on top without absorbing.',
-      bgImage: 'https://www.invisel.in/cdn/shop/files/Banner_03.jpg?v=1791117386&width=1600',
-      badge: 'Zero Stain Absorption',
-      icon: '🛋️',
-      productLink: '/product/fabric-upholstery-nano-shield'
+      id: 'bathroom-shield',
+      headlineTop: 'Borewell Hard Water',
+      headlineMid: 'stains se chutkara,',
+      headlineBot: '6 mahine tak chamak',
+      badgeDiscount: '30% OFF',
+      tagline: 'Formulated for High-TDS Indian Water',
+      tiers: [
+        { cart: 'Bathroom Kit', save: 'Save ₹700' },
+        { cart: '2x Shield Pack', save: 'Save ₹1,200' },
+        { cart: 'Full Home Set', save: 'Save ₹1,800' }
+      ],
+      ctaLink: '/product/bathroom-protector-kit',
+      ctaText: 'Get Bathroom Shield'
     },
     {
-      id: 'marble',
-      tag: 'MARBLE, WOOD & GRANITE',
-      headline: 'Preserve Natural Beauty',
-      highlight: 'Against Haldi, Oil & Stains.',
-      description: 'Deep-penetrating oleophobic nano-barrier for Italian marble, kitchen countertops, and fine wooden furniture. Blocks stains while keeping natural texture.',
-      bgImage: 'https://www.invisel.in/cdn/shop/files/02.jpg_1.jpg?v=1791440002&width=1600',
-      badge: 'Food Safe & Non-Toxic',
-      icon: '🍳',
-      productLink: '/product/marble-granite-nano-guard'
+      id: 'sofa-fabric',
+      headlineTop: 'Chai, Coffee & Spills',
+      headlineMid: 'ab daag nahi banenge,',
+      headlineBot: 'liquid beads up & rolls off',
+      badgeDiscount: '15% OFF',
+      tagline: 'Invisible Hydrophobic Shield for Sofas & Upholstery',
+      tiers: [
+        { cart: '1 Sofa Spray', save: 'Save ₹150' },
+        { cart: 'Living Room Set', save: 'Save ₹450' },
+        { cart: 'Mega Protector', save: 'Save ₹850' }
+      ],
+      ctaLink: '/product/fabric-upholstery-nano-shield',
+      ctaText: 'Protect Your Sofa'
     }
   ];
 
-  // Auto-advance slides every 5.5 seconds
   useEffect(() => {
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % slides.length);
-    }, 5500);
+    }, 6000);
     return () => clearInterval(timer);
   }, [slides.length]);
 
-  const handleMouseMove = (e) => {
-    const { clientX, clientY, currentTarget } = e;
-    const { width, height, left, top } = currentTarget.getBoundingClientRect();
-    const x = (clientX - left) / width - 0.5;
-    const y = (clientY - top) / height - 0.5;
-    setMousePosition({ x: x * 15, y: y * -15 });
-  };
-
-  const handleMouseLeave = () => {
-    setMousePosition({ x: 0, y: 0 });
-  };
-
-  const active = slides[currentSlide];
+  const slide = slides[currentSlide];
 
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-[#F0F9F9] via-[#F8FCFC] to-white py-6 sm:py-12 lg:py-16">
-      {/* Background Ambience Glows */}
-      <div className="absolute -top-20 -left-20 w-96 h-96 bg-[#65D5D8]/20 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute top-1/2 -right-20 w-[30rem] h-[30rem] bg-[#087F8C]/10 rounded-full blur-3xl pointer-events-none" />
+    <section className="relative w-full overflow-hidden bg-gradient-to-r from-[#F7EFE8] via-[#FAF6F0] to-[#F3ECE4] select-none border-b border-amber-100">
+      
+      {/* Background Lighting & Festive Indian Decor Ambience */}
+      <div className="absolute inset-0 pointer-events-none opacity-40 bg-[radial-gradient(circle_at_top_right,rgba(251,191,36,0.35),transparent_50%),radial-gradient(circle_at_bottom_left,rgba(8,127,140,0.15),transparent_40%)]" />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      {/* Side Arrows */}
+      <button
+        onClick={() => setCurrentSlide((prev) => (prev === 0 ? slides.length - 1 : prev - 1))}
+        aria-label="Previous Banner"
+        className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-30 w-8 h-8 sm:w-11 sm:h-11 rounded-lg bg-black/40 hover:bg-black/70 text-white flex items-center justify-center backdrop-blur-md transition-all cursor-pointer border border-white/20"
+      >
+        <ChevronLeft size={22} />
+      </button>
+
+      <button
+        onClick={() => setCurrentSlide((prev) => (prev + 1) % slides.length)}
+        aria-label="Next Banner"
+        className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-30 w-8 h-8 sm:w-11 sm:h-11 rounded-lg bg-black/40 hover:bg-black/70 text-white flex items-center justify-center backdrop-blur-md transition-all cursor-pointer border border-white/20"
+      >
+        <ChevronRight size={22} />
+      </button>
+
+      {/* Main Banner Container */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16 relative z-10">
         
-        {/* Top Surface Selector Tabs (Invisel Style) */}
-        <div className="flex items-center justify-start sm:justify-center overflow-x-auto no-scrollbar gap-2 pb-6 sm:pb-8">
-          {slides.map((s, idx) => (
-            <button
-              key={s.id}
-              onClick={() => setCurrentSlide(idx)}
-              className={`flex items-center gap-2 px-4 sm:px-6 py-2.5 rounded-full text-xs sm:text-sm font-bold whitespace-nowrap transition-all duration-300 cursor-pointer ${
-                currentSlide === idx
-                  ? 'bg-slate-900 text-white shadow-lg shadow-slate-900/25 scale-105'
-                  : 'bg-white/80 hover:bg-white text-slate-700 border border-slate-200/80 hover:border-slate-300 shadow-2xs'
-              }`}
+        {/* Top Floating Catchy Slogan */}
+        <div className="text-center max-w-3xl mx-auto mb-6 sm:mb-8">
+          <p className="text-base sm:text-2xl md:text-3xl font-medium text-slate-800 tracking-wide">
+            {slide.headlineTop}
+          </p>
+          <h1 className="text-3xl sm:text-5xl md:text-6xl font-black text-[#8B261D] tracking-tight leading-none mt-1">
+            <span className="italic font-serif font-bold text-amber-900">{slide.headlineMid}</span>{' '}
+            <span className="italic font-serif font-black text-[#A82218]">{slide.headlineBot}</span>
+          </h1>
+        </div>
+
+        {/* 3-Column Banner Composition (Exact Invisel Layout) */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+          
+          {/* LEFT: Discount Badge & Cart Tiers */}
+          <div className="lg:col-span-3 flex flex-col items-center lg:items-start justify-center order-2 lg:order-1 space-y-4">
+            
+            {/* Starburst GET 20% OFF Badge */}
+            <div className="relative inline-flex items-center justify-center">
+              <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-gradient-to-br from-[#A82218] to-[#78140D] text-white flex flex-col items-center justify-center p-2 shadow-2xl border-4 border-dashed border-amber-300 transform -rotate-6 animate-pulse-subtle">
+                <span className="text-[10px] sm:text-xs uppercase font-extrabold tracking-widest text-amber-200">GET</span>
+                <span className="text-xl sm:text-2xl font-black leading-none text-white">{slide.badgeDiscount}</span>
+                <span className="text-xs sm:text-sm font-extrabold text-amber-200">OFF</span>
+              </div>
+            </div>
+
+            {/* Cart Tier Save Pills */}
+            <div className="space-y-2.5 w-full max-w-xs">
+              {slide.tiers.map((tier, idx) => (
+                <div
+                  key={idx}
+                  className="flex items-center justify-between gap-3 px-3.5 py-2 rounded-xl bg-white/90 backdrop-blur-md border border-amber-200/80 shadow-xs"
+                >
+                  <span className="text-xs sm:text-sm font-bold text-slate-800">{tier.cart}</span>
+                  <span className="px-3 py-1 rounded-md bg-[#A82218] text-white text-xs sm:text-sm font-black shadow-xs">
+                    {tier.save}
+                  </span>
+                </div>
+              ))}
+            </div>
+
+            <Link
+              to={slide.ctaLink}
+              className="mt-2 w-full max-w-xs py-3.5 px-6 bg-[#087F8C] hover:bg-[#066670] text-white rounded-xl font-black text-xs sm:text-sm shadow-lg shadow-[#087F8C]/25 flex items-center justify-center gap-2 transition-all cursor-pointer"
             >
-              <span className="text-base">{s.icon}</span>
-              <span>{s.tag.split('&')[0]}</span>
-              {currentSlide === idx && (
-                <span className="w-1.5 h-1.5 rounded-full bg-[#65D5D8] animate-ping" />
-              )}
-            </button>
+              <ShoppingBag size={16} />
+              <span>{slide.ctaText}</span>
+            </Link>
+
+          </div>
+
+          {/* CENTER: The 3 GharShine 3D Aerosol Cans with Real Custom Labels */}
+          <div className="lg:col-span-6 flex items-center justify-center order-1 lg:order-2 py-4">
+            <div className="relative flex items-end justify-center gap-2 sm:gap-4 max-w-md mx-auto">
+              
+              {/* Bottle 1: Cyan/Teal Hard Water Stain Remover */}
+              <div className="flex flex-col items-center group card-3d-hover transform transition-all duration-300 hover:scale-105">
+                <div className="relative w-24 sm:w-32 md:w-36 h-64 sm:h-80 md:h-92 rounded-3xl bg-gradient-to-b from-slate-200 via-white to-slate-200 shadow-2xl border-2 border-slate-300/80 overflow-hidden flex flex-col justify-between p-2 sm:p-3 text-center">
+                  {/* Can Top Nozzle */}
+                  <div className="w-6 sm:w-8 h-3 sm:h-4 bg-red-600 rounded-t-sm mx-auto shadow-inner" />
+                  
+                  {/* Bottle Label */}
+                  <div className="my-auto space-y-1.5">
+                    <span className="text-xs sm:text-sm font-black text-[#087F8C] tracking-tight block">
+                      GharShine
+                    </span>
+                    <span className="text-[7px] sm:text-[9px] uppercase font-bold tracking-widest text-slate-500 block">
+                      THE MAGIC OF NANO-SHIELD
+                    </span>
+                    
+                    <div className="bg-[#087F8C] text-white py-1 sm:py-1.5 px-1 rounded-md">
+                      <h3 className="text-[9px] sm:text-xs font-black uppercase leading-tight">
+                        HARD WATER
+                      </h3>
+                      <p className="text-[7px] sm:text-[9px] font-bold text-teal-100">
+                        STAIN REMOVER
+                      </p>
+                    </div>
+
+                    <span className="text-[7px] sm:text-[8px] font-bold text-slate-600 uppercase block">
+                      Active Foam Formulation
+                    </span>
+                  </div>
+
+                  {/* Bottle Bottom Features */}
+                  <div className="text-[7px] sm:text-[8px] text-slate-500 border-t border-slate-200 pt-1">
+                    <span>500ml • Borewell TDS Safe</span>
+                  </div>
+                </div>
+                <span className="text-[10px] sm:text-xs font-bold text-slate-700 mt-2">Hard Water Remover</span>
+              </div>
+
+              {/* Bottle 2: Blue Glass & Tile Stain Repellent (Center Hero) */}
+              <div className="flex flex-col items-center group card-3d-hover transform transition-all duration-300 hover:scale-110 z-10 -translate-y-2">
+                <div className="relative w-26 sm:w-34 md:w-40 h-72 sm:h-88 md:h-96 rounded-3xl bg-gradient-to-b from-slate-100 via-white to-slate-200 shadow-2xl border-2 border-teal-400 overflow-hidden flex flex-col justify-between p-2 sm:p-3 text-center ring-4 ring-[#087F8C]/10">
+                  {/* Can Top Nozzle */}
+                  <div className="w-6 sm:w-8 h-3 sm:h-4 bg-red-600 rounded-t-sm mx-auto shadow-inner" />
+                  
+                  {/* Bottle Label */}
+                  <div className="my-auto space-y-1.5">
+                    <span className="text-sm sm:text-base font-black text-[#087F8C] tracking-tight block">
+                      GharShine
+                    </span>
+                    <span className="text-[7px] sm:text-[9px] uppercase font-bold tracking-widest text-slate-500 block">
+                      THE MAGIC OF NANO-SHIELD
+                    </span>
+                    
+                    <div className="bg-gradient-to-r from-[#087F8C] to-[#0AA1B2] text-white py-1.5 px-1 rounded-md shadow-xs">
+                      <h3 className="text-[9px] sm:text-xs font-black uppercase leading-tight">
+                        Glass & Tile
+                      </h3>
+                      <p className="text-[7px] sm:text-[9px] font-bold text-teal-100">
+                        Stain Repellent (PROTECTS)
+                      </p>
+                    </div>
+
+                    <span className="text-[7px] sm:text-[8px] font-black text-emerald-600 uppercase block">
+                      180 Days Hydro-Barrier
+                    </span>
+                  </div>
+
+                  {/* Bottle Bottom Features */}
+                  <div className="text-[7px] sm:text-[8px] text-slate-500 border-t border-slate-200 pt-1">
+                    <span>250ml • 110° Water Beading</span>
+                  </div>
+                </div>
+                <span className="text-[10px] sm:text-xs font-black text-[#087F8C] mt-2">Glass & Tile Nano-Shield</span>
+              </div>
+
+              {/* Bottle 3: Purple Marble & Granite Stain Repellent */}
+              <div className="flex flex-col items-center group card-3d-hover transform transition-all duration-300 hover:scale-105">
+                <div className="relative w-24 sm:w-32 md:w-36 h-64 sm:h-80 md:h-92 rounded-3xl bg-gradient-to-b from-slate-200 via-white to-slate-200 shadow-2xl border-2 border-purple-300/80 overflow-hidden flex flex-col justify-between p-2 sm:p-3 text-center">
+                  {/* Can Top Nozzle */}
+                  <div className="w-6 sm:w-8 h-3 sm:h-4 bg-red-600 rounded-t-sm mx-auto shadow-inner" />
+                  
+                  {/* Bottle Label */}
+                  <div className="my-auto space-y-1.5">
+                    <span className="text-xs sm:text-sm font-black text-purple-900 tracking-tight block">
+                      GharShine
+                    </span>
+                    <span className="text-[7px] sm:text-[9px] uppercase font-bold tracking-widest text-slate-500 block">
+                      THE MAGIC OF NANO-SHIELD
+                    </span>
+                    
+                    <div className="bg-purple-900 text-white py-1 sm:py-1.5 px-1 rounded-md">
+                      <h3 className="text-[9px] sm:text-xs font-black uppercase leading-tight">
+                        Marble & Granite
+                      </h3>
+                      <p className="text-[7px] sm:text-[9px] font-bold text-purple-200">
+                        Stain Repellent (PROTECTS)
+                      </p>
+                    </div>
+
+                    <span className="text-[7px] sm:text-[8px] font-bold text-slate-600 uppercase block">
+                      Haldi & Oil Defense
+                    </span>
+                  </div>
+
+                  {/* Bottle Bottom Features */}
+                  <div className="text-[7px] sm:text-[8px] text-slate-500 border-t border-slate-200 pt-1">
+                    <span>250ml • Food Contact Safe</span>
+                  </div>
+                </div>
+                <span className="text-[10px] sm:text-xs font-bold text-slate-700 mt-2">Marble & Granite Guard</span>
+              </div>
+
+            </div>
+          </div>
+
+          {/* RIGHT: Big SAVE UP TO ₹800 Graphic & Festive Diyas */}
+          <div className="lg:col-span-3 flex flex-col items-center lg:items-end justify-center order-3 text-center lg:text-right space-y-4">
+            
+            {/* 3D SAVE UP TO ₹800 Block */}
+            <div className="space-y-0.5">
+              <span className="text-lg sm:text-2xl font-black uppercase tracking-wider text-[#A82218] block drop-shadow-xs">
+                SAVE UP TO
+              </span>
+              <span className="text-5xl sm:text-7xl lg:text-8xl font-black text-[#A82218] tracking-tighter leading-none block drop-shadow-md">
+                ₹800
+              </span>
+            </div>
+
+            <p className="text-xs sm:text-sm font-semibold text-slate-700 max-w-xs">
+              Combo packs with free microfiber application kit included.
+            </p>
+
+            <div className="pt-2 flex items-center justify-center lg:justify-end gap-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping" />
+              <span className="text-xs font-extrabold text-emerald-800">
+                ⚡ Ready to Dispatch • Free Delivery Above ₹999
+              </span>
+            </div>
+
+          </div>
+
+        </div>
+
+        {/* Carousel Slide Dots Indicator */}
+        <div className="flex items-center justify-center gap-2 pt-8">
+          {slides.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setCurrentSlide(i)}
+              aria-label={`Slide ${i + 1}`}
+              className={`h-2.5 rounded-full transition-all duration-300 cursor-pointer ${
+                currentSlide === i ? 'w-8 bg-slate-900' : 'w-2.5 bg-slate-400/60 hover:bg-slate-600'
+              }`}
+            />
           ))}
         </div>
 
-        {/* Main Grid: Content & 3D Interactive Visual */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-          
-          {/* LEFT: Dynamic Text Content with Smooth Transitions */}
-          <div className="lg:col-span-6 space-y-6 sm:space-y-7 text-center lg:text-left">
-            
-            {/* Pill Tag */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#E8F8F8] border border-[#087F8C]/30 text-[#087F8C] text-xs font-black tracking-wider uppercase shadow-2xs">
-              <Sparkles size={14} className="text-[#087F8C] animate-spin" style={{ animationDuration: '8s' }} />
-              <span>{active.tag}</span>
-            </div>
-
-            {/* Main Headline */}
-            <div className="space-y-2">
-              <h1 className="text-3xl sm:text-5xl lg:text-[3.6rem] font-black tracking-tight text-slate-900 leading-[1.1] min-h-[110px] sm:min-h-[140px] flex flex-col justify-center">
-                <span>{active.headline}</span>
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#087F8C] via-[#0AA1B2] to-[#066670]">
-                  {active.highlight}
-                </span>
-              </h1>
-            </div>
-
-            {/* Description */}
-            <p className="text-sm sm:text-base lg:text-lg text-slate-600 max-w-xl mx-auto lg:mx-0 leading-relaxed font-normal">
-              {active.description}
-            </p>
-
-            {/* Action CTA Buttons */}
-            <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3 sm:gap-4 pt-1">
-              <Link
-                to={active.productLink}
-                className="w-full sm:w-auto px-8 py-4 shimmer-btn text-white rounded-2xl text-sm sm:text-base font-bold shadow-xl shadow-[#087F8C]/25 hover:shadow-2xl hover:shadow-[#087F8C]/35 hover:-translate-y-0.5 transition-all duration-300 flex items-center justify-center gap-2.5 group cursor-pointer"
-              >
-                <span>Shop This Solution</span>
-                <ArrowRight size={18} className="group-hover:translate-x-1.5 transition-transform" />
-              </Link>
-
-              <button
-                type="button"
-                onClick={() => setIsVideoModalOpen(true)}
-                className="w-full sm:w-auto px-6 py-4 bg-white/90 hover:bg-white text-slate-800 border border-slate-200/80 hover:border-slate-300 rounded-2xl text-sm sm:text-base font-bold transition-all duration-200 flex items-center justify-center gap-2.5 shadow-2xs hover:shadow-md cursor-pointer group"
-              >
-                <div className="w-6 h-6 rounded-full bg-[#E8F8F8] text-[#087F8C] flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <Play size={11} className="fill-current ml-0.5" />
-                </div>
-                <span>Watch Hydrophobic Demo</span>
-              </button>
-            </div>
-
-            {/* Social Proof Strip */}
-            <div className="pt-4 border-t border-slate-200/60 flex flex-wrap items-center justify-center lg:justify-start gap-4 sm:gap-6 text-xs text-slate-600">
-              <div className="flex items-center gap-2">
-                <div className="flex -space-x-1.5">
-                  {[1, 2, 3, 4].map((i) => (
-                    <img
-                      key={i}
-                      src={`https://images.unsplash.com/photo-${1534528741775 + i * 100}?auto=format&fit=crop&w=80&q=80`}
-                      alt="Customer"
-                      className="w-7 h-7 rounded-full border-2 border-white object-cover shadow-2xs"
-                      loading="lazy"
-                    />
-                  ))}
-                </div>
-                <div className="text-left">
-                  <div className="flex items-center text-amber-400">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} size={12} className="fill-amber-400" />
-                    ))}
-                  </div>
-                  <span className="font-bold text-slate-900">4.9/5</span> (1,200+ Homes Protected)
-                </div>
-              </div>
-
-              <div className="hidden sm:block h-5 w-px bg-slate-200" />
-
-              <div className="flex items-center gap-1.5 font-semibold text-emerald-800 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-100">
-                <CheckCircle2 size={14} className="text-emerald-600" />
-                <span>6 Months Shield Guarantee</span>
-              </div>
-            </div>
-
-          </div>
-
-          {/* RIGHT: 3D Transform Interactive Card Visual (Invisel Style) */}
-          <div className="lg:col-span-6 relative perspective-1000">
-            <div
-              className="relative mx-auto max-w-md lg:max-w-none transition-transform duration-300 ease-out transform-style-3d"
-              onMouseMove={handleMouseMove}
-              onMouseLeave={handleMouseLeave}
-              style={{
-                transform: `rotateY(${mousePosition.x}deg) rotateX(${mousePosition.y}deg)`
-              }}
-            >
-              
-              {/* Main Showcase Glass Card with Exact Invisel Banner */}
-              <div className="relative rounded-3xl overflow-hidden shadow-2xl shadow-teal-950/20 border-4 border-white bg-slate-900 aspect-[16/10] sm:aspect-[16/10] group">
-                <img
-                  src={active.bgImage}
-                  alt={active.headline}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 filter brightness-95"
-                />
-                
-                {/* High-Tech Gradient Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/15 to-transparent" />
-
-                {/* Hydrophobic Water Beading Simulation Overlay Indicator */}
-                <div className="absolute top-4 left-4 glass-panel px-3 py-1.5 rounded-full flex items-center gap-2 text-xs font-bold text-slate-800 shadow-md">
-                  <div className="w-2.5 h-2.5 rounded-full bg-teal-500 animate-ping" />
-                  <span>110° Water Repel Angle</span>
-                </div>
-
-                {/* Slide Controls (Previous / Next Arrows) */}
-                <div className="absolute top-4 right-4 flex items-center gap-1.5">
-                  <button
-                    onClick={() => setCurrentSlide((prev) => (prev === 0 ? slides.length - 1 : prev - 1))}
-                    aria-label="Previous Slide"
-                    className="w-8 h-8 rounded-full bg-black/40 hover:bg-black/70 text-white backdrop-blur-md flex items-center justify-center transition-all cursor-pointer border border-white/20"
-                  >
-                    <ChevronLeft size={16} />
-                  </button>
-                  <button
-                    onClick={() => setCurrentSlide((prev) => (prev + 1) % slides.length)}
-                    aria-label="Next Slide"
-                    className="w-8 h-8 rounded-full bg-black/40 hover:bg-black/70 text-white backdrop-blur-md flex items-center justify-center transition-all cursor-pointer border border-white/20"
-                  >
-                    <ChevronRight size={16} />
-                  </button>
-                </div>
-
-                {/* Bottom Card Specs */}
-                <div className="absolute bottom-4 left-4 right-4 text-white">
-                  <div className="flex items-center justify-between gap-2 mb-1">
-                    <span className="text-xs uppercase tracking-widest font-black text-[#65D5D8] flex items-center gap-1">
-                      <Zap size={13} className="text-[#65D5D8]" />
-                      <span>{active.badge}</span>
-                    </span>
-                    <span className="text-[11px] text-slate-300 font-medium">
-                      0{currentSlide + 1} / 0{slides.length}
-                    </span>
-                  </div>
-                  <p className="text-sm font-semibold text-white/95 truncate">
-                    Nano-Barrier Polymer Layer • Zero Scratches • Instant Bead-Off
-                  </p>
-                </div>
-              </div>
-
-              {/* Floating Badge 1: Top Right (Hydro-Shield) */}
-              <div className="absolute -top-5 -right-3 sm:-right-5 glass-panel p-3.5 rounded-2xl shadow-xl border border-white/80 flex items-center gap-3 animate-float-slow z-20">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#087F8C] to-[#0AA1B2] text-white flex items-center justify-center shadow-md shadow-[#087F8C]/30 animate-water-bead">
-                  <Droplets size={20} />
-                </div>
-                <div>
-                  <h4 className="text-xs font-black text-slate-900">Hydrophobic Shield</h4>
-                  <p className="text-[10px] font-semibold text-[#087F8C]">Liquid Repellent Barrier</p>
-                </div>
-              </div>
-
-              {/* Floating Badge 2: Bottom Left (Nano Matrix) */}
-              <div className="absolute -bottom-5 -left-3 sm:-left-5 glass-panel p-3.5 rounded-2xl shadow-xl border border-white/80 flex items-center gap-3 animate-float-reverse z-20">
-                <div className="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center shadow-md shadow-emerald-600/30">
-                  <ShieldCheck size={20} />
-                </div>
-                <div>
-                  <h4 className="text-xs font-black text-slate-900">High TDS Tested</h4>
-                  <p className="text-[10px] font-semibold text-emerald-700">Formulated for Indian Water</p>
-                </div>
-              </div>
-
-            </div>
-          </div>
-
-        </div>
       </div>
-
-      {/* Video Modal Demo */}
-      {isVideoModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4 animate-in fade-in duration-200">
-          <div className="relative w-full max-w-3xl bg-slate-900 rounded-3xl overflow-hidden shadow-2xl border border-slate-700">
-            <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800 text-white">
-              <div className="flex items-center gap-2">
-                <Sparkles size={18} className="text-[#65D5D8]" />
-                <h3 className="font-bold text-base">GharShine Hydrophobic Shield In Action</h3>
-              </div>
-              <button
-                onClick={() => setIsVideoModalOpen(false)}
-                className="text-slate-400 hover:text-white text-sm font-bold bg-slate-800 hover:bg-slate-700 px-3 py-1.5 rounded-lg transition-colors cursor-pointer"
-              >
-                ✕ Close
-              </button>
-            </div>
-            <div className="relative aspect-video w-full">
-              <iframe
-                src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1"
-                title="GharShine Hydro-Barrier Demonstration"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-                className="w-full h-full border-0"
-              />
-            </div>
-          </div>
-        </div>
-      )}
     </section>
   );
 };

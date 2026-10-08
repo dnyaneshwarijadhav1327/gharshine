@@ -1,58 +1,28 @@
 import React from 'react';
-import { Sparkles, ShieldCheck, Clock, Home, Lock } from 'lucide-react';
+import { Home, Atom, Flag, Star, ShieldCheck, Sparkles } from 'lucide-react';
 
 export const TrustStrip = () => {
-  const trustItems = [
-    {
-      icon: <Sparkles size={18} className="text-[#087F8C]" />,
-      title: "Easy DIY Application",
-      desc: "No special tools needed"
-    },
-    {
-      icon: <ShieldCheck size={18} className="text-[#087F8C]" />,
-      title: "Surface Protection",
-      desc: "Up to 6-12 months shield"
-    },
-    {
-      icon: <Home size={18} className="text-[#087F8C]" />,
-      title: "Made for Indian Homes",
-      desc: "Tackles hard water & spices"
-    },
-    {
-      icon: <Clock size={18} className="text-[#087F8C]" />,
-      title: "Long-Lasting Results",
-      desc: "Cuts daily cleaning in half"
-    },
-    {
-      icon: <Lock size={18} className="text-[#087F8C]" />,
-      title: "Safe & Secure Checkout",
-      desc: "COD & express shipping"
-    }
+  const items = [
+    { icon: <Home size={18} className="fill-current" />, text: "45,000+ Homes Protected" },
+    { icon: <Atom size={18} />, text: "Nanotechnology Formula" },
+    { icon: <Flag size={18} className="fill-current" />, text: "Made in India Products" },
+    { icon: <Star size={18} className="fill-current" />, text: "4.7 Star Rating (1,200+ Reviews)" },
+    { icon: <ShieldCheck size={18} />, text: "180 Days Invisible Shield" },
+    { icon: <Sparkles size={18} />, text: "Zero Harsh Acid Fumes" }
   ];
 
+  // Repeat items for seamless marquee loop
+  const marqueeList = [...items, ...items, ...items];
+
   return (
-    <div className="bg-[#F8FAFA] border-y border-slate-100 py-6">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6">
-          {trustItems.map((item, idx) => (
-            <div
-              key={idx}
-              className="flex items-center gap-3 p-2 rounded-xl bg-white/60 sm:bg-transparent border sm:border-0 border-slate-100"
-            >
-              <div className="w-9 h-9 rounded-xl bg-[#E8F8F8] flex items-center justify-center shrink-0">
-                {item.icon}
-              </div>
-              <div className="min-w-0">
-                <h4 className="text-xs sm:text-[13px] font-bold text-slate-900 truncate">
-                  {item.title}
-                </h4>
-                <p className="text-[11px] text-slate-500 truncate mt-0.5">
-                  {item.desc}
-                </p>
-              </div>
-            </div>
-          ))}
-        </div>
+    <div className="w-full bg-[#D4F754] text-slate-950 font-black py-3.5 overflow-hidden border-y border-slate-900/10 shadow-inner select-none">
+      <div className="flex w-max animate-marquee space-x-10 text-xs sm:text-sm tracking-wide uppercase">
+        {marqueeList.map((item, idx) => (
+          <div key={idx} className="flex items-center gap-2.5 shrink-0">
+            <span className="text-slate-900">{item.icon}</span>
+            <span className="font-black text-slate-900">{item.text}</span>
+          </div>
+        ))}
       </div>
     </div>
   );
