@@ -103,18 +103,34 @@ export const ProductGallery = ({ images = [], productName = "Product" }) => {
             <button
               onClick={handlePrev}
               aria-label="Previous image"
-              className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white/90 hover:bg-white text-slate-800 shadow-md flex items-center justify-center transition z-10"
+              className="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-md bg-white/80 hover:bg-white text-slate-800 border border-slate-300 shadow-sm flex items-center justify-center transition z-10 cursor-pointer"
             >
-              <ChevronLeft size={18} />
+              <ChevronLeft size={16} />
             </button>
             <button
               onClick={handleNext}
               aria-label="Next image"
-              className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-white/90 hover:bg-white text-slate-800 shadow-md flex items-center justify-center transition z-10"
+              className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 rounded-md bg-white/80 hover:bg-white text-slate-800 border border-slate-300 shadow-sm flex items-center justify-center transition z-10 cursor-pointer"
             >
-              <ChevronRight size={18} />
+              <ChevronRight size={16} />
             </button>
           </>
+        )}
+
+        {/* Bottom Pagination Dots */}
+        {galleryImages.length > 1 && (
+          <div className="absolute bottom-4 inset-x-0 flex items-center justify-center gap-1.5 z-10 pointer-events-none">
+            {galleryImages.map((_, idx) => (
+              <span
+                key={idx}
+                className={`transition-all rounded-full ${
+                  activeIndex === idx
+                    ? 'w-2.5 h-2.5 bg-slate-900 shadow-xs'
+                    : 'w-1.5 h-1.5 bg-slate-400/80'
+                }`}
+              />
+            ))}
+          </div>
         )}
 
         {/* Counter Badge */}
