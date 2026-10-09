@@ -111,11 +111,12 @@ export const CombosCarouselSection = () => {
         if (res?.success && Array.isArray(res.data) && res.data.length > 0) {
           const dynamicCombos = res.data.filter(
             (p) =>
-              p.isCombo ||
-              p.category?.toLowerCase() === 'combos' ||
-              p.badge === 'BESTSELLER' ||
-              p.tags?.includes('combo') ||
-              p.tags?.includes('featured')
+              p &&
+              (p.isCombo ||
+                p.category?.toLowerCase() === 'combos' ||
+                p.badge === 'BESTSELLER' ||
+                p.tags?.includes('combo') ||
+                p.tags?.includes('featured'))
           );
 
           if (dynamicCombos.length > 0) {
@@ -123,14 +124,14 @@ export const CombosCarouselSection = () => {
               id: p.id,
               name: p.name,
               slug: p.slug,
-              subtitle: p.shortDescription || p.category,
+              subtitle: p.shortDescription || p.category || '',
               image: p.thumbnail || p.images?.[0] || '/images/concern-shower-glass.jpg',
               accentCorner: idx % 2 === 0 ? 'top-right' : 'bottom-left',
               accentColor: idx % 2 === 0 ? '#52D1DC' : '#D3F49A',
-              rating: p.rating || 5,
+              rating: Math.round(Number(p.rating) || 5),
               reviews: p.reviewCount || 150,
-              price: p.price,
-              originalPrice: p.originalPrice || Math.round(p.price * 1.4),
+              price: Number(p.price) || 999,
+              originalPrice: p.originalPrice ? Number(p.originalPrice) : Math.round((Number(p.price) || 999) * 1.4),
               isCombo: true
             }));
             setItems(formatted);
@@ -216,108 +217,117 @@ export const CombosCarouselSection = () => {
             WebkitOverflowScrolling: 'touch'
           }}
         >
-          {items.map((item) => (
-            <div
-              key={item.id}
-              className="w-[285px] sm:w-[320px] md:w-[340px] shrink-0 bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden group"
-            >
-              {/* Product Image Area Wrapped in Clickable Link */}
-              <Link
-                to={`/product/${item.slug}`}
-                className="relative h-60 sm:h-64 w-full bg-[#f6f8fa] overflow-hidden flex items-center justify-center cursor-pointer block"
+          {items.map((item) => {
+            const starCount = Math.max(1, Math.min(5, Math.round(Number(item.rating) || 5)));
+
+            return (
+              <div
+                key={item.id}
+                className="w-[285px] sm:w-[320px] md:w-[340px] shrink-0 bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden group"
               >
-                {/* Organic decorative wave curve */}
-                {item.accentCorner === 'top-right' && (
-                  <div
-                    className="absolute -top-6 -right-6 w-24 h-24 rounded-full opacity-80 pointer-events-none"
-                    style={{ backgroundColor: item.accentColor }}
-                  />
-                )}
-                {item.accentCorner === 'bottom-left' && (
-                  <div
-                    className="absolute -bottom-6 -left-6 w-28 h-28 rounded-full opacity-80 pointer-events-none"
-                    style={{ backgroundColor: item.accentColor }}
-                  />
-                )}
-
-                {/* Product Image */}
-                <img
-                  src={item.image}
-                  alt={item.name}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
-                  loading="lazy"
-                />
-
-                {/* Top Banner overlay if present */}
-                {item.topBanner && (
-                  <div className="absolute top-3 left-3 right-3 text-center z-10">
-                    <span className="inline-block px-3 py-1 rounded-full text-xs font-black text-slate-900 bg-white/90 backdrop-blur-sm shadow-xs">
-                      {item.topBanner}
-                    </span>
-                  </div>
-                )}
-
-                {/* Bottom Overlay text if present */}
-                {item.bottomOverlay && (
-                  <div className="absolute bottom-3 right-3 z-10 text-right">
-                    <span className="inline-block px-3 py-1 rounded-lg text-xs font-black text-slate-900 bg-white/90 backdrop-blur-sm shadow-xs leading-tight">
-                      {item.bottomOverlay}
-                    </span>
-                  </div>
-                )}
-              </Link>
-
-              {/* Bottom Card Details */}
-              <div className="p-5 sm:p-6 flex flex-col justify-between flex-1 bg-white">
-                <div>
-                  {/* Title */}
-                  <Link
-                    to={`/product/${item.slug}`}
-                    className="block font-bold text-slate-900 text-base sm:text-lg leading-snug hover:text-[#087F8C] transition-colors line-clamp-2 min-h-[44px]"
-                  >
-                    {item.name}
-                  </Link>
-
-                  {/* Subtitle / Coverage */}
-                  <p className="text-xs sm:text-[13px] text-slate-500 line-clamp-2 mt-2 leading-relaxed min-h-[36px]">
-                    {item.subtitle}
-                  </p>
-
-                  {/* Star Rating */}
-                  <div className="flex items-center gap-1.5 mt-3">
-                    <div className="flex text-amber-400">
-                      {[...Array(item.rating)].map((_, i) => (
-                        <Star key={i} size={15} fill="currentColor" />
-                      ))}
-                    </div>
-                    <span className="text-xs font-bold text-slate-800">
-                      {item.reviews} reviews
-                    </span>
-                  </div>
-
-                  {/* Price */}
-                  <div className="flex items-baseline gap-2 mt-2.5">
-                    <span className="text-lg sm:text-xl font-extrabold text-slate-900">
-                      {formatPrice(item.price)}
-                    </span>
-                    {item.originalPrice && (
-                      <span className="text-xs sm:text-sm text-slate-400 line-through">
-                        {formatPrice(item.originalPrice)}
-                      </span>
-                    )}
-                  </div>
-                </div>
-
-                {/* Add to Cart Button (Aqua Cyan #52D1DC) */}
-                <button
-                  onClick={() => handleAddToCart(item)}
-                  className="mt-4 w-full py-3 sm:py-3.5 rounded-xl sm:rounded-2xl bg-[#52D1DC] hover:bg-[#3ec4d0] active:scale-[0.98] text-slate-950 font-bold text-sm tracking-wide text-center transition-all duration-200 shadow-xs cursor-pointer block"
+                {/* Product Image Area Wrapped in Clickable Link */}
+                <Link
+                  to={`/product/${item.slug}`}
+                  className="relative h-60 sm:h-64 w-full bg-[#f6f8fa] overflow-hidden flex items-center justify-center cursor-pointer block"
                 >
-                  Add to cart
-                </button>
+                  {/* Organic decorative wave curve */}
+                  {item.accentCorner === 'top-right' && (
+                    <div
+                      className="absolute -top-6 -right-6 w-24 h-24 rounded-full opacity-80 pointer-events-none"
+                      style={{ backgroundColor: item.accentColor }}
+                    />
+                  )}
+                  {item.accentCorner === 'bottom-left' && (
+                    <div
+                      className="absolute -bottom-6 -left-6 w-28 h-28 rounded-full opacity-80 pointer-events-none"
+                      style={{ backgroundColor: item.accentColor }}
+                    />
+                  )}
+
+                  {/* Product Image */}
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+                    loading="lazy"
+                  />
+
+                  {/* Top Banner overlay if present */}
+                  {item.topBanner && (
+                    <div className="absolute top-3 left-3 right-3 text-center z-10">
+                      <span className="inline-block px-3 py-1 rounded-full text-xs font-black text-slate-900 bg-white/90 backdrop-blur-sm shadow-xs">
+                        {item.topBanner}
+                      </span>
+                    </div>
+                  )}
+
+                  {/* Bottom Overlay text if present */}
+                  {item.bottomOverlay && (
+                    <div className="absolute bottom-3 right-3 z-10 text-right">
+                      <span className="inline-block px-3 py-1 rounded-lg text-xs font-black text-slate-900 bg-white/90 backdrop-blur-sm shadow-xs leading-tight">
+                        {item.bottomOverlay}
+                      </span>
+                    </div>
+                  )}
+                </Link>
+
+                {/* Bottom Card Details */}
+                <div className="p-5 sm:p-6 flex flex-col justify-between flex-1 bg-white">
+                  <div>
+                    {/* Title */}
+                    <Link
+                      to={`/product/${item.slug}`}
+                      className="block font-bold text-slate-900 text-base sm:text-lg leading-snug hover:text-[#087F8C] transition-colors line-clamp-2 min-h-[44px]"
+                    >
+                      {item.name}
+                    </Link>
+
+                    {/* Subtitle / Coverage */}
+                    <p className="text-xs sm:text-[13px] text-slate-500 line-clamp-2 mt-2 leading-relaxed min-h-[36px]">
+                      {item.subtitle}
+                    </p>
+
+                    {/* Star Rating (Safe 5-star loop) */}
+                    <div className="flex items-center gap-1.5 mt-3">
+                      <div className="flex text-amber-400">
+                        {[1, 2, 3, 4, 5].map((s) => (
+                          <Star
+                            key={s}
+                            size={15}
+                            fill={s <= starCount ? 'currentColor' : 'none'}
+                            className={s <= starCount ? 'text-amber-400' : 'text-slate-300'}
+                          />
+                        ))}
+                      </div>
+                      <span className="text-xs font-bold text-slate-800">
+                        {item.reviews} reviews
+                      </span>
+                    </div>
+
+                    {/* Price */}
+                    <div className="flex items-baseline gap-2 mt-2.5">
+                      <span className="text-lg sm:text-xl font-extrabold text-slate-900">
+                        {formatPrice(item.price)}
+                      </span>
+                      {item.originalPrice && (
+                        <span className="text-xs sm:text-sm text-slate-400 line-through">
+                          {formatPrice(item.originalPrice)}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Add to Cart Button (Aqua Cyan #52D1DC) */}
+                  <button
+                    onClick={() => handleAddToCart(item)}
+                    className="mt-4 w-full py-3 sm:py-3.5 rounded-xl sm:rounded-2xl bg-[#52D1DC] hover:bg-[#3ec4d0] active:scale-[0.98] text-slate-950 font-bold text-sm tracking-wide text-center transition-all duration-200 shadow-xs cursor-pointer block"
+                  >
+                    Add to cart
+                  </button>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
       </div>

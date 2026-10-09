@@ -1,4 +1,4 @@
-import React, { Suspense, lazy } from 'react';
+import React, { Suspense, lazy, Component } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ToastProvider } from './context/ToastContext';
 import { CartProvider } from './context/CartContext';
@@ -38,6 +38,47 @@ const TermsPage = lazy(() => import('./pages/policies/TermsPage').then(m => ({ d
 const ShippingPolicyPage = lazy(() => import('./pages/policies/ShippingPolicyPage').then(m => ({ default: m.ShippingPolicyPage })));
 const RefundPolicyPage = lazy(() => import('./pages/policies/RefundPolicyPage').then(m => ({ default: m.RefundPolicyPage })));
 
+// Global React Error Boundary Class
+class ErrorBoundary extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.error('GharShine App Crash Prevented:', error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="min-h-screen flex flex-col items-center justify-center p-6 text-center bg-white">
+          <div className="max-w-md w-full p-8 rounded-3xl bg-slate-50 border border-slate-200 shadow-sm space-y-4">
+            <h2 className="text-2xl font-black text-slate-900">GharShine</h2>
+            <p className="text-sm text-slate-600">
+              We are refreshing the page to load the latest protection kits.
+            </p>
+            <button
+              onClick={() => {
+                this.setState({ hasError: false });
+                window.location.reload();
+              }}
+              className="px-6 py-3 bg-[#087F8C] text-white font-bold rounded-xl shadow-md hover:bg-[#066670] transition"
+            >
+              Refresh Store
+            </button>
+          </div>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
 // Loading spinner fallback
 const PageLoader = () => (
   <div className="min-h-[50vh] flex flex-col items-center justify-center space-y-3">
@@ -48,68 +89,70 @@ const PageLoader = () => (
 
 export function App() {
   return (
-    <BrowserRouter>
-      <ToastProvider>
-        <CartProvider>
-          <WishlistProvider>
-            <QuickViewProvider>
-              <SearchProvider>
-                <div className="flex flex-col min-h-screen bg-white text-[#172026] font-sans antialiased selection:bg-[#087F8C]/15 selection:text-[#087F8C]">
-                  {/* Top Announcement Bar */}
-                  <AnnouncementBar />
+    <ErrorBoundary>
+      <BrowserRouter>
+        <ToastProvider>
+          <CartProvider>
+            <WishlistProvider>
+              <QuickViewProvider>
+                <SearchProvider>
+                  <div className="flex flex-col min-h-screen bg-white text-[#172026] font-sans antialiased selection:bg-[#087F8C]/15 selection:text-[#087F8C]">
+                    {/* Top Announcement Bar */}
+                    <AnnouncementBar />
 
-                  {/* Sticky Header */}
-                  <Header />
+                    {/* Sticky Header */}
+                    <Header />
 
-                  {/* Main Page Content with Suspense Lazy Loading */}
-                  <main className="flex-1">
-                    <Suspense fallback={<PageLoader />}>
-                      <Routes>
-                        <Route path="/" element={<HomePage />} />
-                        <Route path="/shop" element={<ShopPage />} />
-                        <Route path="/shop/:categorySlug" element={<CategoryPage />} />
-                        <Route path="/product/:slug" element={<ProductDetailPage />} />
-                        <Route path="/cart" element={<CartPage />} />
-                        <Route path="/wishlist" element={<WishlistPage />} />
-                        <Route path="/combo-builder" element={<ComboBuilderPage />} />
-                        <Route path="/how-to-use" element={<HowToUsePage />} />
-                        <Route path="/about" element={<AboutPage />} />
-                        <Route path="/contact" element={<ContactPage />} />
-                        <Route path="/track-order" element={<TrackOrderPage />} />
-                        <Route path="/faq" element={<FAQPage />} />
-                        <Route path="/login" element={<LoginPage />} />
-                        <Route path="/signup" element={<SignupPage />} />
-                        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+                    {/* Main Page Content with Suspense Lazy Loading */}
+                    <main className="flex-1">
+                      <Suspense fallback={<PageLoader />}>
+                        <Routes>
+                          <Route path="/" element={<HomePage />} />
+                          <Route path="/shop" element={<ShopPage />} />
+                          <Route path="/shop/:categorySlug" element={<CategoryPage />} />
+                          <Route path="/product/:slug" element={<ProductDetailPage />} />
+                          <Route path="/cart" element={<CartPage />} />
+                          <Route path="/wishlist" element={<WishlistPage />} />
+                          <Route path="/combo-builder" element={<ComboBuilderPage />} />
+                          <Route path="/how-to-use" element={<HowToUsePage />} />
+                          <Route path="/about" element={<AboutPage />} />
+                          <Route path="/contact" element={<ContactPage />} />
+                          <Route path="/track-order" element={<TrackOrderPage />} />
+                          <Route path="/faq" element={<FAQPage />} />
+                          <Route path="/login" element={<LoginPage />} />
+                          <Route path="/signup" element={<SignupPage />} />
+                          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
 
-                        {/* Policy Routes */}
-                        <Route path="/policies/privacy" element={<PrivacyPolicyPage />} />
-                        <Route path="/policies/terms" element={<TermsPage />} />
-                        <Route path="/policies/shipping" element={<ShippingPolicyPage />} />
-                        <Route path="/policies/refund" element={<RefundPolicyPage />} />
+                          {/* Policy Routes */}
+                          <Route path="/policies/privacy" element={<PrivacyPolicyPage />} />
+                          <Route path="/policies/terms" element={<TermsPage />} />
+                          <Route path="/policies/shipping" element={<ShippingPolicyPage />} />
+                          <Route path="/policies/refund" element={<RefundPolicyPage />} />
 
-                        {/* Fallback to Home */}
-                        <Route path="*" element={<HomePage />} />
-                      </Routes>
-                    </Suspense>
-                  </main>
+                          {/* Fallback to Home */}
+                          <Route path="*" element={<HomePage />} />
+                        </Routes>
+                      </Suspense>
+                    </main>
 
-                  {/* Footer */}
-                  <Footer />
+                    {/* Footer */}
+                    <Footer />
 
-                  {/* Global Overlays & Modals */}
-                  <FloatingWhatsApp />
-                  <CookieConsent />
-                  <SearchOverlay />
-                  <CartDrawer />
-                  <QuickViewModal />
-                  <ToastContainer />
-                </div>
-              </SearchProvider>
-            </QuickViewProvider>
-          </WishlistProvider>
-        </CartProvider>
-      </ToastProvider>
-    </BrowserRouter>
+                    {/* Global Overlays & Modals */}
+                    <FloatingWhatsApp />
+                    <CookieConsent />
+                    <SearchOverlay />
+                    <CartDrawer />
+                    <QuickViewModal />
+                    <ToastContainer />
+                  </div>
+                </SearchProvider>
+              </QuickViewProvider>
+            </WishlistProvider>
+          </CartProvider>
+        </ToastProvider>
+      </BrowserRouter>
+    </ErrorBoundary>
   );
 }
 
