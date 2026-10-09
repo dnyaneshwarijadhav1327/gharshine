@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { Link } from 'react-router-dom';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { products } from '../../data/products';
 
 export const BestsellersSection = () => {
   const { addToCart } = useCart();
+  const scrollRef = useRef(null);
 
   const roomKits = [
     {
@@ -15,7 +17,6 @@ export const BestsellersSection = () => {
       price: 1999,
       originalPrice: 3399,
       slug: 'bathroom-protector-kit',
-      // Bright cyan / turquoise pastel
       cardBg: 'bg-[#6fe2f5]',
       image: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=600&q=80',
       productId: 1
@@ -28,7 +29,6 @@ export const BestsellersSection = () => {
       price: 1999,
       originalPrice: 4299,
       slug: 'living-room-complete-protection-kit',
-      // Bright coral / peach pastel
       cardBg: 'bg-[#ffa380]',
       image: 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=600&q=80',
       productId: 8
@@ -41,7 +41,6 @@ export const BestsellersSection = () => {
       price: 1699,
       originalPrice: 3299,
       slug: 'biodegrease-kitchen-hob-chimney-cleaner',
-      // Bright lavender / purple pastel
       cardBg: 'bg-[#d5bcfc]',
       image: 'https://images.unsplash.com/photo-1556912172-45b7abe8b7e1?auto=format&fit=crop&w=600&q=80',
       productId: 6
@@ -54,7 +53,6 @@ export const BestsellersSection = () => {
       price: 2879,
       originalPrice: 4499,
       slug: 'groutbright-tile-joint-whitener-shield',
-      // Bright lime / light green pastel
       cardBg: 'bg-[#cbf685]',
       image: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=600&q=80',
       productId: 11
@@ -67,12 +65,23 @@ export const BestsellersSection = () => {
       price: 1999,
       originalPrice: 2999,
       slug: 'lustrewood-carnauba-ceramic-polish-shield',
-      // Bright warm yellow pastel
       cardBg: 'bg-[#fed768]',
       image: 'https://images.unsplash.com/photo-1538688525198-9b88f6f53126?auto=format&fit=crop&w=600&q=80',
       productId: 7
     }
   ];
+
+  const scrollLeft = () => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollBy({ left: -300, behavior: 'smooth' });
+    }
+  };
+
+  const scrollRight = () => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollBy({ left: 300, behavior: 'smooth' });
+    }
+  };
 
   const handleAddToCart = (item, e) => {
     e.preventDefault();
@@ -101,22 +110,50 @@ export const BestsellersSection = () => {
   };
 
   return (
-    <section className="py-14 sm:py-20 bg-white">
+    <section className="py-10 sm:py-16 md:py-20 bg-white">
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Section Heading */}
-        <div className="text-center mb-10 sm:mb-12">
-          <h2 className="text-2xl sm:text-4xl font-extrabold text-slate-900 tracking-tight font-sans">
-            Protect Your Home, Room By Room
-          </h2>
+        {/* Section Heading & Mobile Scroll Controls */}
+        <div className="flex items-center justify-between mb-6 sm:mb-10">
+          <div className="w-full text-center lg:text-center">
+            <h2 className="text-xl sm:text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight font-sans">
+              Protect Your Home, Room By Room
+            </h2>
+          </div>
+
+          {/* Optional arrows on small screens */}
+          <div className="hidden sm:flex lg:hidden items-center gap-2">
+            <button
+              onClick={scrollLeft}
+              className="w-9 h-9 rounded-full border border-slate-200 bg-white text-slate-700 flex items-center justify-center shadow-xs"
+              aria-label="Scroll left"
+            >
+              <ChevronLeft size={18} />
+            </button>
+            <button
+              onClick={scrollRight}
+              className="w-9 h-9 rounded-full border border-slate-200 bg-white text-slate-700 flex items-center justify-center shadow-xs"
+              aria-label="Scroll right"
+            >
+              <ChevronRight size={18} />
+            </button>
+          </div>
         </div>
 
-        {/* 5-Card Layout */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 lg:gap-5">
+        {/* Responsive Layout: Smooth swipeable row on mobile/tablet, 5-col grid on desktop */}
+        <div
+          ref={scrollRef}
+          className="flex lg:grid gap-4 sm:gap-5 overflow-x-auto lg:overflow-visible no-scrollbar pb-4 pt-1 -mx-4 px-4 sm:mx-0 sm:px-0 lg:grid-cols-5 snap-x snap-mandatory"
+          style={{
+            scrollbarWidth: 'none',
+            msOverflowStyle: 'none',
+            WebkitOverflowScrolling: 'touch'
+          }}
+        >
           {roomKits.map((item) => (
             <div
               key={item.id}
-              className={`rounded-3xl overflow-hidden flex flex-col justify-between shadow-sm hover:shadow-md transition-all duration-300 ${item.cardBg}`}
+              className={`w-[260px] sm:w-[280px] lg:w-auto shrink-0 snap-start rounded-3xl overflow-hidden flex flex-col justify-between shadow-sm hover:shadow-md transition-all duration-300 ${item.cardBg}`}
             >
               {/* Product Image Section */}
               <Link 
@@ -163,7 +200,7 @@ export const BestsellersSection = () => {
 
                   <button
                     onClick={(e) => handleAddToCart(item, e)}
-                    className="w-full mt-4 py-2.5 sm:py-3 bg-white hover:bg-slate-50 text-slate-900 font-bold text-sm sm:text-base rounded-xl transition-all duration-150 shadow-xs border border-white/60 active:scale-[0.98] text-center"
+                    className="w-full mt-3.5 sm:mt-4 py-2.5 sm:py-3 bg-white hover:bg-slate-50 text-slate-900 font-bold text-sm sm:text-base rounded-xl transition-all duration-150 shadow-xs border border-white/60 active:scale-[0.98] text-center cursor-pointer"
                   >
                     Add to Cart
                   </button>

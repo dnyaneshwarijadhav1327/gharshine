@@ -27,24 +27,26 @@ export const TieredSavingsBar = ({ currentProductPrice = 1599 }) => {
   const progressPercent = Math.min(100, Math.round((totalCartValue / 4000) * 100));
 
   return (
-    <div className="p-4 sm:p-5 rounded-2xl bg-white border border-slate-200/90 shadow-2xs space-y-4">
+    <div className="p-3.5 sm:p-5 rounded-2xl bg-white border border-slate-200/90 shadow-2xs space-y-3 sm:space-y-4">
       
       {/* Top Unlock Info Text */}
-      <div className="flex items-center justify-between gap-2 flex-wrap">
-        {nextTier ? (
-          <p className="text-xs sm:text-sm text-slate-800 font-medium">
-            Add <strong className="text-[#087F8C] font-black">{formatPrice(remainingForNext)}</strong> more to unlock{' '}
-            <strong className="text-emerald-700 font-black">₹{nextTier.discount} off</strong>
-          </p>
-        ) : (
-          <p className="text-xs sm:text-sm text-emerald-700 font-black">
-            🎉 You have unlocked the maximum ₹800 savings!
-          </p>
-        )}
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5">
+        <div className="flex-1">
+          {nextTier ? (
+            <p className="text-xs sm:text-sm text-slate-800 font-medium">
+              Add <strong className="text-[#087F8C] font-black">{formatPrice(remainingForNext)}</strong> more to unlock{' '}
+              <strong className="text-emerald-700 font-black">₹{nextTier.discount} off</strong>
+            </p>
+          ) : (
+            <p className="text-xs sm:text-sm text-emerald-700 font-black">
+              🎉 You have unlocked the maximum ₹800 savings!
+            </p>
+          )}
+        </div>
 
         {/* Right side You Save + Order Summary button */}
-        <div className="flex items-center gap-3 ml-auto">
-          <div className="text-right">
+        <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end pt-1 sm:pt-0 border-t sm:border-t-0 border-slate-100">
+          <div className="text-left sm:text-right">
             <span className="text-[10px] uppercase font-bold text-slate-400 block tracking-wider">
               YOU SAVE
             </span>
@@ -55,7 +57,7 @@ export const TieredSavingsBar = ({ currentProductPrice = 1599 }) => {
 
           <button
             onClick={openCart}
-            className="px-4 py-2 bg-[#FBD778] hover:bg-[#f7cc59] active:scale-95 text-slate-950 font-black text-xs rounded-xl shadow-2xs transition cursor-pointer"
+            className="px-3.5 py-1.5 sm:px-4 sm:py-2 bg-[#FBD778] hover:bg-[#f7cc59] active:scale-95 text-slate-950 font-black text-xs rounded-xl shadow-2xs transition cursor-pointer"
           >
             Order summary ({totalItemCount})
           </button>
@@ -63,7 +65,7 @@ export const TieredSavingsBar = ({ currentProductPrice = 1599 }) => {
       </div>
 
       {/* Progress Track with Milestone Pins */}
-      <div className="relative pt-2 pb-5">
+      <div className="relative pt-2 pb-4 sm:pb-5">
         <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
           <div
             className="h-full bg-gradient-to-r from-[#087F8C] to-[#52D1DC] rounded-full transition-all duration-500 ease-out"
@@ -72,7 +74,7 @@ export const TieredSavingsBar = ({ currentProductPrice = 1599 }) => {
         </div>
 
         {/* Milestone Node Points */}
-        <div className="flex justify-between items-start text-center mt-2.5 px-2">
+        <div className="flex justify-between items-start text-center mt-2 px-1 sm:px-2">
           {tiers.map((t, idx) => {
             const isReached = totalCartValue >= t.target;
 
@@ -85,10 +87,10 @@ export const TieredSavingsBar = ({ currentProductPrice = 1599 }) => {
                       : 'bg-white border-slate-300'
                   }`}
                 />
-                <span className="text-[11px] font-bold text-slate-800">
+                <span className="text-[10px] sm:text-[11px] font-bold text-slate-800">
                   {t.label}
                 </span>
-                <span className="text-[10px] font-medium text-slate-500">
+                <span className="text-[9px] sm:text-[10px] font-medium text-slate-500">
                   {t.sublabel}
                 </span>
               </div>

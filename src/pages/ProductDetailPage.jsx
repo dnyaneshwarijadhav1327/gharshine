@@ -96,7 +96,7 @@ export const ProductDetailPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white py-6 sm:py-10">
+    <div className="min-h-screen bg-white py-6 sm:py-10 pb-24 sm:pb-10">
       <div className="max-w-[1360px] mx-auto px-4 sm:px-6">
         
         {/* Breadcrumb Navigation */}
