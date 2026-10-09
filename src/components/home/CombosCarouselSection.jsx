@@ -99,6 +99,43 @@ const comboItems = [
 export const CombosCarouselSection = () => {
   const { addToCart } = useCart();
   const scrollContainerRef = useRef(null);
+  const [items, setItems] = React.useState(comboItems);
+
+  React.useEffect(() => {
+    import('../../services/productService').then(({ productService }) => {
+      productService.getProducts().then((res) => {
+        if (res.success && res.data && res.data.length > 0) {
+          const dynamicCombos = res.data.filter(
+            (p) =>
+              p.isCombo ||
+              p.category?.toLowerCase() === 'combos' ||
+              p.badge === 'BESTSELLER' ||
+              p.tags?.includes('combo') ||
+              p.tags?.includes('featured')
+          );
+
+          if (dynamicCombos.length > 0) {
+            // Map formatted products to combo card layout
+            const formatted = dynamicCombos.map((p, idx) => ({
+              id: p.id,
+              name: p.name,
+              slug: p.slug,
+              subtitle: p.shortDescription || p.category,
+              image: p.thumbnail || p.images?.[0] || '/images/concern-shower-glass.jpg',
+              accentCorner: idx % 2 === 0 ? 'top-right' : 'bottom-left',
+              accentColor: idx % 2 === 0 ? '#52D1DC' : '#D3F49A',
+              rating: p.rating || 5,
+              reviews: p.reviewCount || 150,
+              price: p.price,
+              originalPrice: p.originalPrice || Math.round(p.price * 1.4),
+              isCombo: true
+            }));
+            setItems(formatted);
+          }
+        }
+      });
+    });
+  }, []);
 
   const scrollLeft = () => {
     if (scrollContainerRef.current) {
@@ -170,7 +207,7 @@ export const CombosCarouselSection = () => {
             WebkitOverflowScrolling: 'touch'
           }}
         >
-          {comboItems.map((item) => (
+          {items.map((item) => (
             <div
               key={item.id}
               className="w-[285px] sm:w-[320px] md:w-[340px] shrink-0 bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden group"

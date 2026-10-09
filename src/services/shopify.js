@@ -45,13 +45,19 @@ export function formatShopifyProduct(node) {
   
   const images = node.images?.edges?.map(e => e.node.url) || [];
   const thumbnail = images[0] || 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=800&q=80';
+  const tags = (node.tags || []).map(t => t.toLowerCase());
+  const collections = (node.collections?.edges || []).map(e => e.node.title.toLowerCase());
+
+  const isCombo = tags.includes('combo') || tags.includes('kit') || collections.some(c => c.includes('combo') || c.includes('kit')) || node.productType?.toLowerCase().includes('combo');
+  const isFeatured = tags.includes('featured') || tags.includes('bestseller') || tags.includes('frontpage') || collections.some(c => c.includes('front') || c.includes('featured') || c.includes('best'));
+  const isBestseller = tags.includes('bestseller') || collections.some(c => c.includes('bestseller'));
 
   return {
     id: node.id,
     name: node.title,
     slug: node.handle,
-    category: 'Surface Care',
-    productType: 'Solution',
+    category: isCombo ? 'Combos' : (node.productType || 'Surface Care'),
+    productType: node.productType || (isCombo ? 'Protection Kit' : 'Solution'),
     surface: ['Multi-Surface', 'Glass', 'Stone', 'Fabric'],
     concerns: ['Stains & Protection'],
     price: Math.round(price),
@@ -59,7 +65,10 @@ export function formatShopifyProduct(node) {
     discount: discount,
     rating: 4.9,
     reviewCount: 142,
-    badge: 'SHOPIFY LIVE',
+    badge: isBestseller ? 'BESTSELLER' : (isFeatured ? 'FEATURED' : (isCombo ? 'COMBO SET' : 'SHOPIFY LIVE')),
+    isFeatured: isFeatured,
+    isCombo: isCombo,
+    tags: tags,
     stockStatus: node.availableForSale ? 'in_stock' : 'out_of_stock',
     thumbnail: thumbnail,
     images: images.length > 0 ? images : [thumbnail],
@@ -89,7 +98,17 @@ export const SHOPIFY_QUERIES = {
             title
             handle
             description
+            productType
+            tags
             availableForSale
+            collections(first: 5) {
+              edges {
+                node {
+                  title
+                  handle
+                }
+              }
+            }
             priceRange {
               minVariantPrice {
                 amount
