@@ -113,12 +113,20 @@ export const productService = {
 
     const cleanSlug = slug.toLowerCase().trim();
 
-    // Map combo aliases directly
+    // Map combo & room kit aliases directly
     const slugAliases = {
       'glass-ceramics-cleaning-protection-combo': 'bathroom-protector-kit',
       'sofa-fabric-stain-repellent-combo': 'hydrobarrier-sofa-fabric-stain-repellent',
       'ultimate-whole-home-protection-combo': 'living-room-complete-protection-kit',
-      'bathroom-protector-kit': 'bathroom-protector-kit'
+      'bathroom-protector-kit': 'bathroom-protector-kit',
+      'bathroom-kit': 'bathroom-protector-kit',
+      'living-room-kit': 'living-room-complete-protection-kit',
+      'kitchen-protector-kit': 'biodegrease-kitchen-hob-chimney-cleaner',
+      'kitchen-kit': 'biodegrease-kitchen-hob-chimney-cleaner',
+      'balcony-protection-kit': 'groutbright-tile-joint-whitener-shield',
+      'balcony-kit': 'groutbright-tile-joint-whitener-shield',
+      'dining-table-combo': 'lustrewood-carnauba-ceramic-polish-shield',
+      'dining-kit': 'lustrewood-carnauba-ceramic-polish-shield'
     };
 
     const targetSlug = slugAliases[cleanSlug] || cleanSlug;
