@@ -6,9 +6,9 @@ import { formatPrice } from '../../utils/formatters';
 
 const comboItems = [
   {
-    id: 101,
+    id: 1,
     name: 'Glass & Ceramics Cleaning and Protection Combo',
-    slug: 'glass-ceramics-cleaning-protection-combo',
+    slug: 'bathroom-protector-kit',
     subtitle: 'Covers upto 3 bathrooms | Spotless glass for upto 3 months',
     image: '/images/concern-shower-glass.jpg',
     bottomOverlay: 'Stain Free Glass For Months',
@@ -21,9 +21,9 @@ const comboItems = [
     isCombo: true
   },
   {
-    id: 102,
+    id: 2,
     name: 'Sofa & Fabric Stain Repellent Combo',
-    slug: 'sofa-fabric-stain-repellent-combo',
+    slug: 'hydrobarrier-sofa-fabric-stain-repellent',
     subtitle: 'Covers 3 seater Sofa | Stain-free sofa for upto 6 months',
     image: '/images/concern-sofa-spills.jpg',
     topBanner: '3 Sofa Seater Protector Combo',
@@ -36,9 +36,9 @@ const comboItems = [
     isCombo: true
   },
   {
-    id: 103,
+    id: 3,
     name: 'Bathroom Protector Kit',
-    slug: 'bathroom-protector-kit',
+    slug: 'complete-bathroom-care-shield-kit',
     subtitle: 'Covers upto 3 bathrooms Protects glass, ceramics & marbles for upto 3 months',
     image: '/images/concern-kitchen-tiles.jpg',
     accentCorner: 'top-right',
@@ -50,9 +50,9 @@ const comboItems = [
     isCombo: true
   },
   {
-    id: 104,
+    id: 8,
     name: 'Ultimate Whole Home Protection Combo',
-    slug: 'ultimate-whole-home-protection-combo',
+    slug: 'living-room-complete-protection-kit',
     subtitle: 'Pack of 5 Complete protection for your entire house',
     image: '/images/concern-marble-counter.jpg',
     topBanner: 'Full Home Armor Pack',
@@ -65,7 +65,7 @@ const comboItems = [
     isCombo: true
   },
   {
-    id: 105,
+    id: 4,
     name: 'Marble, Granite & Kitchen Protection Kit',
     slug: 'stonearmor-marble-granite-sealant',
     subtitle: 'Covers kitchen countertops, dining & pooja room marble for 12 months',
@@ -80,7 +80,7 @@ const comboItems = [
     isCombo: true
   },
   {
-    id: 106,
+    id: 7,
     name: 'Wood & Furniture Polish + Moisture Shield Combo',
     slug: 'lustrewood-carnauba-ceramic-polish-shield',
     subtitle: 'Covers dining table, wooden consoles & wardrobes for 6 months',
@@ -146,14 +146,14 @@ export const CombosCarouselSection = () => {
             <button
               onClick={scrollLeft}
               aria-label="Scroll Left"
-              className="w-10 h-10 rounded-full border border-slate-200 bg-white hover:bg-slate-50 active:scale-95 text-slate-700 flex items-center justify-center transition shadow-xs"
+              className="w-10 h-10 rounded-full border border-slate-200 bg-white hover:bg-slate-50 active:scale-95 text-slate-700 flex items-center justify-center transition shadow-xs cursor-pointer"
             >
               <ChevronLeft size={20} />
             </button>
             <button
               onClick={scrollRight}
               aria-label="Scroll Right"
-              className="w-10 h-10 rounded-full border border-slate-200 bg-white hover:bg-slate-50 active:scale-95 text-slate-700 flex items-center justify-center transition shadow-xs"
+              className="w-10 h-10 rounded-full border border-slate-200 bg-white hover:bg-slate-50 active:scale-95 text-slate-700 flex items-center justify-center transition shadow-xs cursor-pointer"
             >
               <ChevronRight size={20} />
             </button>
@@ -173,10 +173,13 @@ export const CombosCarouselSection = () => {
           {comboItems.map((item) => (
             <div
               key={item.id}
-              className="w-[285px] sm:w-[320px] md:w-[340px] shrink-0 bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col overflow-hidden"
+              className="w-[285px] sm:w-[320px] md:w-[340px] shrink-0 bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden group"
             >
-              {/* Product Image Area */}
-              <div className="relative h-60 sm:h-64 w-full bg-[#f6f8fa] overflow-hidden flex items-center justify-center group">
+              {/* Product Image Area Wrapped in Clickable Link */}
+              <Link
+                to={`/product/${item.slug}`}
+                className="relative h-60 sm:h-64 w-full bg-[#f6f8fa] overflow-hidden flex items-center justify-center cursor-pointer block"
+              >
                 {/* Organic decorative wave curve */}
                 {item.accentCorner === 'top-right' && (
                   <div
@@ -216,7 +219,7 @@ export const CombosCarouselSection = () => {
                     </span>
                   </div>
                 )}
-              </div>
+              </Link>
 
               {/* Bottom Card Details */}
               <div className="p-5 sm:p-6 flex flex-col justify-between flex-1 bg-white">
