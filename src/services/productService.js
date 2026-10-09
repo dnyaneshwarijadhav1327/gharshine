@@ -19,9 +19,12 @@ export const productService = {
       });
 
       if (shopifyData?.products?.edges?.length > 0) {
-        const liveShopifyProducts = shopifyData.products.edges.map(e => formatShopifyProduct(e.node));
-        // Merge live products with catalog
-        result = [...liveShopifyProducts, ...products];
+        const liveShopifyProducts = shopifyData.products.edges
+          .map((e) => formatShopifyProduct(e.node))
+          .filter(Boolean);
+        if (liveShopifyProducts.length > 0) {
+          result = [...liveShopifyProducts, ...products];
+        }
       }
     } catch (e) {
       console.log('Using local catalog products:', e);

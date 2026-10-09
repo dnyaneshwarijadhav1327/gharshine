@@ -1,10 +1,11 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Star, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { formatPrice } from '../../utils/formatters';
+import { productService } from '../../services/productService';
 
-const comboItems = [
+const fallbackCombos = [
   {
     id: 1,
     name: 'Glass & Ceramics Cleaning and Protection Combo',
@@ -99,12 +100,15 @@ const comboItems = [
 export const CombosCarouselSection = () => {
   const { addToCart } = useCart();
   const scrollContainerRef = useRef(null);
-  const [items, setItems] = React.useState(comboItems);
+  const [items, setItems] = useState(fallbackCombos);
 
-  React.useEffect(() => {
-    import('../../services/productService').then(({ productService }) => {
-      productService.getProducts().then((res) => {
-        if (res.success && res.data && res.data.length > 0) {
+  useEffect(() => {
+    let isMounted = true;
+    productService
+      .getProducts()
+      .then((res) => {
+        if (!isMounted) return;
+        if (res?.success && Array.isArray(res.data) && res.data.length > 0) {
           const dynamicCombos = res.data.filter(
             (p) =>
               p.isCombo ||
@@ -115,7 +119,6 @@ export const CombosCarouselSection = () => {
           );
 
           if (dynamicCombos.length > 0) {
-            // Map formatted products to combo card layout
             const formatted = dynamicCombos.map((p, idx) => ({
               id: p.id,
               name: p.name,
@@ -133,8 +136,14 @@ export const CombosCarouselSection = () => {
             setItems(formatted);
           }
         }
+      })
+      .catch((err) => {
+        console.warn('Could not load dynamic combos, using fallback catalog:', err);
       });
-    });
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   const scrollLeft = () => {
