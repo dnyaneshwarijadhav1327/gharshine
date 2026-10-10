@@ -9,25 +9,22 @@ export const HeroSection = () => {
 
   const slides = [
     {
-      id: 'gharshine-diwali-festive',
-      desktopImage: '/images/gharshine-banner-diwali.png',
-      mobileImage: '/images/hero-diwali-coating-mobile.jpg',
-      alt: 'GharShine - Ye Diwali GharShine Wali - Aabse har Diwali cleaning me, GharShine ka coating!',
+      id: 'gharshine-stain-protection',
+      image: '/images/hero-stain-protection.png',
+      alt: 'GharShine - Stain Protection That Lasts - Seal today. Stay spotless tomorrow.',
       link: '/shop'
     },
     {
-      id: 'gharshine-stop-cleaning-protect',
-      desktopImage: '/images/gharshine-banner-protect.png',
-      mobileImage: '/images/hero-stop-cleaning-mobile.jpg',
-      alt: 'GharShine - Stop Cleaning Your Home. Start Protecting It. Engineered nano-coatings for spotless home surfaces',
-      link: '/shop'
-    },
-    {
-      id: 'gharshine-choose-6-bundle',
-      desktopImage: '/images/gharshine-banner-bundle.png',
-      mobileImage: '/images/hero-bundle-1999-mobile.jpg',
-      alt: 'GharShine - Choose any 6 products @just ₹1,999/- FLAT Build your own bundle',
+      id: 'gharshine-cleaning-bundle',
+      image: '/images/hero-cleaning-bundle.png',
+      alt: 'GharShine - Choose Your Perfect Cleaning Bundle - Complete protection for every surface.',
       link: '/combo-builder'
+    },
+    {
+      id: 'gharshine-diwali-festive',
+      image: '/images/hero-diwali-festive.png',
+      alt: 'GharShine - This Diwali, Let Your Home Shine! Keep your home fresh, clean and protected.',
+      link: '/shop'
     }
   ];
 
@@ -91,7 +88,7 @@ export const HeroSection = () => {
         <ChevronRight size={22} />
       </button>
 
-      {/* Main Full-Bleed Edge-to-Edge Slides Wrapper */}
+      {/* Main Full-Bleed Edge-to-Edge Slides Wrapper with Tall Mobile View */}
       <div className="relative w-full overflow-hidden">
         <div
           className="flex transition-transform duration-700 ease-out"
@@ -100,17 +97,12 @@ export const HeroSection = () => {
           {slides.map((slide, idx) => (
             <div key={slide.id} className="w-full shrink-0 relative">
               <Link to={slide.link} className="block w-full cursor-pointer">
-                <picture className="w-full block">
-                  {/* High-res dedicated mobile 1:1 portrait banner */}
-                  <source media="(max-width: 640px)" srcSet={slide.mobileImage} />
-                  {/* Ultra high-res desktop 1920x680 crystal clear banner */}
-                  <img
-                    src={slide.desktopImage}
-                    alt={slide.alt}
-                    className="w-full aspect-square sm:aspect-auto sm:h-auto object-cover max-h-[640px] block"
-                    loading={idx === 0 ? 'eager' : 'lazy'}
-                  />
-                </picture>
+                <img
+                  src={slide.image}
+                  alt={slide.alt}
+                  className="w-full h-[360px] sm:h-[440px] md:h-auto object-cover object-center max-h-[640px] block"
+                  loading={idx === 0 ? 'eager' : 'lazy'}
+                />
               </Link>
             </div>
           ))}
