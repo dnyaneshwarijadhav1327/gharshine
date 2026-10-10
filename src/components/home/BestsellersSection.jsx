@@ -73,54 +73,89 @@ export const BestsellersSection = () => {
 
   const [kits, setKits] = React.useState(roomKits);
 
+  const pastelColors = ['bg-[#6fe2f5]', 'bg-[#ffa380]', 'bg-[#d5bcfc]', 'bg-[#cbf685]', 'bg-[#fed768]'];
+
   React.useEffect(() => {
     import('../../services/productService').then(({ productService }) => {
       productService.getProducts().then((res) => {
         if (res?.success && Array.isArray(res.data) && res.data.length > 0) {
-          setKits((prevKits) =>
-            prevKits.map((kit) => {
-              // Try to find a matching product by slug, room keyword, tags or collection
-              const match = res.data.find((p) => {
-                if (!p) return false;
-                if (p.slug === kit.slug) return true;
-                const pName = (p.name || '').toLowerCase();
-                const pSlug = (p.slug || '').toLowerCase();
-                const pCols = (p.collectionTitles || []).join(' ');
-                const pTags = (p.tags || []).join(' ');
-                const pRooms = (p.rooms || []).join(' ').toLowerCase();
+          const usedProductSlugs = new Set();
 
-                if (kit.id === 'kitchen-kit') {
-                  return pName.includes('kitchen') || pSlug.includes('kitchen') || pCols.includes('kitchen') || pTags.includes('kitchen') || pRooms.includes('kitchen');
-                }
-                if (kit.id === 'bathroom-kit') {
-                  return pName.includes('bathroom') || pSlug.includes('bathroom') || pSlug.includes('glass-tile') || pName.includes('glass & ceramics') || pCols.includes('bathroom') || pTags.includes('bathroom') || pRooms.includes('bathroom');
-                }
-                if (kit.id === 'living-room-kit') {
-                  return pName.includes('living') || pName.includes('sofa') || pSlug.includes('sofa') || pCols.includes('living') || pTags.includes('living') || pRooms.includes('living');
-                }
-                if (kit.id === 'dining-kit') {
-                  return pName.includes('dining') || pName.includes('wood') || pCols.includes('dining') || pTags.includes('dining') || pRooms.includes('dining');
-                }
-                if (kit.id === 'balcony-kit') {
-                  return pName.includes('balcony') || pName.includes('grout') || pCols.includes('balcony') || pTags.includes('balcony') || pRooms.includes('balcony');
-                }
-                return false;
-              });
+          const updatedKits = roomKits.map((kit) => {
+            // Try to find a matching product by slug, room keyword, tags or collection
+            const match = res.data.find((p) => {
+              if (!p) return false;
+              if (p.slug === kit.slug) return true;
+              const pName = (p.name || '').toLowerCase();
+              const pSlug = (p.slug || '').toLowerCase();
+              const pCols = (p.collectionTitles || []).join(' ').toLowerCase();
+              const pTags = (p.tags || []).join(' ').toLowerCase();
+              const pRooms = (p.rooms || []).join(' ').toLowerCase();
 
-              if (match) {
-                return {
-                  ...kit,
-                  title: match.name || kit.title,
-                  price: match.price || kit.price,
-                  originalPrice: match.originalPrice || kit.originalPrice,
-                  image: match.thumbnail || match.images?.[0] || kit.image,
-                  slug: match.slug || kit.slug,
-                  productId: match.id || kit.productId
-                };
+              if (kit.id === 'kitchen-kit') {
+                return pName.includes('kitchen') || pSlug.includes('kitchen') || pCols.includes('kitchen') || pTags.includes('kitchen') || pRooms.includes('kitchen');
               }
-              return kit;
-            })
-          );
+              if (kit.id === 'bathroom-kit') {
+                return pName.includes('bathroom') || pSlug.includes('bathroom') || pSlug.includes('glass-tile') || pName.includes('glass & ceramics') || pCols.includes('bathroom') || pTags.includes('bathroom') || pRooms.includes('bathroom');
+              }
+              if (kit.id === 'living-room-kit') {
+                return pName.includes('living') || pName.includes('sofa') || pSlug.includes('sofa') || pCols.includes('living') || pTags.includes('living') || pRooms.includes('living');
+              }
+              if (kit.id === 'dining-kit') {
+                return pName.includes('dining') || pName.includes('wood') || pCols.includes('dining') || pTags.includes('dining') || pRooms.includes('dining');
+              }
+              if (kit.id === 'balcony-kit') {
+                return pName.includes('balcony') || pName.includes('grout') || pCols.includes('balcony') || pTags.includes('balcony') || pRooms.includes('balcony');
+              }
+              return false;
+            });
+
+            if (match) {
+              usedProductSlugs.add(match.slug);
+              return {
+                ...kit,
+                title: match.name || kit.title,
+                price: match.price || kit.price,
+                originalPrice: match.originalPrice || kit.originalPrice,
+                image: match.thumbnail || match.images?.[0] || kit.image,
+                slug: match.slug || kit.slug,
+                productId: match.id || kit.productId
+              };
+            }
+            return kit;
+          });
+
+          // Check if there are any extra products in Shopify added to a "Room By Room" collection or tagged "room"
+          const extraRoomProducts = res.data.filter((p) => {
+            if (!p || usedProductSlugs.has(p.slug)) return false;
+            const pCols = (p.collectionTitles || []).join(' ').toLowerCase();
+            const pTags = (p.tags || []).join(' ').toLowerCase();
+            return (
+              pCols.includes('room by room') ||
+              pCols.includes('room-by-room') ||
+              pCols.includes('protect your home') ||
+              pTags.includes('room-by-room') ||
+              pTags.includes('room')
+            );
+          });
+
+          if (extraRoomProducts.length > 0) {
+            const extraKits = extraRoomProducts.map((p, idx) => ({
+              id: `custom-room-${p.id || idx}`,
+              title: p.name,
+              subtitle: p.shortDescription || 'Protect and Clean your home surfaces',
+              saveText: p.originalPrice ? `Save ${Math.round(((p.originalPrice - p.price) / p.originalPrice) * 100)}% Vs Buying Separately` : 'Best Value Kit',
+              price: p.price,
+              originalPrice: p.originalPrice || Math.round(p.price * 1.3),
+              slug: p.slug,
+              cardBg: pastelColors[(updatedKits.length + idx) % pastelColors.length],
+              image: p.thumbnail || p.images?.[0],
+              productId: p.id
+            }));
+            setKits([...updatedKits, ...extraKits]);
+          } else {
+            setKits(updatedKits);
+          }
         }
       });
     });
