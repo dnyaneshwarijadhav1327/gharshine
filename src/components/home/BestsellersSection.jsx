@@ -44,30 +44,6 @@ export const BestsellersSection = () => {
       cardBg: 'bg-[#d5bcfc]',
       image: 'https://images.unsplash.com/photo-1556912172-45b7abe8b7e1?auto=format&fit=crop&w=600&q=80',
       productId: 6
-    },
-    {
-      id: 'balcony-kit',
-      title: 'Balcony Protection Kit',
-      subtitle: 'Protect and Clean your Windows, Furniture & Fabric Furniture',
-      saveText: 'Save 24% Vs Buying Separately',
-      price: 2879,
-      originalPrice: 4499,
-      slug: 'groutbright-tile-joint-whitener-shield',
-      cardBg: 'bg-[#cbf685]',
-      image: 'https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=600&q=80',
-      productId: 11
-    },
-    {
-      id: 'dining-kit',
-      title: 'Dining Table Combo',
-      subtitle: 'Protect and Clean your Fabrics & Wooden Table',
-      saveText: 'Save 30% Vs Buying Separately',
-      price: 1999,
-      originalPrice: 2999,
-      slug: 'lustrewood-carnauba-ceramic-polish-shield',
-      cardBg: 'bg-[#fed768]',
-      image: 'https://images.unsplash.com/photo-1538688525198-9b88f6f53126?auto=format&fit=crop&w=600&q=80',
-      productId: 7
     }
   ];
 
@@ -100,12 +76,6 @@ export const BestsellersSection = () => {
               }
               if (kit.id === 'living-room-kit') {
                 return pName.includes('living') || pName.includes('sofa') || pSlug.includes('sofa') || pCols.includes('living') || pTags.includes('living') || pRooms.includes('living');
-              }
-              if (kit.id === 'dining-kit') {
-                return pName.includes('dining') || pName.includes('wood') || pCols.includes('dining') || pTags.includes('dining') || pRooms.includes('dining');
-              }
-              if (kit.id === 'balcony-kit') {
-                return pName.includes('balcony') || pName.includes('grout') || pCols.includes('balcony') || pTags.includes('balcony') || pRooms.includes('balcony');
               }
               return false;
             });
@@ -230,10 +200,15 @@ export const BestsellersSection = () => {
           </div>
         </div>
 
-        {/* Responsive Layout: Smooth swipeable row on mobile/tablet, 5-col grid on desktop */}
         <div
           ref={scrollRef}
-          className="flex lg:grid gap-4 sm:gap-5 overflow-x-auto lg:overflow-visible no-scrollbar pb-4 pt-1 -mx-4 px-4 sm:mx-0 sm:px-0 lg:grid-cols-5 snap-x snap-mandatory"
+          className={`flex lg:grid gap-5 sm:gap-6 overflow-x-auto lg:overflow-visible no-scrollbar pb-4 pt-1 -mx-4 px-4 sm:mx-0 sm:px-0 snap-x snap-mandatory ${
+            kits.length <= 3
+              ? 'lg:grid-cols-3 max-w-5xl mx-auto'
+              : kits.length === 4
+              ? 'lg:grid-cols-4 max-w-6xl mx-auto'
+              : 'lg:grid-cols-5'
+          }`}
           style={{
             scrollbarWidth: 'none',
             msOverflowStyle: 'none',
