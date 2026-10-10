@@ -113,10 +113,13 @@ export const CombosCarouselSection = () => {
             (p) =>
               p &&
               (p.isCombo ||
+                p.name?.toLowerCase().includes('combo') ||
+                p.name?.toLowerCase().includes('kit') ||
                 p.category?.toLowerCase() === 'combos' ||
                 p.badge === 'BESTSELLER' ||
                 p.tags?.includes('combo') ||
-                p.tags?.includes('featured'))
+                p.tags?.includes('featured') ||
+                (p.collectionTitles && p.collectionTitles.some((c) => c.includes('combo') || c.includes('kit') || c.includes('best seller') || c.includes('bestseller') || c.includes('home page'))))
           );
 
           if (dynamicCombos.length > 0) {
@@ -134,7 +137,14 @@ export const CombosCarouselSection = () => {
               originalPrice: p.originalPrice ? Number(p.originalPrice) : Math.round((Number(p.price) || 999) * 1.4),
               isCombo: true
             }));
-            setItems(formatted);
+
+            // Prioritize Shopify live products, keep remaining fallback combos so section looks rich
+            const seenSlugs = new Set(formatted.map((f) => f.slug));
+            const seenNames = new Set(formatted.map((f) => f.name?.toLowerCase()));
+            const remainingFallbacks = fallbackCombos.filter(
+              (fb) => !seenSlugs.has(fb.slug) && !seenNames.has(fb.name?.toLowerCase())
+            );
+            setItems([...formatted, ...remainingFallbacks]);
           }
         }
       })

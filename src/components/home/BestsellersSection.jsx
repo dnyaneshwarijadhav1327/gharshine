@@ -71,6 +71,61 @@ export const BestsellersSection = () => {
     }
   ];
 
+  const [kits, setKits] = React.useState(roomKits);
+
+  React.useEffect(() => {
+    import('../../services/productService').then(({ productService }) => {
+      productService.getProducts().then((res) => {
+        if (res?.success && Array.isArray(res.data) && res.data.length > 0) {
+          setKits((prevKits) =>
+            prevKits.map((kit) => {
+              // Try to find a matching product by slug, room keyword, tags or collection
+              const match = res.data.find((p) => {
+                if (!p) return false;
+                if (p.slug === kit.slug) return true;
+                const pName = (p.name || '').toLowerCase();
+                const pSlug = (p.slug || '').toLowerCase();
+                const pCols = (p.collectionTitles || []).join(' ');
+                const pTags = (p.tags || []).join(' ');
+                const pRooms = (p.rooms || []).join(' ').toLowerCase();
+
+                if (kit.id === 'kitchen-kit') {
+                  return pName.includes('kitchen') || pSlug.includes('kitchen') || pCols.includes('kitchen') || pTags.includes('kitchen') || pRooms.includes('kitchen');
+                }
+                if (kit.id === 'bathroom-kit') {
+                  return pName.includes('bathroom') || pSlug.includes('bathroom') || pSlug.includes('glass-tile') || pName.includes('glass & ceramics') || pCols.includes('bathroom') || pTags.includes('bathroom') || pRooms.includes('bathroom');
+                }
+                if (kit.id === 'living-room-kit') {
+                  return pName.includes('living') || pName.includes('sofa') || pSlug.includes('sofa') || pCols.includes('living') || pTags.includes('living') || pRooms.includes('living');
+                }
+                if (kit.id === 'dining-kit') {
+                  return pName.includes('dining') || pName.includes('wood') || pCols.includes('dining') || pTags.includes('dining') || pRooms.includes('dining');
+                }
+                if (kit.id === 'balcony-kit') {
+                  return pName.includes('balcony') || pName.includes('grout') || pCols.includes('balcony') || pTags.includes('balcony') || pRooms.includes('balcony');
+                }
+                return false;
+              });
+
+              if (match) {
+                return {
+                  ...kit,
+                  title: match.name || kit.title,
+                  price: match.price || kit.price,
+                  originalPrice: match.originalPrice || kit.originalPrice,
+                  image: match.thumbnail || match.images?.[0] || kit.image,
+                  slug: match.slug || kit.slug,
+                  productId: match.id || kit.productId
+                };
+              }
+              return kit;
+            })
+          );
+        }
+      });
+    });
+  }, []);
+
   const scrollLeft = () => {
     if (scrollRef.current) {
       scrollRef.current.scrollBy({ left: -300, behavior: 'smooth' });
@@ -150,7 +205,7 @@ export const BestsellersSection = () => {
             WebkitOverflowScrolling: 'touch'
           }}
         >
-          {roomKits.map((item) => (
+          {kits.map((item) => (
             <div
               key={item.id}
               className={`w-[260px] sm:w-[280px] lg:w-auto shrink-0 snap-start rounded-3xl overflow-hidden flex flex-col justify-between shadow-sm hover:shadow-md transition-all duration-300 ${item.cardBg}`}

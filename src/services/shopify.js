@@ -51,9 +51,64 @@ export function formatShopifyProduct(node) {
     const rawTags = Array.isArray(node.tags) ? node.tags : (typeof node.tags === 'string' ? node.tags.split(',') : []);
     const tags = rawTags.map(t => String(t).trim().toLowerCase());
 
-    const isCombo = tags.includes('combo') || tags.includes('kit') || (node.productType && node.productType.toLowerCase().includes('combo'));
-    const isFeatured = tags.includes('featured') || tags.includes('bestseller') || tags.includes('frontpage');
-    const isBestseller = tags.includes('bestseller');
+    const rawCollections = (node.collections?.edges || []).map(e => ({
+      id: e.node?.id,
+      title: e.node?.title || '',
+      handle: e.node?.handle || ''
+    }));
+    const collectionTitles = rawCollections.map(c => c.title.toLowerCase());
+    const collectionHandles = rawCollections.map(c => c.handle.toLowerCase());
+
+    const titleLower = (node.title || '').toLowerCase();
+
+    const isCombo = 
+      tags.includes('combo') || 
+      tags.includes('kit') || 
+      (node.productType && node.productType.toLowerCase().includes('combo')) ||
+      titleLower.includes('combo') || 
+      titleLower.includes('kit') ||
+      collectionTitles.some(t => t.includes('combo') || t.includes('protection kit')) ||
+      collectionHandles.some(h => h.includes('combo'));
+
+    const isBestseller = 
+      tags.includes('bestseller') || 
+      tags.includes('best seller') || 
+      tags.includes('best-seller') || 
+      collectionTitles.some(t => t.includes('best seller') || t.includes('bestseller')) ||
+      collectionHandles.some(h => h.includes('best-seller') || h.includes('bestseller'));
+
+    const isFeatured = 
+      isBestseller ||
+      tags.includes('featured') || 
+      tags.includes('frontpage') || 
+      tags.includes('home') ||
+      tags.includes('homepage') ||
+      collectionTitles.some(t => t.includes('home page') || t.includes('featured') || t.includes('homepage')) ||
+      collectionHandles.some(h => h.includes('frontpage') || h.includes('featured'));
+
+    // Detect rooms from collections, tags, or title
+    const detectedRooms = [];
+    const checkRoom = (term, roomName) => {
+      if (
+        titleLower.includes(term) ||
+        tags.some(t => t.includes(term)) ||
+        collectionTitles.some(c => c.includes(term)) ||
+        collectionHandles.some(c => c.includes(term))
+      ) {
+        if (!detectedRooms.includes(roomName)) detectedRooms.push(roomName);
+      }
+    };
+    checkRoom('kitchen', 'Kitchen');
+    checkRoom('bathroom', 'Bathroom');
+    checkRoom('bath', 'Bathroom');
+    checkRoom('living', 'Living Room');
+    checkRoom('sofa', 'Living Room');
+    checkRoom('bedroom', 'Bedroom');
+    checkRoom('dining', 'Dining Room');
+    checkRoom('pooja', 'Pooja Room');
+    checkRoom('balcony', 'Balcony');
+    checkRoom('glass', 'Bathroom');
+    checkRoom('tile', 'Bathroom');
 
     return {
       id: node.id || `shopify-${Date.now()}`,
@@ -63,6 +118,10 @@ export function formatShopifyProduct(node) {
       productType: node.productType || (isCombo ? 'Protection Kit' : 'Solution'),
       surface: ['Multi-Surface', 'Glass', 'Stone', 'Fabric'],
       concerns: ['Stains & Protection'],
+      rooms: detectedRooms.length > 0 ? detectedRooms : ['Living Room', 'Kitchen'],
+      collections: rawCollections,
+      collectionTitles: collectionTitles,
+      collectionHandles: collectionHandles,
       price: Math.round(price) || 999,
       originalPrice: comparePrice > price ? Math.round(comparePrice) : null,
       discount: discount,
@@ -124,6 +183,15 @@ export const SHOPIFY_QUERIES = {
               edges {
                 node {
                   url
+                }
+              }
+            }
+            collections(first: 10) {
+              edges {
+                node {
+                  id
+                  title
+                  handle
                 }
               }
             }
