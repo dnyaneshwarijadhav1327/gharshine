@@ -116,25 +116,90 @@ export const productService = {
 
     const cleanSlug = slug.toLowerCase().trim();
 
-    // Map combo & room kit aliases directly
+    // 1. Check live Shopify products FIRST so real images, titles & prices always show!
+    try {
+      // Try direct handle lookup
+      const shopifyData = await shopifyFetch({
+        query: SHOPIFY_QUERIES.GET_PRODUCT_BY_HANDLE,
+        variables: { handle: cleanSlug }
+      });
+      if (shopifyData?.product) {
+        const liveProduct = formatShopifyProduct(shopifyData.product);
+        if (liveProduct) {
+          const localMatch = products.find(
+            (p) => p.slug === cleanSlug || p.name.toLowerCase() === liveProduct.name.toLowerCase()
+          );
+          if (localMatch) {
+            return {
+              success: true,
+              data: {
+                ...localMatch,
+                ...liveProduct,
+                thumbnail: liveProduct.thumbnail,
+                images: liveProduct.images && liveProduct.images.length > 0 ? liveProduct.images : localMatch.images
+              }
+            };
+          }
+          return { success: true, data: liveProduct };
+        }
+      }
+
+      // Check all products list in Shopify for handle, id, or title match
+      const allShopifyData = await shopifyFetch({
+        query: SHOPIFY_QUERIES.GET_PRODUCTS,
+        variables: { first: 50 }
+      });
+      if (allShopifyData?.products?.edges) {
+        const match = allShopifyData.products.edges.find((e) => {
+          const h = (e.node.handle || '').toLowerCase();
+          const t = (e.node.title || '').toLowerCase();
+          return (
+            h === cleanSlug ||
+            e.node.id === cleanSlug ||
+            h.includes(cleanSlug) ||
+            cleanSlug.includes(h) ||
+            t.includes(cleanSlug.replace(/-/g, ' '))
+          );
+        });
+        if (match) {
+          const liveProduct = formatShopifyProduct(match.node);
+          if (liveProduct) {
+            const localMatch = products.find(
+              (p) => p.slug === cleanSlug || p.name.toLowerCase() === liveProduct.name.toLowerCase()
+            );
+            if (localMatch) {
+              return {
+                success: true,
+                data: {
+                  ...localMatch,
+                  ...liveProduct,
+                  thumbnail: liveProduct.thumbnail,
+                  images: liveProduct.images && liveProduct.images.length > 0 ? liveProduct.images : localMatch.images
+                }
+              };
+            }
+            return { success: true, data: liveProduct };
+          }
+        }
+      }
+    } catch (e) {
+      console.warn('Error fetching live product from Shopify:', e);
+    }
+
+    // 2. Map combo & room kit aliases if Shopify lookup had no direct match
     const slugAliases = {
       'glass-ceramics-cleaning-protection-combo': 'bathroom-protector-kit',
-      'sofa-fabric-stain-repellent-combo': 'hydrobarrier-sofa-fabric-stain-repellent',
       'ultimate-whole-home-protection-combo': 'living-room-complete-protection-kit',
-      'bathroom-protector-kit': 'bathroom-protector-kit',
       'bathroom-kit': 'bathroom-protector-kit',
       'living-room-kit': 'living-room-complete-protection-kit',
-      'kitchen-protector-kit': 'biodegrease-kitchen-hob-chimney-cleaner',
       'kitchen-kit': 'biodegrease-kitchen-hob-chimney-cleaner',
-      'balcony-protection-kit': 'groutbright-tile-joint-whitener-shield',
       'balcony-kit': 'groutbright-tile-joint-whitener-shield',
-      'dining-table-combo': 'lustrewood-carnauba-ceramic-polish-shield',
       'dining-kit': 'lustrewood-carnauba-ceramic-polish-shield'
     };
 
     const targetSlug = slugAliases[cleanSlug] || cleanSlug;
 
-    // Check in local catalog first
+    // 3. Fallback to local catalog
     let product = products.find(
       (p) => p.slug === targetSlug || p.slug === cleanSlug || String(p.id) === cleanSlug
     );
@@ -147,24 +212,6 @@ export const productService = {
           p.slug.includes(cleanSlug) ||
           p.name.toLowerCase().includes(cleanSlug.replace(/-/g, ' '))
       );
-    }
-    
-    if (!product) {
-      // Check live shopify products
-      try {
-        const shopifyData = await shopifyFetch({
-          query: SHOPIFY_QUERIES.GET_PRODUCTS,
-          variables: { first: 50 }
-        });
-        if (shopifyData?.products?.edges) {
-          const match = shopifyData.products.edges.find(e => e.node.handle === cleanSlug);
-          if (match) {
-            product = formatShopifyProduct(match.node);
-          }
-        }
-      } catch (e) {
-        console.warn('Error fetching slug from Shopify:', e);
-      }
     }
 
     // Default fallback to first product if still not found so user NEVER gets a broken page

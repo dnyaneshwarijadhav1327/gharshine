@@ -179,7 +179,7 @@ export const SHOPIFY_QUERIES = {
                 currencyCode
               }
             }
-            images(first: 5) {
+            images(first: 20) {
               edges {
                 node {
                   url
@@ -194,6 +194,48 @@ export const SHOPIFY_QUERIES = {
                   handle
                 }
               }
+            }
+          }
+        }
+      }
+    }
+  `,
+
+  GET_PRODUCT_BY_HANDLE: `
+    query getProductByHandle($handle: String!) {
+      product(handle: $handle) {
+        id
+        title
+        handle
+        description
+        productType
+        tags
+        availableForSale
+        priceRange {
+          minVariantPrice {
+            amount
+            currencyCode
+          }
+        }
+        compareAtPriceRange {
+          minVariantPrice {
+            amount
+            currencyCode
+          }
+        }
+        images(first: 20) {
+          edges {
+            node {
+              url
+            }
+          }
+        }
+        collections(first: 10) {
+          edges {
+            node {
+              id
+              title
+              handle
             }
           }
         }

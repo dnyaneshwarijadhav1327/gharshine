@@ -161,28 +161,27 @@ export const ProductDetailPage = () => {
               </span>
             </div>
 
-            {/* Short Problem & Solution Description */}
+            {/* Dynamic Product Description */}
             <div className="text-xs sm:text-[13px] text-slate-600 leading-relaxed space-y-1">
               <p>
-                Hard water stains on shower glass. White rings on chrome taps. Tiles that stay dull no matter how much you scrub.
+                {product.shortDescription || (product.description ? product.description.slice(0, 160) : 'Premium surface care and nano-barrier protection formula.')}
               </p>
-              <p className="font-semibold text-slate-800">
-                Stop scrubbing. Start sealing....
-              </p>
-              
-              {isReadMoreOpen && (
-                <p className="pt-1 text-slate-600 animate-in fade-in">
-                  {product.description || product.shortDescription}
-                </p>
+              {product.description && product.description.length > 160 && (
+                <>
+                  {isReadMoreOpen && (
+                    <p className="pt-1 text-slate-600 animate-in fade-in">
+                      {product.description}
+                    </p>
+                  )}
+                  <button
+                    onClick={() => setIsReadMoreOpen(!isReadMoreOpen)}
+                    className="text-xs font-bold text-slate-900 underline hover:text-[#087F8C] cursor-pointer pt-0.5 inline-flex items-center gap-1"
+                  >
+                    <span>{isReadMoreOpen ? 'Show less' : 'Read more'}</span>
+                    {isReadMoreOpen ? <ChevronUp size={13} /> : <ChevronDown size={13} />}
+                  </button>
+                </>
               )}
-
-              <button
-                onClick={() => setIsReadMoreOpen(!isReadMoreOpen)}
-                className="text-xs font-bold text-slate-900 underline hover:text-[#087F8C] cursor-pointer pt-0.5 inline-flex items-center gap-1"
-              >
-                <span>{isReadMoreOpen ? 'Show less' : 'Read more'}</span>
-                {isReadMoreOpen ? <ChevronUp size={13} /> : <ChevronDown size={13} />}
-              </button>
             </div>
 
             {/* "Add more to your bundle" Widget */}
