@@ -9,21 +9,17 @@ export const HeroSection = () => {
 
   const slides = [
     {
-      id: 'gharshine-stain-protection',
-      image: '/images/hero-stain-protection.png',
-      alt: 'GharShine - Stain Protection That Lasts - Seal today. Stay spotless tomorrow.',
-      link: '/shop'
-    },
-    {
       id: 'gharshine-cleaning-bundle',
-      image: '/images/hero-cleaning-bundle.png',
+      desktopImage: '/images/hero-cleaning-bundle.png',
+      mobileImage: '/images/hero-cleaning-bundle-mobile.jpg',
       alt: 'GharShine - Choose Your Perfect Cleaning Bundle - Complete protection for every surface.',
       link: '/combo-builder'
     },
     {
       id: 'gharshine-diwali-festive',
-      image: '/images/hero-diwali-festive.png',
-      alt: 'GharShine - This Diwali, Let Your Home Shine! Keep your home fresh, clean and protected.',
+      desktopImage: '/images/hero-diwali-festive.png',
+      mobileImage: '/images/hero-diwali-festive-mobile.jpg',
+      alt: 'GharShine - This Diwali, Let Your Home Shine! Nano-coating solutions for Indian homes.',
       link: '/shop'
     }
   ];
@@ -71,7 +67,7 @@ export const HeroSection = () => {
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
     >
-      {/* Side Arrow Navigation Buttons (Edge-aligned like reference image) */}
+      {/* Side Arrow Navigation Buttons */}
       <button
         onClick={handlePrev}
         aria-label="Previous Banner"
@@ -88,7 +84,7 @@ export const HeroSection = () => {
         <ChevronRight size={22} />
       </button>
 
-      {/* Main Full-Bleed Edge-to-Edge Slides Wrapper with Tall Mobile View */}
+      {/* Main Full-Bleed Slides Wrapper with Responsive Desktop and Mobile Pictures */}
       <div className="relative w-full overflow-hidden">
         <div
           className="flex transition-transform duration-700 ease-out"
@@ -97,12 +93,17 @@ export const HeroSection = () => {
           {slides.map((slide, idx) => (
             <div key={slide.id} className="w-full shrink-0 relative">
               <Link to={slide.link} className="block w-full cursor-pointer">
-                <img
-                  src={slide.image}
-                  alt={slide.alt}
-                  className="w-full h-[360px] sm:h-[440px] md:h-auto object-cover object-center max-h-[640px] block"
-                  loading={idx === 0 ? 'eager' : 'lazy'}
-                />
+                <picture className="w-full block">
+                  {/* Dedicated 9:16 portrait banner on mobile devices (< 640px) */}
+                  <source media="(max-width: 640px)" srcSet={slide.mobileImage} />
+                  {/* Widescreen landscape banner on tablet and desktop screens */}
+                  <img
+                    src={slide.desktopImage}
+                    alt={slide.alt}
+                    className="w-full h-auto object-cover max-h-[640px] block"
+                    loading={idx === 0 ? 'eager' : 'lazy'}
+                  />
+                </picture>
               </Link>
             </div>
           ))}
