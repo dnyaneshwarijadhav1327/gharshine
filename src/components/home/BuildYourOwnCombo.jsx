@@ -1,14 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Sparkles, Check, Plus, Minus, Trash2, ShoppingBag, ArrowRight, ShieldCheck } from 'lucide-react';
-import { products } from '../../data/products';
+import { products as fallbackProducts } from '../../data/products';
 import { surfaces } from '../../data/categories';
 import { formatPrice } from '../../utils/formatters';
 import { useCart } from '../../context/CartContext';
+import { productService } from '../../services/productService';
 
 export const BuildYourOwnCombo = () => {
   const [selectedSurface, setSelectedSurface] = useState('All');
-  const [selectedProductIds, setSelectedProductIds] = useState([1, 2]); // Default pre-picked 2
+  const [catalogProducts, setCatalogProducts] = useState(fallbackProducts);
+  const [selectedProductIds, setSelectedProductIds] = useState(() => fallbackProducts.slice(0, 2).map((p) => p.id));
   const { addCustomBundleToCart } = useCart();
+
+  useEffect(() => {
+    let isMounted = true;
+    productService.getProducts().then((res) => {
+      if (!isMounted) return;
+      if (res?.success && Array.isArray(res.data) && res.data.length > 0) {
+        setCatalogProducts(res.data);
+        if (res.data.length >= 2) {
+          setSelectedProductIds([res.data[0].id, res.data[1].id]);
+        }
+      }
+    });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const handleToggleProduct = (product) => {
     setSelectedProductIds((prev) => {
@@ -20,7 +38,7 @@ export const BuildYourOwnCombo = () => {
     });
   };
 
-  const selectedProducts = products.filter((p) => selectedProductIds.includes(p.id));
+  const selectedProducts = catalogProducts.filter((p) => selectedProductIds.includes(p.id));
 
   // Bundle pricing logic
   const rawSubtotal = selectedProducts.reduce((sum, p) => sum + p.price, 0);
@@ -47,9 +65,11 @@ export const BuildYourOwnCombo = () => {
     });
   };
 
-  const filteredCatalog = products.filter((p) => {
+  const filteredCatalog = catalogProducts.filter((p) => {
     if (selectedSurface === 'All') return true;
-    return p.surface.some((s) => s.toLowerCase().includes(selectedSurface.toLowerCase()));
+    if (!p.surface) return true;
+    const surf = Array.isArray(p.surface) ? p.surface : [String(p.surface)];
+    return surf.some((s) => s.toLowerCase().includes(selectedSurface.toLowerCase()));
   });
 
   return (
@@ -153,14 +173,14 @@ export const BuildYourOwnCombo = () => {
                       }`}
                     >
                       <img
-                        src={p.thumbnail}
+                        src={p.thumbnail || p.images?.[0] || 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=800&q=80'}
                         alt={p.name}
                         className="w-16 h-16 rounded-xl object-cover shrink-0 border border-slate-100"
                       />
 
                       <div className="flex-1 min-w-0">
                         <span className="text-[10px] font-bold text-[#087F8C] uppercase tracking-wider block truncate">
-                          {p.surface.join(', ')}
+                          {Array.isArray(p.surface) ? p.surface.join(', ') : (p.category || 'Multi-Surface')}
                         </span>
                         <h4 className="text-xs sm:text-sm font-bold text-slate-900 truncate">
                           {p.name}
