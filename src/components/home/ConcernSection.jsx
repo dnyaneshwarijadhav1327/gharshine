@@ -1,8 +1,9 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { productService } from '../../services/productService';
 
-const homeConcerns = [
+const defaultConcerns = [
   {
     id: 'hard-water-stains',
     title: 'Hard Water Stains',
@@ -35,6 +36,58 @@ const homeConcerns = [
 
 export const ConcernSection = () => {
   const scrollContainerRef = useRef(null);
+  const [concerns, setConcerns] = useState(defaultConcerns);
+
+  useEffect(() => {
+    let isMounted = true;
+    productService.getProducts().then((res) => {
+      if (!isMounted) return;
+      if (res?.success && Array.isArray(res.data) && res.data.length > 0) {
+        // Link cards to live Shopify products if matched
+        const updated = defaultConcerns.map((c) => {
+          const match = res.data.find((p) => {
+            const pName = (p.name || '').toLowerCase();
+            const pSlug = (p.slug || '').toLowerCase();
+            if (c.id === 'hard-water-stains') return pSlug.includes('glass-tile') || pName.includes('hard water');
+            if (c.id === 'sofa-spills-stains') return pSlug.includes('sofa') || pName.includes('sofa');
+            if (c.id === 'oil-moisture-damage') return pSlug.includes('kitchen') || pName.includes('kitchen');
+            return false;
+          });
+          if (match) {
+            return {
+              ...c,
+              link: `/product/${match.slug}`
+            };
+          }
+          return c;
+        });
+
+        // Add any extra products from Shopify added to a "Concerns" collection or tagged "concern"
+        const extraConcernProducts = res.data.filter((p) => {
+          const cols = (p.collectionTitles || []).join(' ').toLowerCase();
+          const tags = (p.tags || []).join(' ').toLowerCase();
+          return cols.includes('concern') || tags.includes('concern');
+        });
+
+        if (extraConcernProducts.length > 0) {
+          const extraCards = extraConcernProducts.map((p, idx) => ({
+            id: `custom-concern-${p.id || idx}`,
+            title: p.name,
+            subtitle: p.shortDescription || 'Targeted protection formula for everyday home stains.',
+            image: p.thumbnail || p.images?.[0] || '/images/concern-shower-glass.jpg',
+            link: `/product/${p.slug}`
+          }));
+          setConcerns([...updated, ...extraCards]);
+        } else {
+          setConcerns(updated);
+        }
+      }
+    });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const scrollLeft = () => {
     if (scrollContainerRef.current) {
@@ -91,7 +144,7 @@ export const ConcernSection = () => {
             WebkitOverflowScrolling: 'touch'
           }}
         >
-          {homeConcerns.map((item) => (
+          {concerns.map((item) => (
             <div
               key={item.id}
               className="w-[285px] sm:w-[320px] md:w-[340px] shrink-0 flex flex-col group"
