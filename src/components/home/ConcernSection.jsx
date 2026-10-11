@@ -45,66 +45,86 @@ export const ConcernSection = () => {
       if (res?.success && Array.isArray(res.data) && res.data.length > 0) {
         // Link each of the 4 problem cards directly to its respective live Shopify product
         const updated = defaultConcerns.map((c) => {
-          const match = res.data.find((p) => {
-            const pName = (p.name || '').toLowerCase();
-            const pSlug = (p.slug || '').toLowerCase();
-            const pCols = (p.collectionTitles || []).join(' ').toLowerCase();
-            const pTags = (p.tags || []).join(' ').toLowerCase();
+          // Priority 1: Match by explicit Shopify Collection or Tag
+          let match = res.data.find((p) => {
+            const cols = (p.collectionTitles || []).join(' ').toLowerCase();
+            const tags = (p.tags || []).join(' ').toLowerCase();
 
             // 1. Shower Glass Card -> Collection or Tag: "hard water" or "glass"
             if (c.id === 'hard-water-stains') {
               return (
-                pCols.includes('hard water') ||
-                pCols.includes('hard-water') ||
-                pCols.includes('glass') ||
-                pTags.includes('hard-water') ||
-                pTags.includes('hard water') ||
-                pTags.includes('glass') ||
-                pSlug.includes('bathroom-protector') ||
-                pName.includes('bathroom protector') ||
-                pSlug.includes('glass-tile') ||
-                pName.includes('hard water')
+                cols.includes('hard water') ||
+                cols.includes('hard-water') ||
+                cols.includes('glass') ||
+                tags.includes('hard-water') ||
+                tags.includes('hard water') ||
+                tags.includes('glass')
               );
             }
 
             // 2. Sofa Card -> Collection or Tag: "sofa" or "fabric"
             if (c.id === 'sofa-spills-stains') {
               return (
-                pCols.includes('sofa') ||
-                pCols.includes('fabric') ||
-                pTags.includes('sofa') ||
-                pTags.includes('fabric') ||
-                pSlug.includes('sofa') ||
-                pName.includes('sofa')
+                cols.includes('sofa') ||
+                cols.includes('fabric') ||
+                tags.includes('sofa') ||
+                tags.includes('fabric')
               );
             }
 
             // 3. Kitchen Tiles Card -> Collection or Tag: "kitchen" or "tiles"
             if (c.id === 'oil-moisture-damage') {
               return (
-                pCols.includes('kitchen') ||
-                pCols.includes('tile') ||
-                pTags.includes('kitchen') ||
-                pTags.includes('tile') ||
-                pSlug.includes('kitchen') ||
-                pName.includes('kitchen')
+                cols.includes('kitchen') ||
+                cols.includes('tile') ||
+                tags.includes('kitchen') ||
+                tags.includes('tile')
               );
             }
 
             // 4. Marble Surface Damage Card -> Collection or Tag: "marble" or "stone"
             if (c.id === 'permanent-surface-damage') {
               return (
-                pCols.includes('marble') ||
-                pCols.includes('stone') ||
-                pTags.includes('marble') ||
-                pTags.includes('stone') ||
-                pName.includes('marble') ||
-                pSlug.includes('marble')
+                cols.includes('marble') ||
+                cols.includes('stone') ||
+                tags.includes('marble') ||
+                tags.includes('stone')
               );
             }
 
             return false;
           });
+
+          // Priority 2: Fallback to title/slug keyword matching if no explicit collection set
+          if (!match) {
+            match = res.data.find((p) => {
+              const pName = (p.name || '').toLowerCase();
+              const pSlug = (p.slug || '').toLowerCase();
+
+              if (c.id === 'hard-water-stains') {
+                return (
+                  pSlug.includes('bathroom-protector') ||
+                  pName.includes('bathroom protector') ||
+                  pSlug.includes('glass-tile') ||
+                  pName.includes('hard water')
+                );
+              }
+
+              if (c.id === 'sofa-spills-stains') {
+                return pSlug.includes('sofa') || pName.includes('sofa');
+              }
+
+              if (c.id === 'oil-moisture-damage') {
+                return pSlug.includes('kitchen') || pName.includes('kitchen');
+              }
+
+              if (c.id === 'permanent-surface-damage') {
+                return pName.includes('marble') || pSlug.includes('marble');
+              }
+
+              return false;
+            });
+          }
 
           if (match) {
             return {
