@@ -64,36 +64,6 @@ const fallbackCombos = [
     price: 4999,
     originalPrice: 7499,
     isCombo: true
-  },
-  {
-    id: 4,
-    name: 'Marble, Granite & Kitchen Protection Kit',
-    slug: 'stonearmor-marble-granite-sealant',
-    subtitle: 'Covers kitchen countertops, dining & pooja room marble for 12 months',
-    image: '/images/surface-marble.png',
-    bottomOverlay: 'Zero Haldi & Oil Etching',
-    accentCorner: 'top-right',
-    accentColor: '#D3F49A',
-    rating: 5,
-    reviews: 215,
-    price: 2499,
-    originalPrice: 3699,
-    isCombo: true
-  },
-  {
-    id: 7,
-    name: 'Wood & Furniture Polish + Moisture Shield Combo',
-    slug: 'lustrewood-carnauba-ceramic-polish-shield',
-    subtitle: 'Covers dining table, wooden consoles & wardrobes for 6 months',
-    image: '/images/surface-wood.jpg',
-    topBanner: 'Carnauba Wax + Ceramic Shield',
-    accentCorner: 'bottom-right',
-    accentColor: '#52D1DC',
-    rating: 5,
-    reviews: 178,
-    price: 1299,
-    originalPrice: 1799,
-    isCombo: true
   }
 ];
 
@@ -109,18 +79,28 @@ export const CombosCarouselSection = () => {
       .then((res) => {
         if (!isMounted) return;
         if (res?.success && Array.isArray(res.data) && res.data.length > 0) {
-          const dynamicCombos = res.data.filter(
-            (p) =>
-              p &&
-              (p.isCombo ||
-                p.name?.toLowerCase().includes('combo') ||
-                p.name?.toLowerCase().includes('kit') ||
-                p.category?.toLowerCase() === 'combos' ||
-                p.badge === 'BESTSELLER' ||
-                p.tags?.includes('combo') ||
-                p.tags?.includes('featured') ||
-                (p.collectionTitles && p.collectionTitles.some((c) => c.includes('combo') || c.includes('kit') || c.includes('best seller') || c.includes('bestseller') || c.includes('home page'))))
-          );
+          const dynamicCombos = res.data.filter((p) => {
+            if (!p) return false;
+            const name = (p.name || '').toLowerCase();
+            const slug = (p.slug || '').toLowerCase();
+            if (
+              slug.includes('lustrewood') ||
+              name.includes('wood & furniture') ||
+              slug.includes('sacred-shringar') ||
+              slug.includes('complete-bathroom-care') ||
+              slug.includes('stonearmor')
+            ) {
+              return false;
+            }
+            return (
+              p.isCombo ||
+              name.includes('combo') ||
+              name.includes('kit') ||
+              p.category?.toLowerCase() === 'combos' ||
+              p.tags?.includes('combo') ||
+              (p.collectionTitles && p.collectionTitles.some((c) => c.includes('combo') || c.includes('kit')))
+            );
+          });
 
           if (dynamicCombos.length > 0) {
             const formatted = dynamicCombos.map((p, idx) => ({
@@ -128,7 +108,7 @@ export const CombosCarouselSection = () => {
               name: p.name,
               slug: p.slug,
               subtitle: p.shortDescription || p.category || '',
-              image: p.thumbnail || p.images?.[0] || '/images/concern-shower-glass.jpg',
+              image: p.thumbnail || p.images?.[0] || 'https://cdn.shopify.com/s/files/1/0831/5037/2921/files/GharShineBathroomCareDuo.png?v=1791650202',
               accentCorner: idx % 2 === 0 ? 'top-right' : 'bottom-left',
               accentColor: idx % 2 === 0 ? '#52D1DC' : '#D3F49A',
               rating: Math.round(Number(p.rating) || 5),
@@ -138,7 +118,7 @@ export const CombosCarouselSection = () => {
               isCombo: true
             }));
 
-            // Prioritize Shopify live products, keep remaining fallback combos so section looks rich
+            // Only use genuine live products; fallbackCombos only if formatted is short
             const seenSlugs = new Set(formatted.map((f) => f.slug));
             const seenNames = new Set(formatted.map((f) => f.name?.toLowerCase()));
             const remainingFallbacks = fallbackCombos.filter(

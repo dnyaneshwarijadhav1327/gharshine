@@ -52,7 +52,7 @@ const fallbackUpsellItems = [
     slug: 'glass-tile-hard-water-stain-repellent',
     price: 749,
     originalPrice: 1299,
-    image: 'https://cdn.shopify.com/s/files/1/0831/5037/2921/files/Screenshot2026-10-10211226.png?v=1791647191'
+    image: 'https://cdn.shopify.com/s/files/1/0831/5037/2921/files/GharShineGlassProtectionSprayAd.png?v=1791650202'
   }
 ];
 

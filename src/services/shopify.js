@@ -45,8 +45,13 @@ export function formatShopifyProduct(node) {
     const comparePrice = parseFloat(node.compareAtPriceRange?.minVariantPrice?.amount || '0');
     const discount = comparePrice > price ? Math.round(((comparePrice - price) / comparePrice) * 100) : 0;
     
-    const images = (node.images?.edges || []).map(e => e.node?.url).filter(Boolean);
-    const thumbnail = images[0] || 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=800&q=80';
+    const rawImages = (node.images?.edges || []).map(e => e.node?.url).filter(Boolean);
+    const images = rawImages.map(img => 
+      img.includes('Screenshot2026-10-10211226')
+        ? 'https://cdn.shopify.com/s/files/1/0831/5037/2921/files/GharShineGlassProtectionSprayAd.png?v=1791650202'
+        : img
+    );
+    const thumbnail = images[0] || 'https://cdn.shopify.com/s/files/1/0831/5037/2921/files/GharShineBathroomCareDuo.png?v=1791650202';
     
     const rawTags = Array.isArray(node.tags) ? node.tags : (typeof node.tags === 'string' ? node.tags.split(',') : []);
     const tags = rawTags.map(t => String(t).trim().toLowerCase());

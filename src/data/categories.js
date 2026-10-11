@@ -38,7 +38,7 @@ export const surfaces = [
     name: "Wood & Veneer",
     slug: "wood",
     shortDesc: "Dining tables, credenzas, wooden doors & wardrobes",
-    image: "/images/surface-wood.jpg",
+    image: "https://cdn.shopify.com/s/files/1/0831/5037/2921/files/GharShineWoodProtectorSprayAd.png?v=1791707672",
     itemCount: 3,
     startingPrice: 599,
     features: ["Moisture & cup-ring barrier", "Enriches grain luster", "Non-sticky protective coat"]

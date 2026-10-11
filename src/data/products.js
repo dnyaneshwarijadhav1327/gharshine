@@ -65,7 +65,7 @@ export const products = [
       "Origin": "Formulated & Bottled in India",
       "Stock": "50 Units Available"
     },
-    relatedProducts: [2, 3, 5, 8]
+    relatedProducts: [2, 5, 8]
   },
   {
     id: 2,
@@ -122,62 +122,7 @@ export const products = [
       "Drying Time": "12-24 Hours",
       "Origin": "Made in India"
     },
-    relatedProducts: [1, 4, 7, 10]
-  },
-  {
-    id: 3,
-    name: "Complete Bathroom Care & Shield Protector Kit",
-    slug: "complete-bathroom-care-shield-kit",
-    category: "Combos",
-    productType: "Room Kit",
-    surface: ["Bathroom", "Glass", "Ceramic", "Tiles", "Metal"],
-    concerns: ["Hard Water Stains", "Bathroom Stains"],
-    rooms: ["Bathroom"],
-    price: 2499,
-    originalPrice: 3799,
-    discount: 34,
-    rating: 4.9,
-    reviewCount: 520,
-    badge: "TOP RATED",
-    isFeatured: true,
-    isCombo: true,
-    stockStatus: "in_stock",
-    size: "4-in-1 Complete Solution (1.5L Total + Accessories)",
-    shortDescription: "All-in-one bathroom transformation: Hard water remover, Tile & Grout Renewer, Chrome Fitting Polish & Nano-Shield.",
-    description: "Everything required to restore an Indian bathroom to showroom condition and lock in that pristine look. Includes targeted formulas for glass shower partitions, CP chrome fittings, ceramic commodes, and floor grout lines. Backed by proprietary anti-mineral bonding agents.",
-    thumbnail: "https://images.unsplash.com/photo-1620626011761-996317b8d101?auto=format&fit=crop&w=800&q=80",
-    images: [
-      "https://images.unsplash.com/photo-1620626011761-996317b8d101?auto=format&fit=crop&w=1000&q=80",
-      "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1000&q=80",
-      "https://images.unsplash.com/photo-1507652313519-d4e9174996dd?auto=format&fit=crop&w=1000&q=80"
-    ],
-    features: [
-      "4 full-sized targeted products for 100% bathroom coverage",
-      "Restores dull chrome taps and rain showers to mirror shine",
-      "Eliminates white lime scale and yellow urine mineral crusts",
-      "Prevents mold, mildew, and black grout line darkening",
-      "Includes 2 premium 400 GSM microfibers & non-scratch scrub pads"
-    ],
-    howToUse: [
-      { step: "01. Glass & Mirror", text: "Clean with Hard Water Gel, then seal with Glass NanoShield." },
-      { step: "02. Taps & Chrome", text: "Polish with Chrome Restorer cream for streak-free shine." },
-      { step: "03. Tiles & Grout", text: "Spray GroutBright along joint lines, wait 5 mins, and brush clean." }
-    ],
-    suitableFor: [
-      "Glass shower cubicles & mirrors",
-      "Chrome, brass, matte black and stainless steel taps",
-      "Ceramic washbasins, bathtubs & western commodes",
-      "Vitrified & ceramic bathroom floor/wall tiles"
-    ],
-    notSuitableFor: [
-      "Acid-sensitive unpolished limestone without dilution"
-    ],
-    specs: {
-      "Kit Contains": "4 Bottles (500ml + 500ml + 250ml + 250ml) + 3 Tools",
-      "Treatment Area": "2 Full Master Bathrooms",
-      "Protection Span": "Up to 6 Months"
-    },
-    relatedProducts: [1, 5, 6, 8]
+    relatedProducts: [1, 4, 8]
   },
   {
     id: 4,
@@ -232,7 +177,7 @@ export const products = [
       "Coverage": "150 - 200 sq. ft. depending on porosity",
       "Finish": "Natural invisible matte / unchanged sheen"
     },
-    relatedProducts: [1, 2, 7, 9]
+    relatedProducts: [1, 2, 8]
   },
   {
     id: 5,
@@ -284,7 +229,7 @@ export const products = [
       "Form": "High-viscosity clinging gel",
       "Scent": "Fresh Crisp Citrus"
     },
-    relatedProducts: [1, 3, 6]
+    relatedProducts: [1, 6]
   },
   {
     id: 6,
@@ -337,59 +282,7 @@ export const products = [
       "Type": "Bio-Enzymatic Degreaser",
       "Safe On Food Prep Areas": "Yes, rinse after cleaning"
     },
-    relatedProducts: [4, 7, 8]
-  },
-  {
-    id: 7,
-    name: "LustreWood Carnauba-Ceramic Polish & Shield",
-    slug: "lustrewood-carnauba-ceramic-polish-shield",
-    category: "Protection",
-    productType: "Surface Protector",
-    surface: ["Wood", "Wood & Veneer"],
-    concerns: ["Wood Surface Damage"],
-    rooms: ["Living Room", "Bedroom", "Dining Area"],
-    price: 649,
-    originalPrice: 899,
-    discount: 27,
-    rating: 4.8,
-    reviewCount: 167,
-    badge: "NATURAL NOURISH",
-    isFeatured: false,
-    isCombo: false,
-    stockStatus: "in_stock",
-    size: "350ml Fine Mist Bottle",
-    shortDescription: "Blended Brazilian carnauba wax + nano-ceramic shield that repels moisture rings and enriches natural timber grain.",
-    description: "Indian humidity and hot chai cups frequently cause cloudy white moisture rings and dryness on solid teak, Sheesham, and engineered veneers. LustreWood feeds deep moisture into wood fibers while forming a microscopic breathable barrier against spills, dust, and daily wear.",
-    thumbnail: "https://images.unsplash.com/photo-1538688525198-9b88f6f53126?auto=format&fit=crop&w=800&q=80",
-    images: [
-      "https://images.unsplash.com/photo-1538688525198-9b88f6f53126?auto=format&fit=crop&w=1000&q=80",
-      "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1000&q=80"
-    ],
-    features: [
-      "Prevents condensation water rings from cups and glasses",
-      "Enriches rich natural wood grain with warm satin finish",
-      "Non-greasy, dust-repellent antistatic formula",
-      "Safe on polished Sheesham, Teak, Oak, Walnut & Veneer"
-    ],
-    howToUse: [
-      { step: "01. Clean", text: "Wipe wood surface with dry cloth to remove loose dust." },
-      { step: "02. Spray & Buff", text: "Mist lightly onto microfiber cloth and buff along the wood grain." },
-      { step: "03. Shine", text: "Flip cloth to dry side and give a final light buff for deep satin glow." }
-    ],
-    suitableFor: [
-      "Solid wood dining tables, study desks & coffee tables",
-      "Veneer wardrobes, consoles & TV units",
-      "Wooden doors, stair railings & mandir frames"
-    ],
-    notSuitableFor: [
-      "Waxed antique finishes without small patch testing"
-    ],
-    specs: {
-      "Volume": "350ml",
-      "Coverage": "Up to 500 sq. ft. of furniture",
-      "Finish": "Satin natural luster"
-    },
-    relatedProducts: [2, 4, 8]
+    relatedProducts: [4, 8]
   },
   {
     id: 8,
@@ -447,56 +340,7 @@ export const products = [
       "Savings": "₹1,100 (33% OFF)",
       "Total Volume": "1,350ml"
     },
-    relatedProducts: [1, 2, 4, 7]
-  },
-  {
-    id: 9,
-    name: "Sacred Shringar Brass, Copper & Mandir Marble Care Set",
-    slug: "sacred-shringar-brass-copper-marble-set",
-    category: "Combos",
-    productType: "Room Kit",
-    surface: ["Metal", "Marble"],
-    concerns: ["Marble & Granite Stains"],
-    rooms: ["Pooja Room"],
-    price: 999,
-    originalPrice: 1499,
-    discount: 33,
-    rating: 4.9,
-    reviewCount: 242,
-    badge: "PUJA ESSENTIAL",
-    isFeatured: false,
-    isCombo: true,
-    stockStatus: "in_stock",
-    size: "250ml Metal Tarnish Shield + 250ml Stone Sealer + Applicator",
-    shortDescription: "Keeps brass diyas, copper lotas, and mandir marble stain-free from kumkum, oil drips, and black oxidation.",
-    description: "Pooja rooms in Indian homes face oily diya drips, incense soot, kumkum/haldi pigments, and rapid brass tarnishing. This dedicated kit restores glowing golden luster to brass and seals marble mandir floors against oil and pigment penetration.",
-    thumbnail: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=800&q=80",
-    images: [
-      "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1000&q=80",
-      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1000&q=80"
-    ],
-    features: [
-      "Prevents brass & copper tarnishing for up to 90 days",
-      "Stops red kumkum and diya oil from staining white marble floors",
-      "Gentle botanical formula safe for holy idols and daily worship items",
-      "No caustic acid fumes or abrasive scratching particles"
-    ],
-    howToUse: [
-      { step: "01. Clean Idols", text: "Apply Brass Shimmer cream, rub gently and buff to mirror shine." },
-      { step: "02. Seal Marble", text: "Apply Mandir Stone Shield on clean marble base to prevent haldi/oil absorption." }
-    ],
-    suitableFor: [
-      "Brass idols, diyas, hanging bells & copper vessels",
-      "White Makrana & Italian marble pooja altars"
-    ],
-    notSuitableFor: [
-      "Gold leaf leafing without spot testing"
-    ],
-    specs: {
-      "Pack": "2x 250ml Bottles + Special Wool Polisher",
-      "Formulation": "Phosphate-free, Non-toxic"
-    },
-    relatedProducts: [4, 5, 8]
+    relatedProducts: [1, 2, 4]
   },
   {
     id: 10,
@@ -548,7 +392,7 @@ export const products = [
       "Finish": "Rich soft matte",
       "Application Frequency": "Every 3 to 6 months"
     },
-    relatedProducts: [2, 7, 8]
+    relatedProducts: [1, 2, 8]
   },
   {
     id: 11,

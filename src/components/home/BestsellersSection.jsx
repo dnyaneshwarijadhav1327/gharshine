@@ -127,36 +127,7 @@ export const BestsellersSection = () => {
             return kit;
           });
 
-          // Include any other remaining Shopify products in this section so ALL products are visible
-          const remainingProducts = res.data.filter((p) => {
-            if (!p || usedProductSlugs.has(p.slug)) return false;
-            // Only include live Shopify or high priority products
-            return (
-              p.thumbnail?.includes('cdn.shopify.com') ||
-              p.isCombo ||
-              p.badge === 'BESTSELLER' ||
-              p.badge === 'SHOPIFY LIVE' ||
-              (p.tags && p.tags.length > 0)
-            );
-          });
-
-          if (remainingProducts.length > 0) {
-            const extraKits = remainingProducts.map((p, idx) => ({
-              id: `custom-room-${p.id || idx}`,
-              title: p.name,
-              subtitle: p.shortDescription || 'Deep Clean & Long-Lasting Protection',
-              saveText: p.originalPrice ? `Save ${Math.round(((p.originalPrice - p.price) / p.originalPrice) * 100)}% Vs Buying Separately` : 'Best Value Kit',
-              price: p.price,
-              originalPrice: p.originalPrice || Math.round(p.price * 1.3),
-              slug: p.slug,
-              cardBg: pastelColors[(updatedKits.length + idx) % pastelColors.length],
-              image: p.thumbnail || p.images?.[0],
-              productId: p.id
-            }));
-            setKits([...updatedKits, ...extraKits]);
-          } else {
-            setKits(updatedKits);
-          }
+          setKits(updatedKits);
         }
       });
     });
