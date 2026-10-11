@@ -48,10 +48,18 @@ export const ConcernSection = () => {
           const match = res.data.find((p) => {
             const pName = (p.name || '').toLowerCase();
             const pSlug = (p.slug || '').toLowerCase();
+            const pCols = (p.collectionTitles || []).join(' ').toLowerCase();
+            const pTags = (p.tags || []).join(' ').toLowerCase();
 
-            // 1. Shower Glass Card -> Opens uploaded Bathroom & Glass Protector Kit
+            // 1. Shower Glass Card -> Collection or Tag: "hard water" or "glass"
             if (c.id === 'hard-water-stains') {
               return (
+                pCols.includes('hard water') ||
+                pCols.includes('hard-water') ||
+                pCols.includes('glass') ||
+                pTags.includes('hard-water') ||
+                pTags.includes('hard water') ||
+                pTags.includes('glass') ||
                 pSlug.includes('bathroom-protector') ||
                 pName.includes('bathroom protector') ||
                 pSlug.includes('glass-tile') ||
@@ -59,22 +67,39 @@ export const ConcernSection = () => {
               );
             }
 
-            // 2. Sofa Card -> Opens Sofa & Fabric Stain Repellent Combo
+            // 2. Sofa Card -> Collection or Tag: "sofa" or "fabric"
             if (c.id === 'sofa-spills-stains') {
-              return pSlug.includes('sofa') || pName.includes('sofa');
+              return (
+                pCols.includes('sofa') ||
+                pCols.includes('fabric') ||
+                pTags.includes('sofa') ||
+                pTags.includes('fabric') ||
+                pSlug.includes('sofa') ||
+                pName.includes('sofa')
+              );
             }
 
-            // 3. Kitchen Tiles Card -> Opens Kitchen Protector Kit / Foam Cleaner
+            // 3. Kitchen Tiles Card -> Collection or Tag: "kitchen" or "tiles"
             if (c.id === 'oil-moisture-damage') {
-              return pSlug.includes('kitchen') || pName.includes('kitchen');
+              return (
+                pCols.includes('kitchen') ||
+                pCols.includes('tile') ||
+                pTags.includes('kitchen') ||
+                pTags.includes('tile') ||
+                pSlug.includes('kitchen') ||
+                pName.includes('kitchen')
+              );
             }
 
-            // 4. Marble Surface Damage Card -> Opens Marble/Bathroom Protection Kit
+            // 4. Marble Surface Damage Card -> Collection or Tag: "marble" or "stone"
             if (c.id === 'permanent-surface-damage') {
               return (
+                pCols.includes('marble') ||
+                pCols.includes('stone') ||
+                pTags.includes('marble') ||
+                pTags.includes('stone') ||
                 pName.includes('marble') ||
-                pSlug.includes('marble') ||
-                pSlug.includes('bathroom-protector')
+                pSlug.includes('marble')
               );
             }
 
