@@ -47,7 +47,7 @@ export const ProductCard = ({ product, className = "" }) => {
           <img
             src={product.thumbnail || product.images?.[0]}
             alt={product.name}
-            className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-700 ease-out"
+            className="w-full h-full object-cover"
             loading="lazy"
           />
         </Link>

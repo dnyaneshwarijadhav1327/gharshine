@@ -1,22 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { ChevronLeft, ChevronRight, ZoomIn, X, Maximize2 } from 'lucide-react';
+import { ChevronLeft, ChevronRight, X } from 'lucide-react';
 
 export const ProductGallery = ({ images = [], productName = "Product" }) => {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [isHoverZoomed, setIsHoverZoomed] = useState(false);
-  const [zoomPos, setZoomPos] = useState({ x: 0, y: 0 });
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
 
   const galleryImages = images.length > 0 ? images : [
     "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1000&q=80"
   ];
-
-  const handleMouseMove = (e) => {
-    const { left, top, width, height } = e.currentTarget.getBoundingClientRect();
-    const x = ((e.clientX - left) / width) * 100;
-    const y = ((e.clientY - top) / height) * 100;
-    setZoomPos({ x, y });
-  };
 
   const handlePrev = (e) => {
     e?.stopPropagation();
@@ -71,30 +62,13 @@ export const ProductGallery = ({ images = [], productName = "Product" }) => {
         onClick={() => setIsLightboxOpen(true)}
         className="relative flex-1 aspect-square rounded-3xl overflow-hidden bg-slate-50 border border-slate-100 group select-none cursor-pointer"
       >
-        {/* Main Image with Hover Lens Effect on Desktop */}
-        <div
-          className="w-full h-full overflow-hidden"
-          onMouseEnter={() => setIsHoverZoomed(true)}
-          onMouseLeave={() => setIsHoverZoomed(false)}
-          onMouseMove={handleMouseMove}
-        >
+        {/* Main Product Image (Steady, NO hover zoom) */}
+        <div className="w-full h-full overflow-hidden flex items-center justify-center">
           <img
             src={galleryImages[activeIndex]}
             alt={`${productName} image ${activeIndex + 1}`}
-            className={`w-full h-full object-cover transition-transform duration-200 ${
-              isHoverZoomed ? 'md:scale-150 md:origin-[var(--zoom-x)_var(--zoom-y)]' : 'scale-100'
-            }`}
-            style={{
-              '--zoom-x': `${zoomPos.x}%`,
-              '--zoom-y': `${zoomPos.y}%`
-            }}
+            className="w-full h-full object-cover"
           />
-        </div>
-
-        {/* Fullscreen Zoom Pill Hint */}
-        <div className="absolute top-4 right-4 bg-black/60 hover:bg-black/80 backdrop-blur-md px-3 py-1.5 rounded-full text-white text-xs font-semibold flex items-center gap-1.5 shadow-md transition pointer-events-none">
-          <Maximize2 size={13} />
-          <span className="hidden sm:inline">Click to expand</span>
         </div>
 
         {/* Left / Right Arrow buttons */}
