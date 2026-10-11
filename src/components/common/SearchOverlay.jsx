@@ -162,7 +162,7 @@ export const SearchOverlay = () => {
                         <img
                           src={p.thumbnail}
                           alt={p.name}
-                          className="w-14 h-14 rounded-xl object-cover shrink-0 group-hover:scale-105 transition"
+                          className="w-14 h-14 rounded-xl object-cover shrink-0"
                           loading="lazy"
                         />
                         <div className="min-w-0">

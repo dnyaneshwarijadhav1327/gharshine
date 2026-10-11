@@ -25,12 +25,13 @@ export const products = [
     size: "Complete Multi-Action Solution Set (50 in stock)",
     shortDescription: "Complete dual-action bathroom transformation: heavy-duty hard water scale remover plus 6-month hydrophobic glass, ceramic & tile nano-shield.",
     description: "Formulated specifically for Indian ground-water conditions with high TDS and mineral hardness. Step 1 removes deep-set white mineral limescale, silica marks and soap scum without scratching. Step 2 creates an ultra-slick, invisible hydrophobic barrier that makes water bead off immediately, preventing future stain formation for up to 180 days.",
-    thumbnail: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=800&q=80",
+    thumbnail: "https://cdn.shopify.com/s/files/1/0831/5037/2921/files/GharShineBathroomCleaningTrio.png?v=1791689722",
     images: [
-      "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1000&q=80",
-      "https://images.unsplash.com/photo-1620626011761-996317b8d101?auto=format&fit=crop&w=1000&q=80",
-      "https://images.unsplash.com/photo-1507652313519-d4e9174996dd?auto=format&fit=crop&w=1000&q=80",
-      "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1000&q=80"
+      "https://cdn.shopify.com/s/files/1/0831/5037/2921/files/GharShineBathroomCleaningTrio.png?v=1791689722",
+      "https://cdn.shopify.com/s/files/1/0831/5037/2921/files/GharShineMarbleProtectionInfographic.png?v=1791689722",
+      "https://cdn.shopify.com/s/files/1/0831/5037/2921/files/GharShineNano-CoatingCleaningSolutions.png?v=1791689722",
+      "https://cdn.shopify.com/s/files/1/0831/5037/2921/files/GharShineGlassProtectionin4Steps.png?v=1791689722",
+      "https://cdn.shopify.com/s/files/1/0831/5037/2921/files/GharShineHardWaterStainRemover.png?v=1791689722"
     ],
     features: [
       "Dissolves stubborn hard water scaling and mineral film in minutes",
@@ -87,11 +88,10 @@ export const products = [
     size: "500ml Spray Bottle",
     shortDescription: "Invisible breathable liquid barrier that repels chai, coffee, wine, oil and masala spills instantly.",
     description: "An advanced water-based fluoropolymer shield engineered for Indian fabrics. It coats individual yarn fibers without blocking the fabric's breathability, altering its original texture, or leaving a stiff plastic feel. Spilled liquids bead up into droplets on the surface and can be wiped away with a dry napkin.",
-    thumbnail: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=800&q=80",
+    thumbnail: "https://cdn.shopify.com/s/files/1/0831/5037/2921/files/GharshineSofaProtectorCombo.png?v=1791652689",
     images: [
-      "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1000&q=80",
-      "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1000&q=80",
-      "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=1000&q=80"
+      "https://cdn.shopify.com/s/files/1/0831/5037/2921/files/GharshineSofaProtectorCombo.png?v=1791652689",
+      "https://cdn.shopify.com/s/files/1/0831/5037/2921/files/GharshineFabricCareProductSet.png?v=1791652689"
     ],
     features: [
       "Liquids bead up instantly for stress-free blotting",
@@ -307,10 +307,11 @@ export const products = [
     size: "500ml Trigger Spray",
     shortDescription: "Plant-derived powerhouse that instantly emulsifies burnt mustard oil, ghee films, and chimney grease.",
     description: "Engineered specifically for authentic Indian cooking where tempering spices and daily frying create tenacious polymerised grease layers. BioDegrease breaks lipid bonds in under 60 seconds, allowing you to wipe away thick yellow oil residue with a single swipe.",
-    thumbnail: "https://images.unsplash.com/photo-1556912172-45b7abe8b7e1?auto=format&fit=crop&w=800&q=80",
+    thumbnail: "https://cdn.shopify.com/s/files/1/0831/5037/2921/files/WhatsAppImage2026-10-10at23.23.25_1.jpg?v=1791654877",
     images: [
-      "https://images.unsplash.com/photo-1556912172-45b7abe8b7e1?auto=format&fit=crop&w=1000&q=80",
-      "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=1000&q=80"
+      "https://cdn.shopify.com/s/files/1/0831/5037/2921/files/WhatsAppImage2026-10-10at23.23.25_1.jpg?v=1791654877",
+      "https://cdn.shopify.com/s/files/1/0831/5037/2921/files/WhatsAppImage2026-10-10at23.23.25.jpg?v=1791654877",
+      "https://cdn.shopify.com/s/files/1/0831/5037/2921/files/WhatsAppImage2026-10-10at23.23.24.jpg?v=1791654877"
     ],
     features: [
       "Melts burnt grease on gas hobs, glass stoves & chimney baffles",

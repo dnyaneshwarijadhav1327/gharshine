@@ -1,50 +1,105 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
 import { formatPrice } from '../../utils/formatters';
-import { Check, Plus, Minus } from 'lucide-react';
+import { productService } from '../../services/productService';
+import { Check, Plus } from 'lucide-react';
 
-const upsellItems = [
+const fallbackUpsellItems = [
   {
-    id: 201,
-    name: 'Kitchen Foam Cleaner | 500ml x2',
-    slug: 'biodegrease-kitchen-hob-chimney-cleaner',
+    id: 'shopify-kitchen-cleaner',
+    name: 'Kitchen Foam Cleaner',
+    slug: 'kitchen-foam-cleaner',
     price: 749,
     originalPrice: 1499,
-    image: 'https://images.unsplash.com/photo-1556912172-45b7abe8b7e1?auto=format&fit=crop&w=400&q=80'
+    image: 'https://cdn.shopify.com/s/files/1/0831/5037/2921/files/WhatsAppImage2026-10-10at23.23.25_1.jpg?v=1791654877'
   },
   {
-    id: 202,
-    name: 'Fabric Foam Cleaner | 500ml x2',
-    slug: 'hydrobarrier-sofa-fabric-stain-repellent',
+    id: 'shopify-sofa-combo',
+    name: 'Sofa & Fabric Stain Repellent Combo',
+    slug: 'sofa-fabric-stain-repellent-combo',
+    price: 1999,
+    originalPrice: 2999,
+    image: 'https://cdn.shopify.com/s/files/1/0831/5037/2921/files/GharshineSofaProtectorCombo.png?v=1791652689'
+  },
+  {
+    id: 'shopify-kitchen-kit',
+    name: 'Kitchen Protector Kit',
+    slug: 'kitchen-protector-kit',
+    price: 1699,
+    originalPrice: 2499,
+    image: 'https://cdn.shopify.com/s/files/1/0831/5037/2921/files/WhatsAppImage2026-10-10at23.37.19.jpg?v=1791655692'
+  },
+  {
+    id: 'shopify-bathroom-kit',
+    name: 'Bathroom Protector Kit',
+    slug: 'bathroom-protector-kit-deep-clean-long-lasting-protection-for-glass-marble-fittings',
+    price: 1599,
+    originalPrice: 2299,
+    image: 'https://cdn.shopify.com/s/files/1/0831/5037/2921/files/GharShineBathroomCleaningTrio.png?v=1791689722'
+  },
+  {
+    id: 'shopify-glass-tile',
+    name: 'Glass & Tile Hard Water Stain Repellent',
+    slug: 'glass-tile-hard-water-stain-repellent',
     price: 749,
-    originalPrice: 1499,
-    image: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=400&q=80'
-  },
-  {
-    id: 203,
-    name: 'Glass & Scale Shield | 500ml',
-    slug: 'bathroom-protector-kit',
-    price: 749,
-    originalPrice: 1499,
-    image: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=400&q=80'
-  },
-  {
-    id: 204,
-    name: 'Wood & Stone Polish | 350ml',
-    slug: 'lustrewood-carnauba-ceramic-polish-shield',
-    price: 649,
     originalPrice: 1299,
-    image: 'https://images.unsplash.com/photo-1538688525198-9b88f6f53126?auto=format&fit=crop&w=400&q=80'
+    image: 'https://cdn.shopify.com/s/files/1/0831/5037/2921/files/Screenshot2026-10-10211226.png?v=1791647191'
   }
 ];
 
-export const BundleUpsellBox = ({ onAddUpsell }) => {
-  const { cartItems, addToCart, removeFromCart, updateQuantity } = useCart();
+export const BundleUpsellBox = ({ currentProduct, onAddUpsell }) => {
+  const { cartItems, addToCart, updateQuantity } = useCart();
+  const [items, setItems] = useState(fallbackUpsellItems);
+
+  useEffect(() => {
+    let isMounted = true;
+    productService
+      .getProducts()
+      .then((res) => {
+        if (!isMounted) return;
+        if (res?.success && Array.isArray(res.data) && res.data.length > 0) {
+          // Format live products
+          const dynamicItems = res.data.map((p) => ({
+            id: p.id,
+            name: p.name,
+            slug: p.slug,
+            price: Number(p.price) || 749,
+            originalPrice: p.originalPrice ? Number(p.originalPrice) : Math.round((Number(p.price) || 749) * 1.5),
+            image: p.thumbnail || p.images?.[0] || 'https://cdn.shopify.com/s/files/1/0831/5037/2921/files/GharShineBathroomCleaningTrio.png?v=1791689722',
+            category: p.category || 'Protection Add-on',
+            shortDescription: p.shortDescription || 'Add-on bundle savings'
+          }));
+
+          // Filter out current product if provided
+          const currentSlug = (currentProduct?.slug || '').toLowerCase();
+          const currentName = (currentProduct?.name || '').toLowerCase();
+          const filtered = dynamicItems.filter((p) => {
+            const pSlug = (p.slug || '').toLowerCase();
+            const pName = (p.name || '').toLowerCase();
+            if (p.id === currentProduct?.id) return false;
+            if (currentSlug && (pSlug === currentSlug || pSlug.includes(currentSlug) || currentSlug.includes(pSlug))) return false;
+            if (currentName && pName === currentName) return false;
+            return true;
+          });
+
+          if (filtered.length > 0) {
+            setItems(filtered.slice(0, 5));
+          }
+        }
+      })
+      .catch((err) => {
+        console.warn('Could not load dynamic bundle upsell items:', err);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [currentProduct?.id, currentProduct?.slug]);
 
   // Determine if item is in cart and its quantity
   const getItemInCart = (itemId) => {
-    return cartItems.find((ci) => ci.product.id === itemId);
+    return cartItems.find((ci) => ci.product.id === itemId || ci.product.slug === itemId);
   };
 
   const handleAdd = (item, e) => {
@@ -59,8 +114,8 @@ export const BundleUpsellBox = ({ onAddUpsell }) => {
         price: item.price,
         originalPrice: item.originalPrice,
         thumbnail: item.image,
-        category: 'Protection Add-on',
-        shortDescription: 'Add-on bundle savings'
+        category: item.category || 'Protection Add-on',
+        shortDescription: item.shortDescription || 'Add-on bundle savings'
       },
       1,
       true
@@ -68,6 +123,17 @@ export const BundleUpsellBox = ({ onAddUpsell }) => {
 
     if (onAddUpsell) onAddUpsell(item);
   };
+
+  // Filter items again in case fallback items contain current product
+  const currentSlug = (currentProduct?.slug || '').toLowerCase();
+  const displayItems = items.filter((item) => {
+    const itemSlug = (item.slug || '').toLowerCase();
+    if (item.id === currentProduct?.id) return false;
+    if (currentSlug && (itemSlug === currentSlug || itemSlug.includes(currentSlug) || currentSlug.includes(itemSlug))) return false;
+    return true;
+  });
+
+  if (displayItems.length === 0) return null;
 
   return (
     <div className="p-4 sm:p-5 rounded-2xl bg-[#EEF9FB] border border-[#D5EEF3] space-y-3">
@@ -82,8 +148,8 @@ export const BundleUpsellBox = ({ onAddUpsell }) => {
 
       {/* Horizontal Upsell Cards */}
       <div className="flex items-center gap-3 overflow-x-auto no-scrollbar pb-1">
-        {upsellItems.map((item) => {
-          const cartEntry = getItemInCart(item.id);
+        {displayItems.map((item) => {
+          const cartEntry = getItemInCart(item.id) || getItemInCart(item.slug);
           const isAdded = Boolean(cartEntry);
 
           return (
@@ -91,7 +157,7 @@ export const BundleUpsellBox = ({ onAddUpsell }) => {
               key={item.id}
               className="w-[220px] sm:w-[240px] shrink-0 bg-white rounded-xl p-2.5 border border-slate-200/80 shadow-2xs hover:shadow-xs transition-all flex items-center gap-3 group"
             >
-              {/* Product Thumbnail (Clickable link to product) */}
+              {/* Product Thumbnail (Clickable link to product) - NO hover zoom */}
               <Link
                 to={`/product/${item.slug}`}
                 className="w-14 h-14 rounded-lg bg-slate-100 overflow-hidden shrink-0 relative block cursor-pointer"
@@ -100,7 +166,7 @@ export const BundleUpsellBox = ({ onAddUpsell }) => {
                 <img
                   src={item.image}
                   alt={item.name}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  className="w-full h-full object-cover"
                   loading="lazy"
                 />
               </Link>
@@ -120,9 +186,11 @@ export const BundleUpsellBox = ({ onAddUpsell }) => {
                   <span className="text-xs font-black text-slate-900">
                     {formatPrice(item.price)}
                   </span>
-                  <span className="text-[10px] text-slate-400 line-through">
-                    {formatPrice(item.originalPrice)}
-                  </span>
+                  {item.originalPrice && (
+                    <span className="text-[10px] text-slate-400 line-through">
+                      {formatPrice(item.originalPrice)}
+                    </span>
+                  )}
                 </div>
 
                 <div className="mt-1.5 flex items-center">
@@ -131,7 +199,7 @@ export const BundleUpsellBox = ({ onAddUpsell }) => {
                       <Check size={12} className="text-emerald-600" />
                       <span>Added ({cartEntry.quantity})</span>
                       <button
-                        onClick={() => updateQuantity(item.id, 1)}
+                        onClick={() => updateQuantity(cartEntry.product.id, 1)}
                         className="ml-1 text-emerald-900 hover:text-emerald-950 font-black cursor-pointer"
                         title="Add one more"
                       >

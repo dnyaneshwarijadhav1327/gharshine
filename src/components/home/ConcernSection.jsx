@@ -213,7 +213,7 @@ export const ConcernSection = () => {
                 <img
                   src={item.image}
                   alt={item.title}
-                  className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                  className="absolute inset-0 w-full h-full object-cover"
                   loading="lazy"
                 />
 

@@ -85,7 +85,7 @@ export const ProductCard = ({ product, className = "" }) => {
         <div className="absolute inset-x-2.5 bottom-2.5 hidden sm:flex items-center gap-1.5 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 z-10">
           <button
             onClick={handleQuickViewClick}
-            className="flex-1 py-2.5 bg-white/95 backdrop-blur-md hover:bg-white text-slate-800 rounded-xl text-xs font-black shadow-md transition-all flex items-center justify-center gap-1.5 border border-slate-100 cursor-pointer hover:scale-102"
+            className="flex-1 py-2.5 bg-white/95 backdrop-blur-md hover:bg-white text-slate-800 rounded-xl text-xs font-black shadow-md transition-all flex items-center justify-center gap-1.5 border border-slate-100 cursor-pointer"
           >
             <Eye size={14} />
             <span>Quick View</span>
@@ -94,7 +94,7 @@ export const ProductCard = ({ product, className = "" }) => {
           <button
             onClick={handleQuickAdd}
             disabled={isAdding}
-            className={`flex-1 py-2.5 text-white rounded-xl text-xs font-black shadow-md transition-all flex items-center justify-center gap-1.5 cursor-pointer hover:scale-102 ${
+            className={`flex-1 py-2.5 text-white rounded-xl text-xs font-black shadow-md transition-all flex items-center justify-center gap-1.5 cursor-pointer ${
               isAdding ? 'bg-emerald-600' : 'bg-[#087F8C] hover:bg-[#066670]'
             }`}
           >

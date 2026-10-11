@@ -45,7 +45,7 @@ export const SurfaceGrid = () => {
                 <img
                   src={s.image}
                   alt={s.name}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out filter brightness-95"
+                  className="w-full h-full object-cover filter brightness-95"
                   loading="lazy"
                 />
                 

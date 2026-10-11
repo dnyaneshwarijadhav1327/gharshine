@@ -1,14 +1,37 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Sparkles, Check, ShoppingBag, ArrowRight, ShieldCheck } from 'lucide-react';
-import { products } from '../../data/products';
+import { products as fallbackProducts } from '../../data/products';
+import { productService } from '../../services/productService';
 import { formatPrice } from '../../utils/formatters';
 import { useCart } from '../../context/CartContext';
 import { RatingStars } from '../common/RatingStars';
 
 export const FeaturedComboSection = () => {
   const { addToCart } = useCart();
-  const combos = products.filter((p) => p.isCombo).slice(0, 2);
+  const [combos, setCombos] = useState(() => fallbackProducts.filter((p) => p.isCombo).slice(0, 2));
+
+  useEffect(() => {
+    let isMounted = true;
+    productService
+      .getProducts()
+      .then((res) => {
+        if (!isMounted) return;
+        if (res?.success && Array.isArray(res.data) && res.data.length > 0) {
+          const liveCombos = res.data.filter((p) => p.isCombo);
+          if (liveCombos.length > 0) {
+            setCombos(liveCombos.slice(0, 2));
+          }
+        }
+      })
+      .catch((err) => {
+        console.warn('Could not load dynamic combos in FeaturedComboSection:', err);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   return (
     <section className="py-16 sm:py-24 bg-[#F8FAFA] border-y border-slate-100">
@@ -66,7 +89,7 @@ export const FeaturedComboSection = () => {
                     <img
                       src={combo.thumbnail}
                       alt={combo.name}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      className="w-full h-full object-cover"
                       loading="lazy"
                     />
                     <div className="absolute bottom-3 left-3 bg-slate-900/80 backdrop-blur-md px-3 py-1 rounded-lg text-[11px] text-white font-medium">

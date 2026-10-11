@@ -185,7 +185,7 @@ export const ProductDetailPage = () => {
             </div>
 
             {/* "Add more to your bundle" Widget */}
-            <BundleUpsellBox />
+            <BundleUpsellBox currentProduct={product} />
 
             {/* Price Display with Save badge */}
             <div className="flex items-baseline gap-3 pt-1">

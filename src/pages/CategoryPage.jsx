@@ -125,7 +125,7 @@ export const CategoryPage = () => {
                 <img
                   src={s.image}
                   alt={s.name}
-                  className="w-12 h-12 rounded-xl object-cover group-hover:scale-105 transition"
+                  className="w-12 h-12 rounded-xl object-cover"
                   loading="lazy"
                 />
                 <div className="min-w-0">

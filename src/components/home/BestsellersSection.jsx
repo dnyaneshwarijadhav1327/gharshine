@@ -58,30 +58,59 @@ export const BestsellersSection = () => {
           const usedProductSlugs = new Set();
 
           const updatedKits = roomKits.map((kit) => {
-            // Try to find a matching product by slug, room keyword, tags or collection
-            const match = res.data.find((p) => {
-              if (!p) return false;
-              if (p.slug === kit.slug) return true;
-              const pName = (p.name || '').toLowerCase();
-              const pSlug = (p.slug || '').toLowerCase();
-              const pCols = (p.collectionTitles || []).join(' ').toLowerCase();
-              const pTags = (p.tags || []).join(' ').toLowerCase();
-              const pRooms = (p.rooms || []).join(' ').toLowerCase();
+            // Prioritize exact kit match first
+            let match = null;
 
-              if (kit.id === 'kitchen-kit') {
-                if (pSlug === 'kitchen-protector-kit' || pName.toLowerCase().includes('kitchen protector kit')) return true;
-                return pName.includes('kitchen') || pSlug.includes('kitchen') || pCols.includes('kitchen') || pTags.includes('kitchen') || pRooms.includes('kitchen');
+            if (kit.id === 'bathroom-kit') {
+              match = res.data.find((p) => {
+                if (!p) return false;
+                const pName = (p.name || '').toLowerCase();
+                const pSlug = (p.slug || '').toLowerCase();
+                return pSlug.includes('bathroom-protector') || pName.includes('bathroom protector');
+              });
+              if (!match) {
+                match = res.data.find((p) => {
+                  if (!p) return false;
+                  const pName = (p.name || '').toLowerCase();
+                  const pSlug = (p.slug || '').toLowerCase();
+                  return pName.includes('bathroom') || pSlug.includes('bathroom');
+                });
               }
-              if (kit.id === 'bathroom-kit') {
-                if (pSlug.includes('bathroom-protector') || pName.toLowerCase().includes('bathroom protector kit')) return true;
-                return pName.includes('bathroom') || pSlug.includes('bathroom') || pSlug.includes('glass-tile') || pName.includes('glass & ceramics') || pCols.includes('bathroom') || pTags.includes('bathroom') || pRooms.includes('bathroom');
+            } else if (kit.id === 'kitchen-kit') {
+              match = res.data.find((p) => {
+                if (!p) return false;
+                const pName = (p.name || '').toLowerCase();
+                const pSlug = (p.slug || '').toLowerCase();
+                return pSlug.includes('kitchen-protector') || pName.includes('kitchen protector');
+              });
+              if (!match) {
+                match = res.data.find((p) => {
+                  if (!p) return false;
+                  const pName = (p.name || '').toLowerCase();
+                  const pSlug = (p.slug || '').toLowerCase();
+                  return pName.includes('kitchen') || pSlug.includes('kitchen');
+                });
               }
-              if (kit.id === 'living-room-kit') {
-                if (pSlug.includes('sofa-fabric') || pName.toLowerCase().includes('sofa & fabric')) return true;
-                return pName.includes('living') || pName.includes('sofa') || pSlug.includes('sofa') || pCols.includes('living') || pTags.includes('living') || pRooms.includes('living');
+            } else if (kit.id === 'living-room-kit') {
+              match = res.data.find((p) => {
+                if (!p) return false;
+                const pName = (p.name || '').toLowerCase();
+                const pSlug = (p.slug || '').toLowerCase();
+                return pSlug.includes('sofa-fabric') || pName.includes('sofa & fabric') || pSlug.includes('sofa');
+              });
+              if (!match) {
+                match = res.data.find((p) => {
+                  if (!p) return false;
+                  const pName = (p.name || '').toLowerCase();
+                  const pSlug = (p.slug || '').toLowerCase();
+                  return pName.includes('living') || pSlug.includes('living') || pName.includes('sofa');
+                });
               }
-              return false;
-            });
+            }
+
+            if (!match) {
+              match = res.data.find((p) => p && p.slug === kit.slug);
+            }
 
             if (match) {
               usedProductSlugs.add(match.slug);
@@ -98,25 +127,24 @@ export const BestsellersSection = () => {
             return kit;
           });
 
-          // Check if there are any extra products in Shopify added to a "Room By Room" collection or tagged "room"
-          const extraRoomProducts = res.data.filter((p) => {
+          // Include any other remaining Shopify products in this section so ALL products are visible
+          const remainingProducts = res.data.filter((p) => {
             if (!p || usedProductSlugs.has(p.slug)) return false;
-            const pCols = (p.collectionTitles || []).join(' ').toLowerCase();
-            const pTags = (p.tags || []).join(' ').toLowerCase();
+            // Only include live Shopify or high priority products
             return (
-              pCols.includes('room by room') ||
-              pCols.includes('room-by-room') ||
-              pCols.includes('protect your home') ||
-              pTags.includes('room-by-room') ||
-              pTags.includes('room')
+              p.thumbnail?.includes('cdn.shopify.com') ||
+              p.isCombo ||
+              p.badge === 'BESTSELLER' ||
+              p.badge === 'SHOPIFY LIVE' ||
+              (p.tags && p.tags.length > 0)
             );
           });
 
-          if (extraRoomProducts.length > 0) {
-            const extraKits = extraRoomProducts.map((p, idx) => ({
+          if (remainingProducts.length > 0) {
+            const extraKits = remainingProducts.map((p, idx) => ({
               id: `custom-room-${p.id || idx}`,
               title: p.name,
-              subtitle: p.shortDescription || 'Protect and Clean your home surfaces',
+              subtitle: p.shortDescription || 'Deep Clean & Long-Lasting Protection',
               saveText: p.originalPrice ? `Save ${Math.round(((p.originalPrice - p.price) / p.originalPrice) * 100)}% Vs Buying Separately` : 'Best Value Kit',
               price: p.price,
               originalPrice: p.originalPrice || Math.round(p.price * 1.3),

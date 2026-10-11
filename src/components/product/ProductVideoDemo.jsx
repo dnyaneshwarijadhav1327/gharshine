@@ -70,7 +70,7 @@ export const ProductVideoDemo = ({
               <img
                 src={videoPoster}
                 alt="Product video preview"
-                className="w-full h-full object-cover brightness-75 group-hover:scale-102 transition-transform duration-700"
+                className="w-full h-full object-cover brightness-75"
               />
               
               {/* Dark overlay with highlights */}

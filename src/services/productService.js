@@ -22,8 +22,51 @@ export const productService = {
         const liveShopifyProducts = shopifyData.products.edges
           .map((e) => formatShopifyProduct(e.node))
           .filter(Boolean);
+
         if (liveShopifyProducts.length > 0) {
-          result = [...liveShopifyProducts, ...products];
+          // Enhance live Shopify products with rich schema details (surface, howToUse, features)
+          const enhancedLive = liveShopifyProducts.map((lp) => {
+            const lpName = (lp.name || '').toLowerCase();
+            const lpSlug = (lp.slug || '').toLowerCase();
+            const localMatch = products.find((p) => {
+              const pName = (p.name || '').toLowerCase();
+              const pSlug = (p.slug || '').toLowerCase();
+              if (lpSlug === pSlug) return true;
+              if (lpSlug.includes('bathroom') && (pSlug.includes('bathroom') || pName.includes('bathroom'))) return true;
+              if (lpSlug.includes('kitchen-foam') && (pSlug.includes('kitchen') || pName.includes('kitchen'))) return true;
+              if (lpSlug.includes('sofa') && (pSlug.includes('sofa') || pSlug.includes('fabric'))) return true;
+              if (lpSlug.includes('kitchen-protector') && (pSlug.includes('kitchen') || pName.includes('kitchen'))) return true;
+              return false;
+            });
+
+            if (localMatch) {
+              return {
+                ...localMatch,
+                ...lp,
+                thumbnail: lp.thumbnail || localMatch.thumbnail,
+                images: lp.images?.length > 0 ? lp.images : localMatch.images,
+                surface: localMatch.surface || lp.surface,
+                howToUse: localMatch.howToUse || lp.howToUse,
+                features: localMatch.features || lp.features,
+                suitableFor: localMatch.suitableFor || lp.suitableFor,
+                notSuitableFor: localMatch.notSuitableFor || lp.notSuitableFor
+              };
+            }
+            return lp;
+          });
+
+          // Deduplicate: filter out fallback products that match live Shopify products
+          const liveSlugs = new Set(enhancedLive.map((p) => p.slug.toLowerCase()));
+          const remainingLocal = products.filter((p) => {
+            const pSlug = (p.slug || '').toLowerCase();
+            const pName = (p.name || '').toLowerCase();
+            if (pSlug.includes('bathroom-protector') || pName.includes('bathroom protector')) return false;
+            if (pSlug.includes('kitchen') && liveSlugs.has('kitchen-foam-cleaner')) return false;
+            if ((pSlug.includes('sofa') || pSlug.includes('fabric')) && liveSlugs.has('sofa-fabric-stain-repellent-combo')) return false;
+            return !liveSlugs.has(pSlug);
+          });
+
+          result = [...enhancedLive, ...remainingLocal];
         }
       }
     } catch (e) {
@@ -116,18 +159,37 @@ export const productService = {
 
     const cleanSlug = slug.toLowerCase().trim();
 
+    // Map combo & room kit aliases to live Shopify handles
+    const slugAliases = {
+      'bathroom-protector-kit': 'bathroom-protector-kit-deep-clean-long-lasting-protection-for-glass-marble-fittings',
+      'bathroom-kit': 'bathroom-protector-kit-deep-clean-long-lasting-protection-for-glass-marble-fittings',
+      'complete-bathroom-care-shield-kit': 'bathroom-protector-kit-deep-clean-long-lasting-protection-for-glass-marble-fittings',
+      'kitchen-kit': 'kitchen-protector-kit',
+      'biodegrease-kitchen-hob-chimney-cleaner': 'kitchen-foam-cleaner',
+      'living-room-kit': 'sofa-fabric-stain-repellent-combo',
+      'living-room-complete-protection-kit': 'sofa-fabric-stain-repellent-combo',
+      'hydrobarrier-sofa-fabric-stain-repellent': 'sofa-fabric-stain-repellent-combo',
+      'glass-ceramics-cleaning-protection-combo': 'abc',
+      'glass-tile-stain-repellent': 'glass-tile-hard-water-stain-repellent',
+      'ultimate-whole-home-protection-combo': 'sofa-fabric-stain-repellent-combo',
+      'balcony-kit': 'glass-tile-hard-water-stain-repellent',
+      'dining-kit': 'kitchen-foam-cleaner'
+    };
+
+    const targetSlug = slugAliases[cleanSlug] || cleanSlug;
+
     // 1. Check live Shopify products FIRST so real images, titles & prices always show!
     try {
       // Try direct handle lookup
       const shopifyData = await shopifyFetch({
         query: SHOPIFY_QUERIES.GET_PRODUCT_BY_HANDLE,
-        variables: { handle: cleanSlug }
+        variables: { handle: targetSlug }
       });
       if (shopifyData?.product) {
         const liveProduct = formatShopifyProduct(shopifyData.product);
         if (liveProduct) {
           const localMatch = products.find(
-            (p) => p.slug === cleanSlug || p.name.toLowerCase() === liveProduct.name.toLowerCase()
+            (p) => p.slug === cleanSlug || p.slug === targetSlug || p.name.toLowerCase() === liveProduct.name.toLowerCase()
           );
           if (localMatch) {
             return {
@@ -135,7 +197,7 @@ export const productService = {
               data: {
                 ...localMatch,
                 ...liveProduct,
-                thumbnail: liveProduct.thumbnail,
+                thumbnail: liveProduct.thumbnail || localMatch.thumbnail,
                 images: liveProduct.images && liveProduct.images.length > 0 ? liveProduct.images : localMatch.images
               }
             };
@@ -154,10 +216,14 @@ export const productService = {
           const h = (e.node.handle || '').toLowerCase();
           const t = (e.node.title || '').toLowerCase();
           return (
+            h === targetSlug ||
             h === cleanSlug ||
-            e.node.id === cleanSlug ||
+            e.node.id === targetSlug ||
+            h.includes(targetSlug) ||
+            targetSlug.includes(h) ||
             h.includes(cleanSlug) ||
             cleanSlug.includes(h) ||
+            t.includes(targetSlug.replace(/-/g, ' ')) ||
             t.includes(cleanSlug.replace(/-/g, ' '))
           );
         });
@@ -165,7 +231,7 @@ export const productService = {
           const liveProduct = formatShopifyProduct(match.node);
           if (liveProduct) {
             const localMatch = products.find(
-              (p) => p.slug === cleanSlug || p.name.toLowerCase() === liveProduct.name.toLowerCase()
+              (p) => p.slug === cleanSlug || p.slug === targetSlug || p.name.toLowerCase() === liveProduct.name.toLowerCase()
             );
             if (localMatch) {
               return {
@@ -173,7 +239,7 @@ export const productService = {
                 data: {
                   ...localMatch,
                   ...liveProduct,
-                  thumbnail: liveProduct.thumbnail,
+                  thumbnail: liveProduct.thumbnail || localMatch.thumbnail,
                   images: liveProduct.images && liveProduct.images.length > 0 ? liveProduct.images : localMatch.images
                 }
               };
@@ -185,19 +251,6 @@ export const productService = {
     } catch (e) {
       console.warn('Error fetching live product from Shopify:', e);
     }
-
-    // 2. Map combo & room kit aliases if Shopify lookup had no direct match
-    const slugAliases = {
-      'glass-ceramics-cleaning-protection-combo': 'bathroom-protector-kit',
-      'ultimate-whole-home-protection-combo': 'living-room-complete-protection-kit',
-      'bathroom-kit': 'bathroom-protector-kit',
-      'living-room-kit': 'living-room-complete-protection-kit',
-      'kitchen-kit': 'biodegrease-kitchen-hob-chimney-cleaner',
-      'balcony-kit': 'groutbright-tile-joint-whitener-shield',
-      'dining-kit': 'lustrewood-carnauba-ceramic-polish-shield'
-    };
-
-    const targetSlug = slugAliases[cleanSlug] || cleanSlug;
 
     // 3. Fallback to local catalog
     let product = products.find(
