@@ -43,16 +43,44 @@ export const ConcernSection = () => {
     productService.getProducts().then((res) => {
       if (!isMounted) return;
       if (res?.success && Array.isArray(res.data) && res.data.length > 0) {
-        // Link cards to live Shopify products if matched
+        // Link each of the 4 problem cards directly to its respective live Shopify product
         const updated = defaultConcerns.map((c) => {
           const match = res.data.find((p) => {
             const pName = (p.name || '').toLowerCase();
             const pSlug = (p.slug || '').toLowerCase();
-            if (c.id === 'hard-water-stains') return pSlug.includes('glass-tile') || pName.includes('hard water');
-            if (c.id === 'sofa-spills-stains') return pSlug.includes('sofa') || pName.includes('sofa');
-            if (c.id === 'oil-moisture-damage') return pSlug.includes('kitchen') || pName.includes('kitchen');
+
+            // 1. Shower Glass Card -> Opens uploaded Bathroom & Glass Protector Kit
+            if (c.id === 'hard-water-stains') {
+              return (
+                pSlug.includes('bathroom-protector') ||
+                pName.includes('bathroom protector') ||
+                pSlug.includes('glass-tile') ||
+                pName.includes('hard water')
+              );
+            }
+
+            // 2. Sofa Card -> Opens Sofa & Fabric Stain Repellent Combo
+            if (c.id === 'sofa-spills-stains') {
+              return pSlug.includes('sofa') || pName.includes('sofa');
+            }
+
+            // 3. Kitchen Tiles Card -> Opens Kitchen Protector Kit / Foam Cleaner
+            if (c.id === 'oil-moisture-damage') {
+              return pSlug.includes('kitchen') || pName.includes('kitchen');
+            }
+
+            // 4. Marble Surface Damage Card -> Opens Marble/Bathroom Protection Kit
+            if (c.id === 'permanent-surface-damage') {
+              return (
+                pName.includes('marble') ||
+                pSlug.includes('marble') ||
+                pSlug.includes('bathroom-protector')
+              );
+            }
+
             return false;
           });
+
           if (match) {
             return {
               ...c,
@@ -62,26 +90,8 @@ export const ConcernSection = () => {
           return c;
         });
 
-        // Add any extra products from Shopify added to a "Concerns" collection or tagged "concern"
-        const extraConcernProducts = res.data.filter((p) => {
-          const cols = (p.collectionTitles || []).join(' ').toLowerCase();
-          const tags = (p.tags || []).join(' ').toLowerCase();
-          return cols.includes('concern') || tags.includes('concern');
-        });
-
-        if (extraConcernProducts.length > 0) {
-          const extraCards = extraConcernProducts.map((p, idx) => ({
-            id: `custom-concern-${p.id || idx}`,
-            title: p.name,
-            subtitle: p.shortDescription || 'Deep clean + long-lasting protection for glass, marble & bathroom fittings.',
-            image: p.thumbnail || p.images?.[0] || '/images/concern-shower-glass.jpg',
-            link: `/product/${p.slug}`
-          }));
-          // Place live Shopify concern products at the FRONT so they are immediately visible!
-          setConcerns([...extraCards, ...updated]);
-        } else {
-          setConcerns(updated);
-        }
+        // Keep the exact 4 problem cards on the front page, now linked to their respective products
+        setConcerns(updated);
       }
     });
 
