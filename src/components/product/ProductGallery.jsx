@@ -23,12 +23,17 @@ export const ProductGallery = ({ images = [], productName = "Product" }) => {
 
   // Scroll active thumbnail into view
   useEffect(() => {
-    if (thumbRefs.current[activeIndex]) {
-      thumbRefs.current[activeIndex].scrollIntoView({
-        behavior: 'smooth',
-        block: 'nearest',
-        inline: 'nearest'
-      });
+    try {
+      const el = thumbRefs.current?.[activeIndex];
+      if (el && typeof el.scrollIntoView === 'function') {
+        el.scrollIntoView({
+          behavior: 'smooth',
+          block: 'nearest',
+          inline: 'nearest'
+        });
+      }
+    } catch {
+      // safe fallback
     }
   }, [activeIndex]);
 

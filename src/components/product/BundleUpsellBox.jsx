@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
 import { formatPrice } from '../../utils/formatters';
 import { productService } from '../../services/productService';
-import { Check, Plus } from 'lucide-react';
+import { Check, Plus, ChevronLeft, ChevronRight } from 'lucide-react';
 
 const fallbackUpsellItems = [
   {
@@ -59,6 +59,14 @@ const fallbackUpsellItems = [
 export const BundleUpsellBox = ({ currentProduct, onAddUpsell }) => {
   const { cartItems, addToCart, updateQuantity } = useCart();
   const [items, setItems] = useState(fallbackUpsellItems);
+  const scrollContainerRef = useRef(null);
+
+  const handleScroll = (direction) => {
+    if (scrollContainerRef.current) {
+      const scrollAmount = direction === 'left' ? -250 : 250;
+      scrollContainerRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    }
+  };
 
   useEffect(() => {
     let isMounted = true;
@@ -142,15 +150,6 @@ export const BundleUpsellBox = ({ currentProduct, onAddUpsell }) => {
   });
 
   if (displayItems.length === 0) return null;
-
-  const scrollContainerRef = React.useRef(null);
-
-  const handleScroll = (direction) => {
-    if (scrollContainerRef.current) {
-      const scrollAmount = direction === 'left' ? -250 : 250;
-      scrollContainerRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
-    }
-  };
 
   return (
     <div className="p-4 sm:p-5 rounded-2xl bg-[#EEF9FB] border border-[#D5EEF3] space-y-3">
