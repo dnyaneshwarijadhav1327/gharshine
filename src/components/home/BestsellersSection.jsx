@@ -69,12 +69,15 @@ export const BestsellersSection = () => {
               const pRooms = (p.rooms || []).join(' ').toLowerCase();
 
               if (kit.id === 'kitchen-kit') {
+                if (pSlug === 'kitchen-protector-kit' || pName.toLowerCase().includes('kitchen protector kit')) return true;
                 return pName.includes('kitchen') || pSlug.includes('kitchen') || pCols.includes('kitchen') || pTags.includes('kitchen') || pRooms.includes('kitchen');
               }
               if (kit.id === 'bathroom-kit') {
+                if (pSlug.includes('bathroom-protector') || pName.toLowerCase().includes('bathroom protector kit')) return true;
                 return pName.includes('bathroom') || pSlug.includes('bathroom') || pSlug.includes('glass-tile') || pName.includes('glass & ceramics') || pCols.includes('bathroom') || pTags.includes('bathroom') || pRooms.includes('bathroom');
               }
               if (kit.id === 'living-room-kit') {
+                if (pSlug.includes('sofa-fabric') || pName.toLowerCase().includes('sofa & fabric')) return true;
                 return pName.includes('living') || pName.includes('sofa') || pSlug.includes('sofa') || pCols.includes('living') || pTags.includes('living') || pRooms.includes('living');
               }
               return false;

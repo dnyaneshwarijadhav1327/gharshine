@@ -73,11 +73,12 @@ export const ConcernSection = () => {
           const extraCards = extraConcernProducts.map((p, idx) => ({
             id: `custom-concern-${p.id || idx}`,
             title: p.name,
-            subtitle: p.shortDescription || 'Targeted protection formula for everyday home stains.',
+            subtitle: p.shortDescription || 'Deep clean + long-lasting protection for glass, marble & bathroom fittings.',
             image: p.thumbnail || p.images?.[0] || '/images/concern-shower-glass.jpg',
             link: `/product/${p.slug}`
           }));
-          setConcerns([...updated, ...extraCards]);
+          // Place live Shopify concern products at the FRONT so they are immediately visible!
+          setConcerns([...extraCards, ...updated]);
         } else {
           setConcerns(updated);
         }
@@ -166,10 +167,10 @@ export const ConcernSection = () => {
 
                 {/* Card Text Content */}
                 <div className="relative z-10 text-center space-y-1.5 sm:space-y-2">
-                  <h3 className="text-lg sm:text-xl font-bold text-white leading-tight">
+                  <h3 className="text-lg sm:text-xl font-bold text-white leading-tight line-clamp-2">
                     {item.title}
                   </h3>
-                  <p className="text-xs sm:text-[13px] text-slate-200 leading-relaxed font-normal">
+                  <p className="text-xs sm:text-[13px] text-slate-200 leading-relaxed font-normal line-clamp-2">
                     {item.subtitle}
                   </p>
                 </div>
