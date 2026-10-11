@@ -32,6 +32,7 @@ export const productService = {
               const pName = (p.name || '').toLowerCase();
               const pSlug = (p.slug || '').toLowerCase();
               if (lpSlug === pSlug) return true;
+              if ((lpSlug === 'living-room-kit' || lpSlug.includes('living-room')) && (pSlug.includes('living-room') || pName.includes('living room'))) return true;
               if (lpSlug.includes('bathroom') && (pSlug.includes('bathroom') || pName.includes('bathroom'))) return true;
               if (lpSlug.includes('kitchen-foam') && (pSlug.includes('kitchen') || pName.includes('kitchen'))) return true;
               if (lpSlug.includes('sofa') && (pSlug.includes('sofa') || pSlug.includes('fabric'))) return true;
@@ -61,6 +62,7 @@ export const productService = {
             const pSlug = (p.slug || '').toLowerCase();
             const pName = (p.name || '').toLowerCase();
             if (pSlug.includes('bathroom-protector') || pName.includes('bathroom protector')) return false;
+            if (pSlug.includes('living-room') || pName.includes('living room')) return false;
             if (pSlug.includes('kitchen') && liveSlugs.has('kitchen-foam-cleaner')) return false;
             if ((pSlug.includes('sofa') || pSlug.includes('fabric')) && liveSlugs.has('sofa-fabric-stain-repellent-combo')) return false;
             return !liveSlugs.has(pSlug);
@@ -166,12 +168,13 @@ export const productService = {
       'complete-bathroom-care-shield-kit': 'bathroom-protector-kit-deep-clean-long-lasting-protection-for-glass-marble-fittings',
       'kitchen-kit': 'kitchen-protector-kit',
       'biodegrease-kitchen-hob-chimney-cleaner': 'kitchen-foam-cleaner',
-      'living-room-kit': 'sofa-fabric-stain-repellent-combo',
-      'living-room-complete-protection-kit': 'sofa-fabric-stain-repellent-combo',
+      'living-room-kit': 'living-room-kit',
+      'living-room-complete-protection-kit': 'living-room-kit',
+      'sofa-fabric-stain-repellent': 'sofa-fabric-stain-repellent-combo',
       'hydrobarrier-sofa-fabric-stain-repellent': 'sofa-fabric-stain-repellent-combo',
       'glass-ceramics-cleaning-protection-combo': 'abc',
       'glass-tile-stain-repellent': 'glass-tile-hard-water-stain-repellent',
-      'ultimate-whole-home-protection-combo': 'sofa-fabric-stain-repellent-combo',
+      'ultimate-whole-home-protection-combo': 'living-room-kit',
       'balcony-kit': 'glass-tile-hard-water-stain-repellent',
       'dining-kit': 'kitchen-foam-cleaner'
     };

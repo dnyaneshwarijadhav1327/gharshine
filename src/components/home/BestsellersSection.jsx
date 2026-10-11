@@ -16,9 +16,9 @@ export const BestsellersSection = () => {
       saveText: 'Save 24% Vs Buying Separately',
       price: 1999,
       originalPrice: 3399,
-      slug: 'bathroom-protector-kit',
+      slug: 'bathroom-protector-kit-deep-clean-long-lasting-protection-for-glass-marble-fittings',
       cardBg: 'bg-[#6fe2f5]',
-      image: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=600&q=80',
+      image: 'https://cdn.shopify.com/s/files/1/0831/5037/2921/files/GharShineBathroomCleaningTrio.png?v=1791689722',
       productId: 1
     },
     {
@@ -28,9 +28,9 @@ export const BestsellersSection = () => {
       saveText: 'Save 44% Vs Buying Separately',
       price: 1999,
       originalPrice: 4299,
-      slug: 'living-room-complete-protection-kit',
+      slug: 'living-room-kit',
       cardBg: 'bg-[#ffa380]',
-      image: 'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=600&q=80',
+      image: 'https://cdn.shopify.com/s/files/1/0831/5037/2921/files/GharShineCleaningCollectionDisplay.png?v=1791707672',
       productId: 8
     },
     {
@@ -40,9 +40,9 @@ export const BestsellersSection = () => {
       saveText: 'Save 39% Vs Buying Separately',
       price: 1699,
       originalPrice: 3299,
-      slug: 'biodegrease-kitchen-hob-chimney-cleaner',
+      slug: 'kitchen-protector-kit',
       cardBg: 'bg-[#d5bcfc]',
-      image: 'https://images.unsplash.com/photo-1556912172-45b7abe8b7e1?auto=format&fit=crop&w=600&q=80',
+      image: 'https://cdn.shopify.com/s/files/1/0831/5037/2921/files/WhatsAppImage2026-10-10at23.37.19.jpg?v=1791655692',
       productId: 6
     }
   ];
@@ -96,14 +96,14 @@ export const BestsellersSection = () => {
                 if (!p) return false;
                 const pName = (p.name || '').toLowerCase();
                 const pSlug = (p.slug || '').toLowerCase();
-                return pSlug.includes('sofa-fabric') || pName.includes('sofa & fabric') || pSlug.includes('sofa');
+                return pSlug === 'living-room-kit' || pSlug.includes('living-room') || pName.includes('living room');
               });
               if (!match) {
                 match = res.data.find((p) => {
                   if (!p) return false;
                   const pName = (p.name || '').toLowerCase();
                   const pSlug = (p.slug || '').toLowerCase();
-                  return pName.includes('living') || pSlug.includes('living') || pName.includes('sofa');
+                  return pSlug.includes('sofa-fabric') || pName.includes('sofa & fabric') || pSlug.includes('sofa');
                 });
               }
             }
