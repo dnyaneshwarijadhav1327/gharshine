@@ -109,18 +109,18 @@ export const ProductDetailPage = () => {
         />
 
         {/* Top Product Hero Split */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 pt-4 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 pt-4 items-start">
           
-          {/* Left Column: Interactive Image Gallery (7 cols) */}
-          <div className="lg:col-span-7">
+          {/* Left Column: Interactive Image Gallery (Balanced for Laptop & Desktop) */}
+          <div className="lg:col-span-6 xl:col-span-7 lg:sticky lg:top-24">
             <ProductGallery
               images={product.images || [product.thumbnail]}
               productName={product.name}
             />
           </div>
 
-          {/* Right Column: Buying Options & Details (5 cols) */}
-          <div className="lg:col-span-5 space-y-4">
+          {/* Right Column: Buying Options & Details */}
+          <div className="lg:col-span-6 xl:col-span-5 space-y-4">
             
             {/* Badges & Surface tags */}
             <div className="flex items-center justify-between gap-2">

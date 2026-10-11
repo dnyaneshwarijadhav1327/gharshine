@@ -23,6 +23,14 @@ const fallbackUpsellItems = [
     image: 'https://cdn.shopify.com/s/files/1/0831/5037/2921/files/GharshineSofaProtectorCombo.png?v=1791652689'
   },
   {
+    id: 'shopify-living-room-kit',
+    name: 'Living Room Kit',
+    slug: 'living-room-kit',
+    price: 1999,
+    originalPrice: 4299,
+    image: 'https://cdn.shopify.com/s/files/1/0831/5037/2921/files/GharShineCleaningCollectionDisplay.png?v=1791707672'
+  },
+  {
     id: 'shopify-kitchen-kit',
     name: 'Kitchen Protector Kit',
     slug: 'kitchen-protector-kit',
@@ -135,19 +143,52 @@ export const BundleUpsellBox = ({ currentProduct, onAddUpsell }) => {
 
   if (displayItems.length === 0) return null;
 
+  const scrollContainerRef = React.useRef(null);
+
+  const handleScroll = (direction) => {
+    if (scrollContainerRef.current) {
+      const scrollAmount = direction === 'left' ? -250 : 250;
+      scrollContainerRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    }
+  };
+
   return (
     <div className="p-4 sm:p-5 rounded-2xl bg-[#EEF9FB] border border-[#D5EEF3] space-y-3">
-      <div>
-        <h4 className="text-sm sm:text-base font-extrabold text-slate-900 tracking-tight">
-          Add more to your bundle
-        </h4>
-        <p className="text-xs text-slate-500 font-medium mt-0.5">
-          Every add takes you closer to the next saving
-        </p>
+      <div className="flex items-center justify-between gap-2">
+        <div>
+          <h4 className="text-sm sm:text-base font-extrabold text-slate-900 tracking-tight">
+            Add more to your bundle
+          </h4>
+          <p className="text-xs text-slate-500 font-medium mt-0.5">
+            Every add takes you closer to the next saving
+          </p>
+        </div>
+
+        {displayItems.length > 2 && (
+          <div className="hidden sm:flex items-center gap-1 shrink-0">
+            <button
+              onClick={() => handleScroll('left')}
+              className="w-7 h-7 rounded-lg bg-white hover:bg-slate-50 border border-slate-200 text-slate-600 hover:text-slate-900 flex items-center justify-center transition shadow-2xs cursor-pointer"
+              aria-label="Previous upsell items"
+            >
+              <ChevronLeft size={14} />
+            </button>
+            <button
+              onClick={() => handleScroll('right')}
+              className="w-7 h-7 rounded-lg bg-white hover:bg-slate-50 border border-slate-200 text-slate-600 hover:text-slate-900 flex items-center justify-center transition shadow-2xs cursor-pointer"
+              aria-label="Next upsell items"
+            >
+              <ChevronRight size={14} />
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Horizontal Upsell Cards */}
-      <div className="flex items-center gap-3 overflow-x-auto no-scrollbar pb-1">
+      <div
+        ref={scrollContainerRef}
+        className="flex items-center gap-3 overflow-x-auto no-scrollbar pb-1"
+      >
         {displayItems.map((item) => {
           const cartEntry = getItemInCart(item.id) || getItemInCart(item.slug);
           const isAdded = Boolean(cartEntry);
@@ -160,13 +201,13 @@ export const BundleUpsellBox = ({ currentProduct, onAddUpsell }) => {
               {/* Product Thumbnail (Clickable link to product) - NO hover zoom */}
               <Link
                 to={`/product/${item.slug}`}
-                className="w-14 h-14 rounded-lg bg-slate-100 overflow-hidden shrink-0 relative block cursor-pointer"
+                className="w-14 h-14 rounded-lg bg-slate-50 border border-slate-100 overflow-hidden shrink-0 relative block cursor-pointer flex items-center justify-center"
                 title={`View ${item.name}`}
               >
                 <img
                   src={item.image}
                   alt={item.name}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-contain p-1"
                   loading="lazy"
                 />
               </Link>
