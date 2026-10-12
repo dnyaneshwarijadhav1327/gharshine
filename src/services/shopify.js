@@ -39,6 +39,7 @@ export async function shopifyFetch({ query, variables = {} }) {
 // Convert Shopify product node into GharShine frontend format
 export function formatShopifyProduct(node) {
   if (!node) return null;
+  if (node.title?.toLowerCase().includes('invisel')) return null;
 
   try {
     const price = parseFloat(node.priceRange?.minVariantPrice?.amount || '0');

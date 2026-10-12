@@ -58,37 +58,31 @@ export const BestsellersSection = () => {
           const usedProductSlugs = new Set();
 
           const updatedKits = roomKits.map((kit) => {
-            // Prioritize exact kit match first
+            // Prioritize exact kit match first, checking 'protect your home room by room' collection
             let match = null;
 
-            if (kit.id === 'bathroom-kit') {
+            if (kit.id === 'kitchen-kit') {
+              // 1. Look for product in 'protect your home room by room' collection
               match = res.data.find((p) => {
                 if (!p) return false;
                 const pName = (p.name || '').toLowerCase();
                 const pSlug = (p.slug || '').toLowerCase();
-                return pSlug.includes('bathroom-protector') || pName.includes('bathroom protector');
+                const inRoomColl =
+                  (p.collectionTitles || []).some((c) => c.includes('room by room') || c.includes('protect your home')) ||
+                  (p.collectionHandles || []).some((h) => h.includes('room-by-room') || h.includes('protect-your-home'));
+                return inRoomColl && (pName.includes('kitchen') || pSlug.includes('kitchen'));
               });
+              // 2. Check exact new slug
               if (!match) {
-                match = res.data.find((p) => {
-                  if (!p) return false;
-                  const pName = (p.name || '').toLowerCase();
-                  const pSlug = (p.slug || '').toLowerCase();
-                  return pName.includes('bathroom') || pSlug.includes('bathroom');
-                });
+                match = res.data.find((p) => p && p.slug === 'kitchen-protector-kit-1');
               }
-            } else if (kit.id === 'kitchen-kit') {
-              match = res.data.find((p) => {
-                if (!p) return false;
-                const pName = (p.name || '').toLowerCase();
-                const pSlug = (p.slug || '').toLowerCase();
-                return pSlug.includes('kitchen-protector') || pName.includes('kitchen protector');
-              });
+              // 3. Fallback
               if (!match) {
                 match = res.data.find((p) => {
                   if (!p) return false;
                   const pName = (p.name || '').toLowerCase();
                   const pSlug = (p.slug || '').toLowerCase();
-                  return pName.includes('kitchen') || pSlug.includes('kitchen');
+                  return pSlug.includes('kitchen-protector') || pName.includes('kitchen protector');
                 });
               }
             } else if (kit.id === 'living-room-kit') {
@@ -96,14 +90,35 @@ export const BestsellersSection = () => {
                 if (!p) return false;
                 const pName = (p.name || '').toLowerCase();
                 const pSlug = (p.slug || '').toLowerCase();
-                return pSlug === 'living-room-kit' || pSlug.includes('living-room') || pName.includes('living room');
+                const inRoomColl =
+                  (p.collectionTitles || []).some((c) => c.includes('room by room') || c.includes('protect your home')) ||
+                  (p.collectionHandles || []).some((h) => h.includes('room-by-room') || h.includes('protect-your-home'));
+                return inRoomColl && (pName.includes('living') || pSlug.includes('living'));
               });
               if (!match) {
                 match = res.data.find((p) => {
                   if (!p) return false;
                   const pName = (p.name || '').toLowerCase();
                   const pSlug = (p.slug || '').toLowerCase();
-                  return pSlug.includes('sofa-fabric') || pName.includes('sofa & fabric') || pSlug.includes('sofa');
+                  return pSlug === 'living-room-kit' || pSlug.includes('living-room') || pName.includes('living room');
+                });
+              }
+            } else if (kit.id === 'bathroom-kit') {
+              match = res.data.find((p) => {
+                if (!p) return false;
+                const pName = (p.name || '').toLowerCase();
+                const pSlug = (p.slug || '').toLowerCase();
+                const inRoomColl =
+                  (p.collectionTitles || []).some((c) => c.includes('room by room') || c.includes('protect your home')) ||
+                  (p.collectionHandles || []).some((h) => h.includes('room-by-room') || h.includes('protect-your-home'));
+                return inRoomColl && (pName.includes('bathroom') || pSlug.includes('bathroom'));
+              });
+              if (!match) {
+                match = res.data.find((p) => {
+                  if (!p) return false;
+                  const pName = (p.name || '').toLowerCase();
+                  const pSlug = (p.slug || '').toLowerCase();
+                  return pSlug.includes('bathroom-protector') || pName.includes('bathroom protector');
                 });
               }
             }
@@ -127,7 +142,34 @@ export const BestsellersSection = () => {
             return kit;
           });
 
-          setKits(updatedKits);
+          // Also include any other products assigned to the 'protect your home room by room' collection in Shopify
+          const extraRoomProducts = res.data.filter((p) => {
+            if (!p || usedProductSlugs.has(p.slug)) return false;
+            const colls = p.collectionTitles || [];
+            const collHandles = p.collectionHandles || [];
+            return (
+              colls.some((c) => c.includes('protect your home') || c.includes('room by room')) ||
+              collHandles.some((h) => h.includes('protect-your-home') || h.includes('room-by-room'))
+            );
+          });
+
+          if (extraRoomProducts.length > 0) {
+            const extraKits = extraRoomProducts.map((p, idx) => ({
+              id: `room-${p.slug || idx}`,
+              title: p.name,
+              subtitle: p.shortDescription || 'Deep Clean & Long-Lasting Protection',
+              saveText: p.originalPrice ? `Save ${Math.round(((p.originalPrice - p.price) / p.originalPrice) * 100)}% Vs Buying Separately` : 'Best Value Kit',
+              price: p.price,
+              originalPrice: p.originalPrice || Math.round(p.price * 1.3),
+              slug: p.slug,
+              cardBg: pastelColors[(updatedKits.length + idx) % pastelColors.length],
+              image: p.thumbnail || p.images?.[0],
+              productId: p.id
+            }));
+            setKits([...updatedKits, ...extraKits]);
+          } else {
+            setKits(updatedKits);
+          }
         }
       });
     });

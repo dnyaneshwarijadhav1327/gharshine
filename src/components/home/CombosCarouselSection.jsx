@@ -37,32 +37,18 @@ const fallbackCombos = [
     isCombo: true
   },
   {
-    id: 3,
-    name: 'Bathroom Protector Kit',
-    slug: 'bathroom-protector-kit-deep-clean-long-lasting-protection-for-glass-marble-fittings',
-    subtitle: 'Covers upto 3 bathrooms Protects glass, ceramics & marbles for upto 3 months',
-    image: 'https://cdn.shopify.com/s/files/1/0831/5037/2921/files/GharShineBathroomCleaningTrio.png?v=1791689722',
+    id: 6,
+    name: 'Kitchen Foam Cleaner & Degreaser',
+    slug: 'kitchen-foam-cleaner',
+    subtitle: 'Dissolves heavy oil, grease & burnt residue in 60 seconds',
+    image: 'https://cdn.shopify.com/s/files/1/0831/5037/2921/files/WhatsAppImage2026-10-10at23.23.25_1.jpg?v=1791654877',
+    topBanner: 'Fast Acting Foam',
     accentCorner: 'top-right',
     accentColor: '#52D1DC',
     rating: 5,
-    reviews: 306,
-    price: 1999,
-    originalPrice: 3399,
-    isCombo: true
-  },
-  {
-    id: 8,
-    name: 'Living Room Kit',
-    slug: 'living-room-kit',
-    subtitle: 'Protect & Clean your Sofas, Wood & Furniture for upto 6 months',
-    image: 'https://cdn.shopify.com/s/files/1/0831/5037/2921/files/GharShineCleaningCollectionDisplay.png?v=1791707672',
-    topBanner: 'Living Room Armor Pack',
-    accentCorner: 'top-left',
-    accentColor: '#52D1DC',
-    rating: 5,
-    reviews: 480,
-    price: 4999,
-    originalPrice: 7499,
+    reviews: 215,
+    price: 749,
+    originalPrice: 1499,
     isCombo: true
   }
 ];
@@ -88,17 +74,33 @@ export const CombosCarouselSection = () => {
               name.includes('wood & furniture') ||
               slug.includes('sacred-shringar') ||
               slug.includes('complete-bathroom-care') ||
-              slug.includes('stonearmor')
+              slug.includes('stonearmor') ||
+              name.includes('invisel')
             ) {
               return false;
             }
+
+            // Exclude products assigned to 'protect your home room by room' collection (they belong in the Room By Room section)
+            const isRoomCollection =
+              (p.collectionTitles || []).some((c) => c.includes('protect your home') || c.includes('room by room')) ||
+              (p.collectionHandles || []).some((h) => h.includes('protect-your-home') || h.includes('room-by-room'));
+
+            const isBestSellerCollection =
+              (p.collectionTitles || []).some((c) => c.includes('best seller') || c.includes('bestseller')) ||
+              (p.collectionHandles || []).some((h) => h.includes('best-seller') || h.includes('bestseller'));
+
+            // If it belongs to Room By Room collection and NOT explicitly to Best Seller collection, exclude from Combos
+            if (isRoomCollection && !isBestSellerCollection) {
+              return false;
+            }
+
             return (
+              isBestSellerCollection ||
               p.isCombo ||
               name.includes('combo') ||
-              name.includes('kit') ||
               p.category?.toLowerCase() === 'combos' ||
               p.tags?.includes('combo') ||
-              (p.collectionTitles && p.collectionTitles.some((c) => c.includes('combo') || c.includes('kit')))
+              (p.collectionTitles && p.collectionTitles.some((c) => c.includes('combo')))
             );
           });
 
