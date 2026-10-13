@@ -175,7 +175,7 @@ export const BuildYourOwnCombo = () => {
                       <img
                         src={p.thumbnail || p.images?.[0] || 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=800&q=80'}
                         alt={p.name}
-                        className="w-16 h-16 rounded-xl object-cover shrink-0 border border-slate-100"
+                        className="w-16 h-16 rounded-xl object-contain p-1 shrink-0 border border-slate-100 bg-white"
                       />
 
                       <div className="flex-1 min-w-0">

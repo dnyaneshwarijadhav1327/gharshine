@@ -85,7 +85,7 @@ export const HeroSection = () => {
       </button>
 
       {/* Main Full-Bleed Slides Wrapper with Responsive Desktop and Mobile Pictures */}
-      <div className="relative w-full overflow-hidden">
+      <div className="relative w-full max-w-[1920px] mx-auto overflow-hidden">
         <div
           className="flex transition-transform duration-700 ease-out"
           style={{ transform: `translateX(-${currentSlide * 100}%)` }}
@@ -100,7 +100,7 @@ export const HeroSection = () => {
                   <img
                     src={slide.desktopImage}
                     alt={slide.alt}
-                    className="w-full h-auto object-cover max-h-[640px] block"
+                    className="w-full h-auto object-cover max-h-[560px] block"
                     loading={idx === 0 ? 'eager' : 'lazy'}
                   />
                 </picture>

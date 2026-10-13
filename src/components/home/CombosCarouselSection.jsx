@@ -181,7 +181,7 @@ export const CombosCarouselSection = () => {
           </div>
 
           {/* Left / Right Scroll Buttons (Desktop & Tablet) */}
-          <div className="hidden sm:flex items-center gap-2">
+          <div className={`hidden sm:flex ${items.length <= 4 ? 'lg:hidden' : ''} items-center gap-2`}>
             <button
               onClick={scrollLeft}
               aria-label="Scroll Left"
@@ -199,10 +199,16 @@ export const CombosCarouselSection = () => {
           </div>
         </div>
 
-        {/* Horizontal Carousel (Swipeable, Manual Right-to-Left Scroll, NO Auto-Scrolling) */}
+        {/* Responsive Grid on Laptop/Desktop, Swipeable Carousel on Mobile */}
         <div
           ref={scrollContainerRef}
-          className="flex items-stretch gap-5 overflow-x-auto scroll-smooth pb-4 pt-1 no-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0"
+          className={`flex lg:grid gap-5 sm:gap-6 overflow-x-auto lg:overflow-visible scroll-smooth pb-4 pt-1 no-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0 ${
+            items.length <= 3
+              ? 'lg:grid-cols-3 max-w-5xl mx-auto'
+              : items.length === 4
+              ? 'lg:grid-cols-4 max-w-[1400px] mx-auto'
+              : 'lg:grid-cols-5'
+          }`}
           style={{
             scrollbarWidth: 'none',
             msOverflowStyle: 'none',
@@ -215,7 +221,7 @@ export const CombosCarouselSection = () => {
             return (
               <div
                 key={item.id}
-                className="w-[285px] sm:w-[320px] md:w-[340px] shrink-0 bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden group"
+                className="w-[285px] sm:w-[320px] md:w-[340px] lg:w-auto shrink-0 lg:shrink bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden group"
               >
                 {/* Product Image Area Wrapped in Clickable Link */}
                 <Link
@@ -240,7 +246,7 @@ export const CombosCarouselSection = () => {
                   <img
                     src={item.image}
                     alt={item.name}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-contain p-3.5 sm:p-4 group-hover:scale-105 transition-transform duration-300"
                     loading="lazy"
                   />
 

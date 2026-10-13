@@ -267,12 +267,12 @@ export const BestsellersSection = () => {
               {/* Product Image Section */}
               <Link 
                 to={`/product/${item.slug}`} 
-                className="block overflow-hidden relative group aspect-[4/3] sm:aspect-square bg-white"
+                className="block overflow-hidden relative group aspect-[4/3] sm:aspect-square bg-white flex items-center justify-center p-2.5 sm:p-3"
               >
                 <img
                   src={item.image}
                   alt={item.title}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
                   loading="lazy"
                 />
               </Link>

@@ -172,7 +172,7 @@ export const ConcernSection = () => {
           </div>
 
           {/* Left / Right Scroll Buttons (Desktop & Tablet) */}
-          <div className="hidden sm:flex items-center gap-2">
+          <div className="hidden sm:flex lg:hidden items-center gap-2">
             <button
               onClick={scrollLeft}
               aria-label="Scroll Left"
@@ -190,10 +190,10 @@ export const ConcernSection = () => {
           </div>
         </div>
 
-        {/* Horizontal Carousel (Manual Right-to-Left Scroll, NO Auto-Scrolling) */}
+        {/* Horizontal Carousel on Mobile/Tablet, Clean 4-Column Grid on Laptop/Desktop */}
         <div
           ref={scrollContainerRef}
-          className="flex items-stretch gap-5 overflow-x-auto scroll-smooth pb-4 pt-1 no-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0"
+          className="flex lg:grid lg:grid-cols-4 items-stretch gap-5 sm:gap-6 overflow-x-auto lg:overflow-visible scroll-smooth pb-4 pt-1 no-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0"
           style={{
             scrollbarWidth: 'none',
             msOverflowStyle: 'none',
@@ -203,17 +203,17 @@ export const ConcernSection = () => {
           {concerns.map((item) => (
             <div
               key={item.id}
-              className="w-[285px] sm:w-[320px] md:w-[340px] shrink-0 flex flex-col group"
+              className="w-[285px] sm:w-[320px] md:w-[340px] lg:w-auto shrink-0 lg:shrink flex flex-col group"
             >
               {/* Image Card */}
               <Link
                 to={item.link}
-                className="relative aspect-[3/4] sm:aspect-[9/13] w-full rounded-2xl sm:rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-end p-5 sm:p-6 bg-slate-100"
+                className="relative aspect-[3/4] sm:aspect-[4/5] lg:aspect-[4/5] w-full rounded-2xl sm:rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-end p-5 sm:p-6 bg-slate-100"
               >
                 <img
                   src={item.image}
                   alt={item.title}
-                  className="absolute inset-0 w-full h-full object-cover"
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                   loading="lazy"
                 />
 
