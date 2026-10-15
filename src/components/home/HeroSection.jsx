@@ -62,7 +62,7 @@ export const HeroSection = () => {
 
   return (
     <section
-      className="relative w-full overflow-hidden bg-white select-none"
+      className="relative w-full overflow-hidden bg-white select-none sm:h-[calc(100vh-100px)] sm:min-h-[560px]"
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
@@ -85,22 +85,22 @@ export const HeroSection = () => {
       </button>
 
       {/* Main Full-Bleed Slides Wrapper with Responsive Desktop and Mobile Pictures */}
-      <div className="relative w-full max-w-[1920px] mx-auto overflow-hidden">
+      <div className="relative w-full sm:h-full max-w-[2560px] mx-auto overflow-hidden">
         <div
-          className="flex transition-transform duration-700 ease-out"
+          className="flex sm:h-full transition-transform duration-700 ease-out"
           style={{ transform: `translateX(-${currentSlide * 100}%)` }}
         >
           {slides.map((slide, idx) => (
-            <div key={slide.id} className="w-full shrink-0 relative">
-              <Link to={slide.link} className="block w-full cursor-pointer">
-                <picture className="w-full block">
+            <div key={slide.id} className="w-full sm:h-full shrink-0 relative">
+              <Link to={slide.link} className="block w-full sm:h-full cursor-pointer">
+                <picture className="w-full sm:h-full block">
                   {/* Dedicated 9:16 portrait banner on mobile devices (< 640px) */}
                   <source media="(max-width: 640px)" srcSet={slide.mobileImage} />
                   {/* Widescreen landscape banner on tablet and desktop screens */}
                   <img
                     src={slide.desktopImage}
                     alt={slide.alt}
-                    className="w-full h-auto object-cover max-h-[560px] block"
+                    className="w-full h-auto sm:h-full object-cover object-center block"
                     loading={idx === 0 ? 'eager' : 'lazy'}
                   />
                 </picture>
