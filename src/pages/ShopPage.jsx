@@ -11,7 +11,6 @@ export const ShopPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [productsList, setProductsList] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [visibleCount, setVisibleCount] = useState(12);
 
   const [filters, setFilters] = useState({
     category: searchParams.get('category') || 'All',
@@ -79,10 +78,6 @@ export const ShopPage = () => {
     setSearchParams({});
   };
 
-  const handleLoadMore = () => {
-    setVisibleCount((prev) => prev + 4);
-  };
-
   return (
     <div className="min-h-screen bg-white py-6 sm:py-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -107,7 +102,7 @@ export const ShopPage = () => {
         {/* Top Toolbar: Product Count & Sort Dropdown */}
         <div className="flex items-center justify-between gap-4 p-4 bg-[#F8FAFA] rounded-2xl border border-slate-100 mb-8">
           <span className="text-xs sm:text-sm font-semibold text-slate-700">
-            Showing {Math.min(visibleCount, productsList.length)} of {productsList.length} products
+            Showing {productsList.length} of {productsList.length} products
           </span>
 
           {/* Sort Dropdown */}
@@ -131,25 +126,11 @@ export const ShopPage = () => {
         {loading ? (
           <ProductGridSkeleton count={8} />
         ) : productsList.length > 0 ? (
-          <>
-            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
-              {productsList.slice(0, visibleCount).map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
-            </div>
-
-            {/* Load More Button */}
-            {visibleCount < productsList.length && (
-              <div className="text-center pt-10">
-                <button
-                  onClick={handleLoadMore}
-                  className="px-8 py-3.5 bg-[#F8FAFA] hover:bg-[#E8F8F8] text-[#087F8C] border border-teal-200 rounded-2xl text-xs sm:text-sm font-bold shadow-xs hover:shadow-md transition"
-                >
-                  Load More Products ({productsList.length - visibleCount} remaining)
-                </button>
-              </div>
-            )}
-          </>
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+            {productsList.map((product) => (
+              <ProductCard key={product.id} product={product} />
+            ))}
+          </div>
         ) : (
           <div className="text-center py-20 bg-[#F8FAFA] rounded-3xl border border-slate-100 p-8">
             <div className="w-16 h-16 rounded-3xl bg-white shadow-xs text-slate-400 flex items-center justify-center mx-auto mb-4">
