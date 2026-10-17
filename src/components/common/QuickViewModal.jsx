@@ -40,7 +40,7 @@ export const QuickViewModal = () => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 items-start">
           
-          {/* Image & Badges */}
+          {/* Image */}
           <div className="relative">
             <div className="w-full aspect-square rounded-2xl overflow-hidden bg-slate-50 border border-slate-100">
               <img
@@ -49,12 +49,6 @@ export const QuickViewModal = () => {
                 className="w-full h-full object-cover"
               />
             </div>
-
-            {p.badge && (
-              <span className="absolute top-3 left-3 px-2.5 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-[#087F8C] text-white shadow-sm">
-                {p.badge}
-              </span>
-            )}
           </div>
 
           {/* Product Details */}

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Heart, Eye, ShoppingBag, Check, ShieldCheck, Zap } from 'lucide-react';
+import { Heart, Eye, ShoppingBag, Check, ShieldCheck } from 'lucide-react';
 import { RatingStars } from '../common/RatingStars';
 import { PriceDisplay } from '../common/PriceDisplay';
 import { useCart } from '../../context/CartContext';
@@ -42,7 +42,7 @@ export const ProductCard = ({ product, className = "" }) => {
       {/* Top Image Container */}
       <div className="relative w-full aspect-square rounded-2xl overflow-hidden bg-gradient-to-b from-[#F8FCFC] to-[#F1F7F7] mb-3.5 flex items-center justify-center">
         
-        {/* Main Product Image with Zoom */}
+        {/* Main Product Image */}
         <Link to={`/product/${product.slug}`} className="w-full h-full block">
           <img
             src={product.thumbnail || product.images?.[0]}
@@ -51,21 +51,6 @@ export const ProductCard = ({ product, className = "" }) => {
             loading="lazy"
           />
         </Link>
-
-        {/* Top Floating Badges */}
-        <div className="absolute top-2.5 left-2.5 flex flex-col gap-1.5 z-10 pointer-events-none">
-          {product.badge && (
-            <span className="px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-slate-900 text-white shadow-md flex items-center gap-1">
-              <Zap size={10} className="text-[#65D5D8] fill-current" />
-              <span>{product.badge}</span>
-            </span>
-          )}
-          {product.isCombo && (
-            <span className="px-2.5 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-gradient-to-r from-[#087F8C] to-[#0AA1B2] text-white shadow-xs">
-              Complete Kit
-            </span>
-          )}
-        </div>
 
         {/* Wishlist Heart Button */}
         <button
