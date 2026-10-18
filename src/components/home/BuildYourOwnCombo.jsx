@@ -9,7 +9,7 @@ import { productService } from '../../services/productService';
 export const BuildYourOwnCombo = () => {
   const [selectedSurface, setSelectedSurface] = useState('All');
   const [catalogProducts, setCatalogProducts] = useState(fallbackProducts);
-  const [selectedProductIds, setSelectedProductIds] = useState(() => fallbackProducts.slice(0, 2).map((p) => p.id));
+  const [selectedProductIds, setSelectedProductIds] = useState([]);
   const { addCustomBundleToCart } = useCart();
 
   useEffect(() => {
@@ -18,9 +18,6 @@ export const BuildYourOwnCombo = () => {
       if (!isMounted) return;
       if (res?.success && Array.isArray(res.data) && res.data.length > 0) {
         setCatalogProducts(res.data);
-        if (res.data.length >= 2) {
-          setSelectedProductIds([res.data[0].id, res.data[1].id]);
-        }
       }
     });
     return () => {
