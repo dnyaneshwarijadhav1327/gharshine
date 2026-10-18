@@ -15,12 +15,12 @@ export const TrustStrip = () => {
   const marqueeList = [...items, ...items, ...items];
 
   return (
-    <div className="w-full bg-[#D4F754] text-slate-950 font-black py-3.5 overflow-hidden border-y border-slate-900/10 shadow-inner select-none">
+    <div className="w-full bg-[#1B263B] text-white font-black py-3.5 overflow-hidden border-y border-white/10 shadow-inner select-none">
       <div className="flex w-max animate-marquee space-x-10 text-xs sm:text-sm tracking-wide uppercase">
         {marqueeList.map((item, idx) => (
           <div key={idx} className="flex items-center gap-2.5 shrink-0">
-            <span className="text-slate-900">{item.icon}</span>
-            <span className="font-black text-slate-900">{item.text}</span>
+            <span className="text-white">{item.icon}</span>
+            <span className="font-black text-white">{item.text}</span>
           </div>
         ))}
       </div>
