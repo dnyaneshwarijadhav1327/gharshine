@@ -65,7 +65,7 @@ export const products = [
       "Origin": "Formulated & Bottled in India",
       "Stock": "50 Units Available"
     },
-    relatedProducts: [2, 6, 8]
+    relatedProducts: [2, 5, 8]
   },
   {
     id: 2,
@@ -175,7 +175,7 @@ export const products = [
       "Type": "Bio-Enzymatic Degreaser",
       "Safe On Food Prep Areas": "Yes, rinse after cleaning"
     },
-    relatedProducts: [1, 2, 8]
+    relatedProducts: [1, 8]
   },
   {
     id: 8,
