@@ -65,7 +65,7 @@ export const products = [
       "Origin": "Formulated & Bottled in India",
       "Stock": "50 Units Available"
     },
-    relatedProducts: [2, 5, 8]
+    relatedProducts: [2, 6, 8]
   },
   {
     id: 2,
@@ -122,114 +122,7 @@ export const products = [
       "Drying Time": "12-24 Hours",
       "Origin": "Made in India"
     },
-    relatedProducts: [1, 4, 8]
-  },
-  {
-    id: 4,
-    name: "StoneArmor Marble & Granite Deep Impregnating Sealant",
-    slug: "stonearmor-marble-granite-sealant",
-    category: "Protection",
-    productType: "Surface Protector",
-    surface: ["Marble", "Granite"],
-    concerns: ["Marble & Granite Stains"],
-    rooms: ["Living Room", "Kitchen", "Pooja Room"],
-    price: 1299,
-    originalPrice: 1899,
-    discount: 31,
-    rating: 4.8,
-    reviewCount: 194,
-    badge: "PREMIUM",
-    isFeatured: true,
-    isCombo: false,
-    stockStatus: "in_stock",
-    size: "500ml Bottle",
-    shortDescription: "Sub-surface oleophobic & hydrophobic shield for Italian marble, Indian granite, and Quartz platforms.",
-    description: "Natural marble and granite have microscopic pores that greedily absorb turmeric haldi, cooking oils, wine, lemon juice, and tea. StoneArmor penetrates up to 5mm below the stone matrix, anchoring silane bonds that stop liquids from soaking into the stone, without leaving an artificial plastic gloss.",
-    thumbnail: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80",
-    images: [
-      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1000&q=80",
-      "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=1000&q=80"
-    ],
-    features: [
-      "Prevents yellow haldi, mustard oil, and citrus etching",
-      "Impregnating sub-surface technology — zero sticky residue",
-      "Certified food-contact safe for kitchen food prep counters",
-      "Preserves original natural stone breathability & color depth",
-      "Long-lasting 12 to 18-month single treatment durability"
-    ],
-    howToUse: [
-      { step: "01. Prep", text: "Clean stone surface with neutral cleaner and let dry 24 hours." },
-      { step: "02. Pour & Spread", text: "Pour small puddles and spread evenly with lint-free microfiber pad." },
-      { step: "03. Dwell", text: "Let penetrate for 15-20 minutes. Apply second coat if stone is highly porous." },
-      { step: "04. Buff", text: "Wipe off excess liquid with a dry cloth before it dries sticky." }
-    ],
-    suitableFor: [
-      "Italian Bottochino, Statuario, Dyna & Makrana white marble",
-      "Black Galaxy, Tan Brown & Kashmir white granite countertops",
-      "Pooja mandir marble flooring & backdrops",
-      "Engineered Quartz & Dekton kitchen islands"
-    ],
-    notSuitableFor: [
-      "Pre-sealed glossy resin epoxies without prior degreasing"
-    ],
-    specs: {
-      "Volume": "500ml",
-      "Coverage": "150 - 200 sq. ft. depending on porosity",
-      "Finish": "Natural invisible matte / unchanged sheen"
-    },
-    relatedProducts: [1, 2, 8]
-  },
-  {
-    id: 5,
-    name: "Hard Water Pro Mineral & Scale Dissolver Gel",
-    slug: "hard-water-pro-scale-dissolver-gel",
-    category: "Cleaners",
-    productType: "Heavy Cleaner",
-    surface: ["Glass", "Bathroom", "Ceramic", "Metal"],
-    concerns: ["Hard Water Stains", "Glass Water Marks"],
-    rooms: ["Bathroom", "Kitchen"],
-    price: 549,
-    originalPrice: 799,
-    discount: 31,
-    rating: 4.7,
-    reviewCount: 285,
-    badge: "FAST ACTING",
-    isFeatured: true,
-    isCombo: false,
-    stockStatus: "in_stock",
-    size: "500ml Clinging Gel Bottle",
-    shortDescription: "Thick clinging formula that breaks down years of hard water calcium and magnesium crust in 5 minutes.",
-    description: "Unlike watery cleaners that drip down immediately, our high-viscosity active gel adheres to vertical glass partitions and bathroom tiles, actively chewing through calcium carbonate, iron scaling, and soap crust without harmful hydrochloric acid fumes.",
-    thumbnail: "https://images.unsplash.com/photo-1584622781564-1d987f7333c1?auto=format&fit=crop&w=800&q=80",
-    images: [
-      "https://images.unsplash.com/photo-1584622781564-1d987f7333c1?auto=format&fit=crop&w=1000&q=80",
-      "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1000&q=80"
-    ],
-    features: [
-      "Clings to vertical glass and tiles without running down",
-      "No choking fumes or harsh corrosive acid vapors",
-      "Effortlessly removes tough borewell & tanker water stains",
-      "Restores cloudy shower enclosures to crystal transparency"
-    ],
-    howToUse: [
-      { step: "01. Apply Gel", text: "Squirt or wipe gel evenly over dry affected glass or tile." },
-      { step: "02. Wait", text: "Let it work for 5-7 minutes without letting it completely dry out." },
-      { step: "03. Scrub & Rinse", text: "Scrub with white pad and rinse with abundant water." }
-    ],
-    suitableFor: [
-      "Glass shower cabins",
-      "Ceramic washbasins and commode bowls",
-      "Glazed wall tiles & bathtub basins"
-    ],
-    notSuitableFor: [
-      "Polished natural marble (will cause acid etch spots)"
-    ],
-    specs: {
-      "Volume": "500ml",
-      "Form": "High-viscosity clinging gel",
-      "Scent": "Fresh Crisp Citrus"
-    },
-    relatedProducts: [1, 6]
+    relatedProducts: [1, 6, 8]
   },
   {
     id: 6,
@@ -282,7 +175,7 @@ export const products = [
       "Type": "Bio-Enzymatic Degreaser",
       "Safe On Food Prep Areas": "Yes, rinse after cleaning"
     },
-    relatedProducts: [4, 8]
+    relatedProducts: [1, 2, 8]
   },
   {
     id: 8,
@@ -340,158 +233,6 @@ export const products = [
       "Savings": "₹1,100 (33% OFF)",
       "Total Volume": "1,350ml"
     },
-    relatedProducts: [1, 2, 4]
-  },
-  {
-    id: 10,
-    name: "Leather Luxe 2-in-1 Condition & Stain Shield",
-    slug: "leather-luxe-condition-stain-shield",
-    category: "Protection",
-    productType: "Surface Protector",
-    surface: ["Leather", "Leather & Leatherette"],
-    concerns: ["Sofa & Fabric Stains"],
-    rooms: ["Living Room", "Bedroom"],
-    price: 749,
-    originalPrice: 1099,
-    discount: 31,
-    rating: 4.7,
-    reviewCount: 118,
-    badge: "UV DEFENSE",
-    isFeatured: false,
-    isCombo: false,
-    stockStatus: "in_stock",
-    size: "350ml Pump Bottle",
-    shortDescription: "Restores supple moisture to leather couches & car seats while repels pen marks, body sweat, and denim color transfer.",
-    description: "Prevents leather cracking in Indian summer heat. Penetrates deep with natural lanolin and beeswax micro-emulsions while creating a breathable shield against ink marks, body oils, and blue denim dye stains.",
-    thumbnail: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=800&q=80",
-    images: [
-      "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=1000&q=80",
-      "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1000&q=80"
-    ],
-    features: [
-      "Prevents dry leather cracking and UV discoloration",
-      "Protects against blue denim transfer & oily hair oils",
-      "Non-slippery, matte factory finish — zero synthetic stickiness",
-      "Pleasant subtle genuine leather fragrance"
-    ],
-    howToUse: [
-      { step: "01. Pump", text: "Dispense small amount onto soft applicator sponge." },
-      { step: "02. Massage", text: "Gently massage into leather in circular motions." },
-      { step: "03. Buff", text: "Buff dry with clean microfiber towel after 10 minutes." }
-    ],
-    suitableFor: [
-      "Full grain, top grain and bonded leather sofas",
-      "Leatherette & PU recliner armchairs",
-      "Automotive leather car seats & steering wheels"
-    ],
-    notSuitableFor: [
-      "Raw suede or nubuck leather"
-    ],
-    specs: {
-      "Volume": "350ml",
-      "Finish": "Rich soft matte",
-      "Application Frequency": "Every 3 to 6 months"
-    },
-    relatedProducts: [1, 2, 8]
-  },
-  {
-    id: 11,
-    name: "GroutBright Deep Tile & Joint Whitener Shield",
-    slug: "groutbright-tile-joint-whitener-shield",
-    category: "Cleaners",
-    productType: "Heavy Cleaner",
-    surface: ["Tiles", "Bathroom"],
-    concerns: ["Bathroom Stains", "Tile Dirt"],
-    rooms: ["Bathroom", "Kitchen", "Balcony"],
-    price: 499,
-    originalPrice: 699,
-    discount: 28,
-    rating: 4.6,
-    reviewCount: 154,
-    badge: "DEEP CLEAN",
-    isFeatured: false,
-    isCombo: false,
-    stockStatus: "in_stock",
-    size: "500ml Pointed Nozzle Bottle",
-    shortDescription: "Dissolves black mold, trapped soap grime, and dirt from floor tile grout lines with precision applicator tip.",
-    description: "Dirty grout lines make even expensive bathrooms and living room floors look worn out. GroutBright penetrates the porous grout channel, breaking down entrenched dirt and locking in a stain barrier that stops future moisture seepage.",
-    thumbnail: "https://images.unsplash.com/photo-1507652313519-d4e9174996dd?auto=format&fit=crop&w=800&q=80",
-    images: [
-      "https://images.unsplash.com/photo-1507652313519-d4e9174996dd?auto=format&fit=crop&w=1000&q=80"
-    ],
-    features: [
-      "Precision applicator tip for direct grout line targeting",
-      "Eliminates dark mold & mildew staining",
-      "Leaves protective sealant behind to prevent new grime",
-      "Fast action in under 5 minutes"
-    ],
-    howToUse: [
-      { step: "01. Apply", text: "Trace nozzle directly along tile grout lines." },
-      { step: "02. Wait", text: "Let sit for 5 minutes." },
-      { step: "03. Brush & Rinse", text: "Lightly scrub with grout brush and rinse with water." }
-    ],
-    suitableFor: [
-      "Bathroom floor & wall tile joints",
-      "Kitchen floor vitrified grout",
-      "Balcony exterior tile channels"
-    ],
-    notSuitableFor: [
-      "Unsealed acid-sensitive limestone joints"
-    ],
-    specs: {
-      "Volume": "500ml Precision Tip",
-      "Coverage": "Over 200 linear meters of grout"
-    },
-    relatedProducts: [3, 5, 6]
-  },
-  {
-    id: 12,
-    name: "UltraGlow Multi-Surface Daily Rapid Cleaner & Dust Shield",
-    slug: "ultraglow-multi-surface-daily-cleaner",
-    category: "Cleaners",
-    productType: "Daily Cleaner",
-    surface: ["Multi-Surface", "Glass", "Wood", "Metal"],
-    concerns: ["Glass Water Marks", "Tile Dirt"],
-    rooms: ["Living Room", "Bedroom", "Kitchen"],
-    price: 399,
-    originalPrice: 549,
-    discount: 27,
-    rating: 4.8,
-    reviewCount: 388,
-    badge: "EVERYDAY ESSENTIAL",
-    isFeatured: true,
-    isCombo: false,
-    stockStatus: "in_stock",
-    size: "500ml Trigger Spray",
-    shortDescription: "One spray for everything: Glass, laminate, appliances, dining tables and electronics with antistatic dust repellent.",
-    description: "The ultimate daily housekeeping companion. Non-toxic, streak-free, and powered by plant surfactants. Neutralizes static charges so fine airborne dust doesn't resettle on TV screens, glass tables, or glossy wardrobes for days.",
-    thumbnail: "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=800&q=80",
-    images: [
-      "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=1000&q=80"
-    ],
-    features: [
-      "Safe on 15+ different household surfaces",
-      "Antistatic formula cuts down dusting frequency by half",
-      "Zero ammonia or harsh chlorine bleach",
-      "Subtle botanical jasmine & white tea aroma"
-    ],
-    howToUse: [
-      { step: "01. Spray", text: "Spray lightly onto surface or directly on microfiber cloth." },
-      { step: "02. Wipe", text: "Wipe with clean dry microfiber for instant streak-free shine." }
-    ],
-    suitableFor: [
-      "Laminates, acrylic cabinets & desks",
-      "TV & laptop screens, monitors, glass tabletops",
-      "Stainless steel refrigerators, microwaves & handles"
-    ],
-    notSuitableFor: [
-      "Raw unsealed natural wood"
-    ],
-    specs: {
-      "Volume": "500ml",
-      "Fragrance": "Jasmine & White Tea",
-      "Eco-Friendly": "100% Biodegradable Surfactants"
-    },
-    relatedProducts: [1, 2, 6, 7]
+    relatedProducts: [1, 2, 6]
   }
 ];

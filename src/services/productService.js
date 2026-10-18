@@ -56,19 +56,7 @@ export const productService = {
             return lp;
           });
 
-          // Deduplicate: filter out fallback products that match live Shopify products
-          const liveSlugs = new Set(enhancedLive.map((p) => p.slug.toLowerCase()));
-          const remainingLocal = products.filter((p) => {
-            const pSlug = (p.slug || '').toLowerCase();
-            const pName = (p.name || '').toLowerCase();
-            if (pSlug.includes('bathroom-protector') || pName.includes('bathroom protector')) return false;
-            if (pSlug.includes('living-room') || pName.includes('living room')) return false;
-            if (pSlug.includes('kitchen') && liveSlugs.has('kitchen-foam-cleaner')) return false;
-            if ((pSlug.includes('sofa') || pSlug.includes('fabric')) && liveSlugs.has('sofa-fabric-stain-repellent-combo')) return false;
-            return !liveSlugs.has(pSlug);
-          });
-
-          result = [...enhancedLive, ...remainingLocal];
+          result = enhancedLive;
         }
       }
     } catch (e) {
