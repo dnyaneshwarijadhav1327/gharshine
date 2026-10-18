@@ -1,6 +1,15 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Star, ChevronLeft, ChevronRight } from 'lucide-react';
+import {
+  Star,
+  ChevronLeft,
+  ChevronRight,
+  ShoppingCart,
+  Sparkles,
+  CookingPot,
+  Sofa,
+  ShowerHead
+} from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { formatPrice } from '../../utils/formatters';
 import { productService } from '../../services/productService';
@@ -52,6 +61,59 @@ const fallbackCombos = [
     isCombo: true
   }
 ];
+
+const CARD_THEMES = {
+  blue: {
+    cardBg: 'linear-gradient(180deg, #E8F4FE 0%, #EFF7FE 100%)',
+    waveColor: '#EFF7FE',
+    accentColor: '#0061A8',
+    accentHover: '#004E87',
+    Icon: Sparkles,
+    insetImage: '/images/concern-shower-glass.jpg'
+  },
+  orange: {
+    cardBg: 'linear-gradient(180deg, #FFF1DF 0%, #FFF6EC 100%)',
+    waveColor: '#FFF6EC',
+    accentColor: '#EA6B00',
+    accentHover: '#CC5D00',
+    Icon: CookingPot,
+    insetImage: '/images/concern-kitchen-tiles.jpg'
+  },
+  green: {
+    cardBg: 'linear-gradient(180deg, #E7F5EC 0%, #EFF9F2 100%)',
+    waveColor: '#EFF9F2',
+    accentColor: '#0E5A31',
+    accentHover: '#094223',
+    Icon: Sofa,
+    insetImage: '/images/concern-sofa-spills.jpg'
+  },
+  purple: {
+    cardBg: 'linear-gradient(180deg, #F1EAFF 0%, #F6F2FF 100%)',
+    waveColor: '#F6F2FF',
+    accentColor: '#5E2B97',
+    accentHover: '#4A2078',
+    Icon: ShowerHead,
+    insetImage: '/images/concern-marble-counter.jpg'
+  }
+};
+
+const getCardTheme = (item, idx) => {
+  const text = `${item.name || ''} ${item.slug || ''}`.toLowerCase();
+  if (text.includes('kitchen') || text.includes('hob') || text.includes('degreas')) {
+    return CARD_THEMES.orange;
+  }
+  if (text.includes('sofa') || text.includes('fabric') || text.includes('living')) {
+    return CARD_THEMES.green;
+  }
+  if (text.includes('bathroom protector') || text.includes('marble') || text.includes('deep clean')) {
+    return CARD_THEMES.purple;
+  }
+  if (text.includes('glass') || text.includes('ceramic')) {
+    return CARD_THEMES.blue;
+  }
+  const order = [CARD_THEMES.blue, CARD_THEMES.orange, CARD_THEMES.green, CARD_THEMES.purple];
+  return order[idx % order.length];
+};
 
 export const CombosCarouselSection = () => {
   const { addToCart } = useCart();
@@ -114,7 +176,7 @@ export const CombosCarouselSection = () => {
               accentCorner: idx % 2 === 0 ? 'top-right' : 'bottom-left',
               accentColor: idx % 2 === 0 ? '#52D1DC' : '#D3F49A',
               rating: Math.round(Number(p.rating) || 5),
-              reviews: p.reviewCount || 150,
+              reviews: p.reviewCount || 142,
               price: Number(p.price) || 999,
               originalPrice: p.originalPrice ? Number(p.originalPrice) : Math.round((Number(p.price) || 999) * 1.4),
               isCombo: true
@@ -166,14 +228,13 @@ export const CombosCarouselSection = () => {
   };
 
   return (
-    <section className="py-12 sm:py-16 bg-white border-t border-slate-100 relative">
+    <section className="py-12 sm:py-16 bg-white border-t border-slate-100 relative overflow-hidden">
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6">
-        
         {/* Header with Navigation arrows */}
         <div className="flex items-center justify-between mb-8">
           <div>
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-[#111827] tracking-tight">
-              Best Seller Combos & Protection Kits
+              Best Seller Combos &amp; Protection Kits
             </h2>
             <p className="text-xs sm:text-sm text-slate-500 mt-1">
               Curated surface-care bundles tested for Indian homes
@@ -202,12 +263,12 @@ export const CombosCarouselSection = () => {
         {/* Responsive Grid on Laptop/Desktop, Swipeable Carousel on Mobile */}
         <div
           ref={scrollContainerRef}
-          className={`flex lg:grid gap-5 sm:gap-6 overflow-x-auto lg:overflow-visible scroll-smooth pb-4 pt-1 no-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0 ${
+          className={`flex lg:grid gap-5 sm:gap-6 overflow-x-auto lg:overflow-visible scroll-smooth pb-4 pt-3 no-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0 ${
             items.length <= 3
               ? 'lg:grid-cols-3 max-w-5xl mx-auto'
               : items.length === 4
               ? 'lg:grid-cols-4 max-w-[1400px] mx-auto'
-              : 'lg:grid-cols-5'
+              : 'lg:grid-cols-4'
           }`}
           style={{
             scrollbarWidth: 'none',
@@ -215,119 +276,129 @@ export const CombosCarouselSection = () => {
             WebkitOverflowScrolling: 'touch'
           }}
         >
-          {items.map((item) => {
+          {items.map((item, idx) => {
             const starCount = Math.max(1, Math.min(5, Math.round(Number(item.rating) || 5)));
+            const theme = getCardTheme(item, idx);
+            const IconComponent = theme.Icon;
 
             return (
               <div
                 key={item.id}
-                className="w-[285px] sm:w-[320px] md:w-[340px] lg:w-auto shrink-0 lg:shrink bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden group"
+                style={{ background: theme.cardBg }}
+                className="relative w-[290px] sm:w-[320px] md:w-[340px] lg:w-auto shrink-0 lg:shrink rounded-t-[130px] rounded-b-[32px] p-2.5 sm:p-3 shadow-[0_10px_30px_rgba(15,23,42,0.06)] hover:shadow-[0_16px_40px_rgba(15,23,42,0.12)] transition-all duration-300 flex flex-col justify-between group"
               >
-                {/* Product Image Area Wrapped in Clickable Link */}
-                <Link
-                  to={`/product/${item.slug}`}
-                  className="relative h-60 sm:h-64 w-full bg-[#f6f8fa] overflow-hidden flex items-center justify-center cursor-pointer block"
-                >
-                  {/* Organic decorative wave curve */}
-                  {item.accentCorner === 'top-right' && (
-                    <div
-                      className="absolute -top-6 -right-6 w-24 h-24 rounded-full opacity-80 pointer-events-none"
-                      style={{ backgroundColor: item.accentColor }}
+                {/* Top Arched Image Container */}
+                <div className="relative">
+                  {/* Top-Left Category Icon Circle */}
+                  <div
+                    style={{ backgroundColor: theme.accentColor }}
+                    className="absolute top-3 left-3 z-20 w-12 h-12 sm:w-13 sm:h-13 rounded-full border-[3px] border-white shadow-md flex items-center justify-center text-white"
+                  >
+                    <IconComponent size={22} strokeWidth={2} />
+                  </div>
+
+                  {/* Product Image Link */}
+                  <Link
+                    to={`/product/${item.slug}`}
+                    className="relative h-72 sm:h-80 w-full rounded-t-[118px] overflow-hidden block bg-white"
+                  >
+                    <img
+                      src={item.image}
+                      alt={item.name}
+                      className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                      loading="lazy"
                     />
-                  )}
-                  {item.accentCorner === 'bottom-left' && (
-                    <div
-                      className="absolute -bottom-6 -left-6 w-28 h-28 rounded-full opacity-80 pointer-events-none"
-                      style={{ backgroundColor: item.accentColor }}
+
+                    {/* Curved Wave Cutout at Bottom of Image */}
+                    <svg
+                      className="absolute -bottom-[1px] left-0 w-full h-10 sm:h-12 pointer-events-none"
+                      viewBox="0 0 500 60"
+                      preserveAspectRatio="none"
+                      style={{ color: theme.waveColor, fill: 'currentColor' }}
+                    >
+                      <path d="M0,15 C160,65 340,65 500,15 L500,60 L0,60 Z" />
+                    </svg>
+                  </Link>
+
+                  {/* Circular Before/After Split Inset on Bottom-Right */}
+                  <Link
+                    to={`/product/${item.slug}`}
+                    className="absolute -bottom-3 right-2 z-20 w-24 h-24 sm:w-26 sm:h-26 rounded-full border-[3px] border-white shadow-lg overflow-hidden block bg-slate-200"
+                  >
+                    <img
+                      src={theme.insetImage}
+                      alt={`${item.name} comparison`}
+                      className="w-full h-full object-cover"
+                      loading="lazy"
                     />
-                  )}
-
-                  {/* Product Image */}
-                  <img
-                    src={item.image}
-                    alt={item.name}
-                    className="w-full h-full object-contain p-3.5 sm:p-4 group-hover:scale-105 transition-transform duration-300"
-                    loading="lazy"
-                  />
-
-                  {/* Top Banner overlay if present */}
-                  {item.topBanner && (
-                    <div className="absolute top-3 left-3 right-3 text-center z-10">
-                      <span className="inline-block px-3 py-1 rounded-full text-xs font-black text-slate-900 bg-white/90 backdrop-blur-sm shadow-xs">
-                        {item.topBanner}
-                      </span>
+                    {/* Split vertical line + tiny center arrow badge */}
+                    <div className="absolute inset-y-0 left-1/2 w-[2px] -translate-x-1/2 bg-white/90" />
+                    <div
+                      style={{ backgroundColor: theme.accentColor }}
+                      className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-6 h-6 rounded-full text-white flex items-center justify-center shadow-xs"
+                    >
+                      <svg width="8" height="10" viewBox="0 0 8 10" fill="currentColor">
+                        <path d="M1 1L7 5L1 9V1Z" />
+                      </svg>
                     </div>
-                  )}
+                  </Link>
+                </div>
 
-                  {/* Bottom Overlay text if present */}
-                  {item.bottomOverlay && (
-                    <div className="absolute bottom-3 right-3 z-10 text-right">
-                      <span className="inline-block px-3 py-1 rounded-lg text-xs font-black text-slate-900 bg-white/90 backdrop-blur-sm shadow-xs leading-tight">
-                        {item.bottomOverlay}
-                      </span>
-                    </div>
-                  )}
-                </Link>
-
-                {/* Bottom Card Details */}
-                <div className="p-5 sm:p-6 flex flex-col justify-between flex-1 bg-white">
+                {/* Card Body Content */}
+                <div className="px-3 sm:px-4 pt-4 pb-3 flex flex-col justify-between flex-1">
                   <div>
-                    {/* Title */}
+                    {/* Product Title */}
                     <Link
                       to={`/product/${item.slug}`}
-                      className="block font-bold text-slate-900 text-base sm:text-lg leading-snug hover:text-[#087F8C] transition-colors line-clamp-2 min-h-[44px]"
+                      className="block font-extrabold text-[#1B1446] text-base sm:text-[18px] leading-snug hover:opacity-80 transition-opacity line-clamp-3 min-h-[50px]"
                     >
                       {item.name}
                     </Link>
 
-                    {/* Subtitle / Coverage */}
-                    <p className="text-xs sm:text-[13px] text-slate-500 line-clamp-2 mt-2 leading-relaxed min-h-[36px]">
-                      {item.subtitle}
-                    </p>
-
-                    {/* Star Rating (Safe 5-star loop) */}
+                    {/* 5 Star Rating + Reviews */}
                     <div className="flex items-center gap-1.5 mt-3">
-                      <div className="flex text-amber-400">
+                      <div className="flex text-[#F59E0B]">
                         {[1, 2, 3, 4, 5].map((s) => (
                           <Star
                             key={s}
-                            size={15}
+                            size={16}
                             fill={s <= starCount ? 'currentColor' : 'none'}
-                            className={s <= starCount ? 'text-amber-400' : 'text-slate-300'}
+                            className={s <= starCount ? 'text-[#F59E0B]' : 'text-slate-300'}
                           />
                         ))}
                       </div>
-                      <span className="text-xs font-bold text-slate-800">
+                      <span className="text-xs sm:text-[13px] font-semibold text-[#2E2559]">
                         {item.reviews} reviews
                       </span>
                     </div>
 
-                    {/* Price */}
-                    <div className="flex items-baseline gap-2 mt-2.5">
-                      <span className="text-lg sm:text-xl font-extrabold text-slate-900">
+                    {/* Price + Strikethrough MRP */}
+                    <div className="flex items-baseline gap-2.5 mt-3">
+                      <span className="text-2xl sm:text-[26px] font-black text-[#1B1446] tracking-tight">
                         {formatPrice(item.price)}
                       </span>
                       {item.originalPrice && (
-                        <span className="text-xs sm:text-sm text-slate-400 line-through">
+                        <span className="text-sm sm:text-base font-semibold text-slate-400 line-through">
                           {formatPrice(item.originalPrice)}
                         </span>
                       )}
                     </div>
                   </div>
 
-                  {/* Add to Cart Button (Aqua Cyan #52D1DC) */}
+                  {/* Matching Solid Pill Add to Cart Button */}
                   <button
                     onClick={() => handleAddToCart(item)}
-                    className="mt-4 w-full py-3 sm:py-3.5 rounded-xl sm:rounded-2xl bg-[#52D1DC] hover:bg-[#3ec4d0] active:scale-[0.98] text-slate-950 font-bold text-sm tracking-wide text-center transition-all duration-200 shadow-xs cursor-pointer block"
+                    style={{ backgroundColor: theme.accentColor }}
+                    className="mt-4 w-full py-3 sm:py-3.5 px-5 rounded-full hover:opacity-95 active:scale-[0.98] text-white font-bold text-sm sm:text-[15px] tracking-wide flex items-center justify-center gap-2.5 transition-all duration-200 shadow-md cursor-pointer"
                   >
-                    Add to cart
+                    <ShoppingCart size={18} strokeWidth={2.2} />
+                    <span>Add to cart</span>
                   </button>
                 </div>
               </div>
             );
           })}
         </div>
-
       </div>
     </section>
   );
