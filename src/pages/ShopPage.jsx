@@ -1,15 +1,75 @@
-import React, { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import React, { useState, useEffect, useRef } from 'react';
+import { useSearchParams, Link } from 'react-router-dom';
 import { SortDropdown } from '../components/shop/SortDropdown';
 import { ProductCard } from '../components/product/ProductCard';
 import { Breadcrumbs } from '../components/common/Breadcrumbs';
 import { ProductGridSkeleton } from '../components/common/LoadingSkeleton';
 import { productService } from '../services/productService';
-import { Sparkles, PackageOpen } from 'lucide-react';
+import { useCart } from '../context/CartContext';
+import {
+  Sparkles,
+  PackageOpen,
+  ChevronLeft,
+  ChevronRight,
+  ShoppingCart,
+  CookingPot,
+  Sofa
+} from 'lucide-react';
+
+const initialValueBundles = [
+  {
+    id: 'bundle-glass-ceramics',
+    key: 'glass',
+    name: 'Glass & Ceramics Cleaning and Protection Combo',
+    slug: 'abc',
+    price: 1599,
+    originalPrice: 2239,
+    image: 'https://cdn.shopify.com/s/files/1/0831/5037/2921/files/GharShineBathroomCareDuo.png?v=1791650202',
+    cardBg: '#E4F0FB',
+    archBg: 'linear-gradient(145deg, #7B9DC4 0%, #587BA6 100%)',
+    arcBorder: 'rgba(88, 123, 166, 0.35)',
+    buttonBg: 'linear-gradient(90deg, #1E3E66 0%, #0D1E36 100%)',
+    priceColor: '#124682',
+    Icon: Sparkles
+  },
+  {
+    id: 'bundle-kitchen-foam',
+    key: 'kitchen',
+    name: 'Kitchen Foam Cleaner',
+    slug: 'kitchen-foam-cleaner',
+    price: 1699,
+    originalPrice: 2379,
+    image: 'https://cdn.shopify.com/s/files/1/0831/5037/2921/files/WhatsAppImage2026-10-10at23.23.25_1.jpg?v=1791654877',
+    cardBg: '#FDF4EB',
+    archBg: 'linear-gradient(145deg, #EAD8C5 0%, #DBC1A6 100%)',
+    arcBorder: 'rgba(180, 148, 115, 0.45)',
+    buttonBg: 'linear-gradient(90deg, #3A5C80 0%, #243F5C 100%)',
+    priceColor: '#13213C',
+    Icon: CookingPot
+  },
+  {
+    id: 'bundle-sofa-fabric',
+    key: 'sofa',
+    name: 'Sofa & Fabric Stain Repellent Combo',
+    slug: 'sofa-fabric-stain-repellent-combo',
+    price: 1999,
+    originalPrice: 2799,
+    image: 'https://cdn.shopify.com/s/files/1/0831/5037/2921/files/GharshineSofaProtectorCombo.png?v=1791652689',
+    cardBg: '#E6EFFA',
+    archBg: 'linear-gradient(145deg, #274469 0%, #13253E 100%)',
+    arcBorder: 'rgba(39, 68, 105, 0.45)',
+    buttonBg: 'linear-gradient(90deg, #1A2F4B 0%, #0E1B2D 100%)',
+    priceColor: '#132747',
+    Icon: Sofa
+  }
+];
 
 export const ShopPage = () => {
+  const { addToCart } = useCart();
+  const bundleScrollRef = useRef(null);
   const [searchParams, setSearchParams] = useSearchParams();
   const [productsList, setProductsList] = useState([]);
+  const [bundlesList, setBundlesList] = useState(initialValueBundles);
   const [loading, setLoading] = useState(true);
 
   const [filters, setFilters] = useState({
@@ -51,12 +111,90 @@ export const ShopPage = () => {
       });
       if (res.success) {
         setProductsList(res.data);
+
+        // Sync the exact 3 Best Value Bundles with live Shopify products if present
+        if (Array.isArray(res.data) && res.data.length > 0) {
+          const updatedThree = initialValueBundles.map((slot) => {
+            const match = res.data.find((p) => {
+              if (!p) return false;
+              const pName = (p.name || '').toLowerCase();
+              const pSlug = (p.slug || '').toLowerCase();
+
+              if (slot.key === 'glass') {
+                return (
+                  pSlug === 'abc' ||
+                  (pName.includes('glass') && pName.includes('ceramic')) ||
+                  pSlug.includes('glass-ceramics')
+                );
+              }
+              if (slot.key === 'kitchen') {
+                return (
+                  pSlug.includes('kitchen-foam') ||
+                  pName.includes('kitchen foam') ||
+                  pSlug.includes('kitchen-protector')
+                );
+              }
+              if (slot.key === 'sofa') {
+                return (
+                  pSlug.includes('sofa-fabric') ||
+                  (pName.includes('sofa') && pName.includes('fabric'))
+                );
+              }
+              return false;
+            });
+
+            if (match) {
+              return {
+                ...slot,
+                id: match.id,
+                name: match.name || slot.name,
+                slug: match.slug || slot.slug,
+                price: Number(match.price) || slot.price,
+                originalPrice: match.originalPrice
+                  ? Number(match.originalPrice)
+                  : slot.originalPrice,
+                image: match.thumbnail || match.images?.[0] || slot.image
+              };
+            }
+            return slot;
+          });
+
+          setBundlesList(updatedThree);
+        }
       }
       setLoading(false);
     };
 
     fetchFiltered();
   }, [filters, sortBy]);
+
+  const scrollBundlesLeft = () => {
+    if (bundleScrollRef.current) {
+      bundleScrollRef.current.scrollBy({ left: -380, behavior: 'smooth' });
+    }
+  };
+
+  const scrollBundlesRight = () => {
+    if (bundleScrollRef.current) {
+      bundleScrollRef.current.scrollBy({ left: 380, behavior: 'smooth' });
+    }
+  };
+
+  const handleAddBundleToCart = (bundle) => {
+    addToCart(
+      {
+        id: bundle.id,
+        name: bundle.name,
+        slug: bundle.slug,
+        price: bundle.price,
+        originalPrice: bundle.originalPrice,
+        thumbnail: bundle.image,
+        isCombo: true
+      },
+      1,
+      true
+    );
+  };
 
   const handleClearSearch = () => {
     setFilters((prev) => ({ ...prev, search: '' }));
@@ -80,12 +218,134 @@ export const ShopPage = () => {
 
   return (
     <div className="min-h-screen bg-white py-6 sm:py-10">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb Navigation */}
         <Breadcrumbs items={[{ label: 'Shop All Products' }]} />
 
+        {/* BEST VALUE BUNDLES SECTION (EXACT 3 CARDS AT TOP) */}
+        <div className="mt-4 mb-12 relative">
+          {/* Heading + Two-Tone Underline */}
+          <div className="flex flex-col items-center justify-center mb-8">
+            <h2 className="text-2xl sm:text-3xl md:text-[38px] font-black tracking-tight text-center leading-tight">
+              <span className="text-[#121D33]">Best Value </span>
+              <span className="text-[#235893]">Bundles</span>
+            </h2>
+            <div className="mt-2.5 flex items-center justify-center">
+              <span className="w-14 sm:w-16 h-[3px] bg-[#121D33] rounded-l-full" />
+              <span className="w-14 sm:w-16 h-[3px] bg-[#3E7BBE] rounded-r-full" />
+            </div>
+          </div>
+
+          <div className="relative">
+            {/* Mobile Scroll Arrows */}
+            <button
+              onClick={scrollBundlesLeft}
+              aria-label="Previous Bundles"
+              className="flex lg:hidden absolute left-1 top-1/2 -translate-y-1/2 z-20 w-9 h-9 rounded-full bg-white/95 hover:bg-white text-slate-800 shadow-md items-center justify-center transition active:scale-95 cursor-pointer"
+            >
+              <ChevronLeft size={18} />
+            </button>
+
+            <button
+              onClick={scrollBundlesRight}
+              aria-label="Next Bundles"
+              className="flex lg:hidden absolute right-1 top-1/2 -translate-y-1/2 z-20 w-9 h-9 rounded-full bg-white/95 hover:bg-white text-slate-800 shadow-md items-center justify-center transition active:scale-95 cursor-pointer"
+            >
+              <ChevronRight size={18} />
+            </button>
+
+            {/* 3 Cards Row: Horizontal Swipe on Mobile, 3-Column Grid on Laptop/Desktop */}
+            <div
+              ref={bundleScrollRef}
+              className="flex lg:grid lg:grid-cols-3 gap-5 sm:gap-6 overflow-x-auto lg:overflow-visible scroll-smooth no-scrollbar pb-3 -mx-4 px-4 sm:mx-0 sm:px-0 snap-x snap-mandatory"
+              style={{
+                scrollbarWidth: 'none',
+                msOverflowStyle: 'none',
+                WebkitOverflowScrolling: 'touch'
+              }}
+            >
+              {bundlesList.slice(0, 3).map((bundle) => {
+                const IconComponent = bundle.Icon;
+
+                return (
+                  <div
+                    key={bundle.id}
+                    style={{ backgroundColor: bundle.cardBg }}
+                    className="w-[335px] sm:w-[400px] lg:w-auto min-h-[265px] sm:min-h-[285px] shrink-0 lg:shrink snap-start rounded-[28px] overflow-hidden flex flex-row items-stretch shadow-[0_10px_28px_rgba(15,23,42,0.07)] hover:shadow-[0_16px_36px_rgba(15,23,42,0.12)] transition-all duration-300 relative group"
+                  >
+                    {/* Left Text & Button Column */}
+                    <div className="w-[53%] sm:w-[54%] p-5 sm:p-6 flex flex-col justify-between z-10">
+                      <div>
+                        {/* Circular Dark Navy Category Icon Badge */}
+                        <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-[#13223B] text-white flex items-center justify-center shadow-md mb-3.5">
+                          <IconComponent size={23} strokeWidth={1.8} />
+                        </div>
+
+                        {/* Product Title */}
+                        <Link to={`/product/${bundle.slug}`}>
+                          <h3 className="text-base sm:text-[20px] font-extrabold text-[#121D33] leading-[1.22] hover:opacity-80 transition-opacity line-clamp-3">
+                            {bundle.name}
+                          </h3>
+                        </Link>
+                      </div>
+
+                      {/* Price + Pill Add to Cart Button */}
+                      <div className="mt-4">
+                        <div className="flex items-baseline gap-2.5 mb-3">
+                          {bundle.originalPrice && (
+                            <span className="text-xs sm:text-[15px] text-slate-500 line-through font-semibold">
+                              ₹{Number(bundle.originalPrice).toLocaleString('en-IN')}
+                            </span>
+                          )}
+                          <span
+                            style={{ color: bundle.priceColor }}
+                            className="text-xl sm:text-[26px] font-black tracking-tight"
+                          >
+                            ₹{Number(bundle.price).toLocaleString('en-IN')}
+                          </span>
+                        </div>
+
+                        <button
+                          onClick={() => handleAddBundleToCart(bundle)}
+                          style={{ background: bundle.buttonBg }}
+                          className="w-full sm:w-auto min-w-[145px] sm:min-w-[165px] px-5 py-2.5 sm:py-3 rounded-full hover:opacity-95 active:scale-[0.98] text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-md transition cursor-pointer"
+                        >
+                          <ShoppingCart size={16} strokeWidth={2.2} />
+                          <span>Add to cart</span>
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Right Curved Arch Image Container */}
+                    <div className="w-[47%] sm:w-[46%] relative flex items-stretch">
+                      {/* Decorative thin outer arc line */}
+                      <div
+                        style={{ borderColor: bundle.arcBorder }}
+                        className="pointer-events-none absolute -left-2.5 top-2 bottom-2 w-full rounded-l-[140px] border-l-[1.5px] z-10"
+                      />
+
+                      <Link
+                        to={`/product/${bundle.slug}`}
+                        style={{ background: bundle.archBg }}
+                        className="w-full h-full relative rounded-l-[135px] overflow-hidden flex items-center justify-center block"
+                      >
+                        <img
+                          src={bundle.image}
+                          alt={bundle.name}
+                          className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                          loading="lazy"
+                        />
+                      </Link>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+
         {/* Page Header */}
-        <div className="py-6 sm:py-8 border-b border-slate-100 mb-8">
+        <div className="py-6 sm:py-8 border-t border-b border-slate-100 mb-8">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#E8F8F8] text-[#087F8C] text-xs font-bold uppercase tracking-wider mb-2">
             <Sparkles size={13} />
             <span>Complete Catalog</span>
