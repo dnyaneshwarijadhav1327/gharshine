@@ -67,17 +67,19 @@ export const ProductGallery = ({ images = [], productName = "Product" }) => {
       {/* Vertical Thumbnail Strip with Up/Down Arrows */}
       <div className="relative flex md:flex-col items-center justify-between shrink-0 w-full md:w-20 lg:w-22">
         {/* Desktop Up Scroll Button */}
-        <button
-          onClick={() => scrollThumbnails('up')}
-          className="hidden md:flex items-center justify-center w-full py-1 text-[#13223B] hover:opacity-70 transition cursor-pointer"
-          aria-label="Scroll thumbnails up"
-        >
-          <ChevronUp size={18} strokeWidth={2.5} />
-        </button>
+        {galleryImages.length > 5 && (
+          <button
+            onClick={() => scrollThumbnails('up')}
+            className="hidden md:flex items-center justify-center w-full py-1 text-[#A61B64] hover:opacity-75 transition cursor-pointer"
+            aria-label="Scroll thumbnails up"
+          >
+            <ChevronUp size={18} strokeWidth={2.5} />
+          </button>
+        )}
 
         <div
           ref={thumbListRef}
-          className="flex md:flex-col gap-2.5 overflow-x-auto md:overflow-y-auto no-scrollbar w-full md:max-h-[440px] lg:max-h-[480px] py-1 px-0.5"
+          className="flex md:flex-col gap-2.5 overflow-x-auto md:overflow-y-auto no-scrollbar w-full md:max-h-[480px] lg:max-h-[520px] py-1 px-0.5"
         >
           {galleryImages.map((img, idx) => (
             <button
@@ -86,8 +88,8 @@ export const ProductGallery = ({ images = [], productName = "Product" }) => {
               onClick={() => setActiveIndex(idx)}
               className={`relative w-16 h-16 md:w-18 md:h-18 lg:w-20 lg:h-20 rounded-2xl overflow-hidden border-2 transition-all shrink-0 bg-[#F6F5F2] cursor-pointer ${
                 activeIndex === idx
-                  ? 'border-[#1D63B8] shadow-xs ring-2 ring-[#1D63B8]/20 opacity-100'
-                  : 'border-transparent hover:border-slate-300 opacity-80 hover:opacity-100'
+                  ? 'border-[#C82068] shadow-xs ring-2 ring-[#C82068]/20 opacity-100'
+                  : 'border-transparent hover:border-pink-200 opacity-85 hover:opacity-100'
               }`}
             >
               <img
@@ -103,7 +105,7 @@ export const ProductGallery = ({ images = [], productName = "Product" }) => {
         {/* Desktop Down Scroll Button */}
         <button
           onClick={() => scrollThumbnails('down')}
-          className="hidden md:flex items-center justify-center w-full py-1 text-[#13223B] hover:opacity-70 transition cursor-pointer"
+          className="hidden md:flex items-center justify-center w-full py-1 text-[#A61B64] hover:opacity-75 transition cursor-pointer"
           aria-label="Scroll thumbnails down"
         >
           <ChevronDown size={18} strokeWidth={2.5} />
@@ -113,7 +115,7 @@ export const ProductGallery = ({ images = [], productName = "Product" }) => {
       {/* Main Active Image Container */}
       <div
         onClick={() => setIsLightboxOpen(true)}
-        className="relative flex-1 w-full aspect-[4/3.6] md:h-[490px] lg:h-[530px] rounded-[28px] overflow-hidden bg-[#F5F3EF] border border-slate-100 shadow-xs group select-none cursor-pointer flex items-center justify-center"
+        className="relative flex-1 w-full aspect-square md:h-[500px] lg:h-[540px] rounded-[28px] overflow-hidden bg-[#F5F3EF] border border-slate-100 shadow-xs group select-none cursor-pointer flex items-center justify-center"
       >
         <img
           src={galleryImages[activeIndex]}
@@ -127,31 +129,24 @@ export const ProductGallery = ({ images = [], productName = "Product" }) => {
             <button
               onClick={handlePrev}
               aria-label="Previous image"
-              className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/95 hover:bg-white text-[#13223B] shadow-md flex items-center justify-center transition z-10 cursor-pointer active:scale-95"
+              className="absolute left-3.5 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/95 hover:bg-white text-[#13223B] shadow-md flex items-center justify-center transition z-10 cursor-pointer active:scale-95"
             >
               <ChevronLeft size={19} strokeWidth={2.2} />
             </button>
             <button
               onClick={handleNext}
               aria-label="Next image"
-              className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/95 hover:bg-white text-[#13223B] shadow-md flex items-center justify-center transition z-10 cursor-pointer active:scale-95"
+              className="absolute right-3.5 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/95 hover:bg-white text-[#13223B] shadow-md flex items-center justify-center transition z-10 cursor-pointer active:scale-95"
             >
               <ChevronRight size={19} strokeWidth={2.2} />
             </button>
           </>
         )}
 
-        {/* Expand Fullscreen Icon Button (Bottom Right) */}
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            setIsLightboxOpen(true);
-          }}
-          aria-label="Expand image"
-          className="absolute bottom-4 right-4 w-10 h-10 rounded-full bg-white/95 hover:bg-white text-[#13223B] shadow-md flex items-center justify-center transition z-10 cursor-pointer active:scale-95"
-        >
-          <Maximize2 size={17} strokeWidth={2.2} />
-        </button>
+        {/* Counter Pill Badge (Bottom Right) */}
+        <div className="absolute bottom-3.5 right-3.5 bg-black/65 backdrop-blur-xs px-3 py-1 rounded-full text-white text-xs font-bold tracking-wide">
+          {activeIndex + 1}/{galleryImages.length}
+        </div>
       </div>
 
       {/* Full-Screen Lightbox Modal on Click */}

@@ -152,32 +152,32 @@ export const BundleUpsellBox = ({ currentProduct, onAddUpsell }) => {
   if (displayItems.length === 0) return null;
 
   return (
-    <div className="p-4 sm:p-5 rounded-2xl bg-[#EEF9FB] border border-[#D5EEF3] space-y-3">
+    <div className="p-4 sm:p-5 rounded-3xl bg-[#FCEBF2] border border-[#F8D8E6] space-y-3.5">
       <div className="flex items-center justify-between gap-2">
         <div>
-          <h4 className="text-sm sm:text-base font-extrabold text-slate-900 tracking-tight">
+          <h4 className="text-base sm:text-[17px] font-extrabold text-[#111C30] tracking-tight">
             Add more to your bundle
           </h4>
-          <p className="text-xs text-slate-500 font-medium mt-0.5">
+          <p className="text-xs text-[#4A5568] font-medium mt-0.5">
             Every add takes you closer to the next saving
           </p>
         </div>
 
         {displayItems.length > 2 && (
-          <div className="hidden sm:flex items-center gap-1 shrink-0">
+          <div className="flex items-center gap-1.5 shrink-0">
             <button
               onClick={() => handleScroll('left')}
-              className="w-7 h-7 rounded-lg bg-white hover:bg-slate-50 border border-slate-200 text-slate-600 hover:text-slate-900 flex items-center justify-center transition shadow-2xs cursor-pointer"
+              className="w-7 h-7 rounded-lg bg-white hover:bg-slate-50 text-[#111C30] flex items-center justify-center transition shadow-2xs cursor-pointer"
               aria-label="Previous upsell items"
             >
-              <ChevronLeft size={14} />
+              <ChevronLeft size={15} />
             </button>
             <button
               onClick={() => handleScroll('right')}
-              className="w-7 h-7 rounded-lg bg-white hover:bg-slate-50 border border-slate-200 text-slate-600 hover:text-slate-900 flex items-center justify-center transition shadow-2xs cursor-pointer"
+              className="w-7 h-7 rounded-lg bg-white hover:bg-slate-50 text-[#111C30] flex items-center justify-center transition shadow-2xs cursor-pointer"
               aria-label="Next upsell items"
             >
-              <ChevronRight size={14} />
+              <ChevronRight size={15} />
             </button>
           </div>
         )}
@@ -186,7 +186,7 @@ export const BundleUpsellBox = ({ currentProduct, onAddUpsell }) => {
       {/* Horizontal Upsell Cards */}
       <div
         ref={scrollContainerRef}
-        className="flex items-center gap-3 overflow-x-auto no-scrollbar pb-1"
+        className="flex items-stretch gap-3 overflow-x-auto no-scrollbar pb-1"
       >
         {displayItems.map((item) => {
           const cartEntry = getItemInCart(item.id) || getItemInCart(item.slug);
@@ -195,47 +195,47 @@ export const BundleUpsellBox = ({ currentProduct, onAddUpsell }) => {
           return (
             <div
               key={item.id}
-              className="w-[220px] sm:w-[240px] shrink-0 bg-white rounded-xl p-2.5 border border-slate-200/80 shadow-2xs hover:shadow-xs transition-all flex items-center gap-3 group"
+              className="w-[225px] sm:w-[245px] shrink-0 bg-white rounded-2xl p-3 border border-white shadow-2xs hover:shadow-xs transition-all flex items-center gap-3 group"
             >
-              {/* Product Thumbnail (Clickable link to product) - NO hover zoom */}
+              {/* Product Thumbnail */}
               <Link
                 to={`/product/${item.slug}`}
-                className="w-14 h-14 rounded-lg bg-slate-50 border border-slate-100 overflow-hidden shrink-0 relative block cursor-pointer flex items-center justify-center"
+                className="w-15 h-15 rounded-xl bg-[#F4F7FA] overflow-hidden shrink-0 relative flex items-center justify-center cursor-pointer"
                 title={`View ${item.name}`}
               >
                 <img
                   src={item.image}
                   alt={item.name}
-                  className="w-full h-full object-contain p-1"
+                  className="w-full h-full object-cover"
                   loading="lazy"
                 />
               </Link>
 
-              {/* Title, Price & Add Button */}
+              {/* Title, Price & Pink + Add Button */}
               <div className="flex-1 min-w-0">
                 <Link
                   to={`/product/${item.slug}`}
-                  className="block hover:text-[#087F8C] transition-colors"
+                  className="block hover:opacity-80 transition-opacity"
                 >
-                  <h5 className="text-[12px] font-bold text-slate-900 truncate leading-snug">
+                  <h5 className="text-xs font-extrabold text-[#111C30] truncate leading-snug">
                     {item.name}
                   </h5>
                 </Link>
 
-                <div className="flex items-baseline gap-1 mt-0.5">
-                  <span className="text-xs font-black text-slate-900">
+                <div className="flex items-baseline gap-1.5 mt-1">
+                  <span className="text-xs sm:text-[13px] font-black text-[#111C30]">
                     {formatPrice(item.price)}
                   </span>
                   {item.originalPrice && (
-                    <span className="text-[10px] text-slate-400 line-through">
+                    <span className="text-[11px] text-slate-400 line-through font-medium">
                       {formatPrice(item.originalPrice)}
                     </span>
                   )}
                 </div>
 
-                <div className="mt-1.5 flex items-center">
+                <div className="mt-2 flex items-center">
                   {isAdded ? (
-                    <div className="inline-flex items-center gap-1.5 bg-emerald-50 text-emerald-800 border border-emerald-200 px-2 py-0.5 rounded-md text-[11px] font-bold">
+                    <div className="inline-flex items-center gap-1.5 bg-emerald-50 text-emerald-800 border border-emerald-200 px-2.5 py-1 rounded-lg text-[11px] font-bold">
                       <Check size={12} className="text-emerald-600" />
                       <span>Added ({cartEntry.quantity})</span>
                       <button
@@ -249,9 +249,9 @@ export const BundleUpsellBox = ({ currentProduct, onAddUpsell }) => {
                   ) : (
                     <button
                       onClick={(e) => handleAdd(item, e)}
-                      className="px-3 py-1 bg-[#F5C344] hover:bg-[#ebb734] active:scale-95 text-slate-950 font-extrabold text-[11px] rounded-md transition-all shadow-2xs cursor-pointer flex items-center gap-1"
+                      className="px-4 py-1 bg-[#F59EC2] hover:bg-[#ef87b3] active:scale-95 text-[#111C30] font-extrabold text-xs rounded-lg transition-all shadow-2xs cursor-pointer flex items-center gap-1"
                     >
-                      <Plus size={11} className="stroke-[3]" />
+                      <Plus size={12} strokeWidth={2.8} />
                       <span>Add</span>
                     </button>
                   )}
