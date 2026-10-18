@@ -1,8 +1,54 @@
 import React, { useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import {
+  ChevronLeft,
+  ChevronRight,
+  Star,
+  ShoppingCart,
+  ShowerHead,
+  Sofa,
+  CookingPot,
+  Building2
+} from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { products } from '../../data/products';
+
+const ROOM_THEMES = {
+  blue: {
+    cardBg: 'linear-gradient(180deg, #DDEEFB 0%, #EEF6FD 100%)',
+    waveColor: '#EEF6FD',
+    accentColor: '#0C6599',
+    Icon: ShowerHead
+  },
+  orange: {
+    cardBg: 'linear-gradient(180deg, #FCE3C8 0%, #FDF2E6 100%)',
+    waveColor: '#FDF2E6',
+    accentColor: '#DA5B1C',
+    Icon: Sofa
+  },
+  green: {
+    cardBg: 'linear-gradient(180deg, #DCF0DD 0%, #EEF8EE 100%)',
+    waveColor: '#EEF8EE',
+    accentColor: '#2E6F3A',
+    Icon: CookingPot
+  },
+  purple: {
+    cardBg: 'linear-gradient(180deg, #E8DCFF 0%, #F4EEFF 100%)',
+    waveColor: '#F4EEFF',
+    accentColor: '#562B99',
+    Icon: Building2
+  }
+};
+
+const getRoomTheme = (item, idx) => {
+  const text = `${item.id || ''} ${item.title || ''} ${item.slug || ''}`.toLowerCase();
+  if (text.includes('bathroom')) return ROOM_THEMES.blue;
+  if (text.includes('living') || text.includes('sofa')) return ROOM_THEMES.orange;
+  if (text.includes('kitchen')) return ROOM_THEMES.green;
+  if (text.includes('balcony') || text.includes('marble') || text.includes('floor')) return ROOM_THEMES.purple;
+  const order = [ROOM_THEMES.blue, ROOM_THEMES.orange, ROOM_THEMES.green, ROOM_THEMES.purple];
+  return order[idx % order.length];
+};
 
 export const BestsellersSection = () => {
   const { addToCart } = useCart();
@@ -15,7 +61,7 @@ export const BestsellersSection = () => {
       subtitle: 'Protect & Clean your Glass Partitions, Taps & Fittings, Wall Tiles',
       saveText: 'Save 24% Vs Buying Separately',
       price: 1999,
-      originalPrice: 3399,
+      originalPrice: 3299,
       slug: 'bathroom-protector-kit-deep-clean-long-lasting-protection-for-glass-marble-fittings',
       cardBg: 'bg-[#6fe2f5]',
       image: 'https://cdn.shopify.com/s/files/1/0831/5037/2921/files/GharShineBathroomCleaningTrio.png?v=1791689722',
@@ -214,19 +260,27 @@ export const BestsellersSection = () => {
   };
 
   return (
-    <section className="py-10 sm:py-16 md:py-20 bg-white">
-      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
-        
+    <section className="relative py-12 sm:py-16 md:py-20 bg-[#FAF8F5] overflow-hidden">
+      {/* Subtle decorative corner accents */}
+      <div className="pointer-events-none absolute -top-20 -right-20 w-72 h-72 rounded-full bg-[#DCEBF9]/60 blur-xl" />
+      <div className="pointer-events-none absolute -bottom-24 -right-16 w-80 h-80 rounded-full bg-[#E3D8FF]/50 blur-xl" />
+
+      <div className="relative z-10 max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Heading & Mobile Scroll Controls */}
-        <div className="flex items-center justify-between mb-6 sm:mb-10">
-          <div className="w-full text-center lg:text-center">
-            <h2 className="text-xl sm:text-3xl md:text-4xl font-extrabold text-slate-900 tracking-tight font-sans">
-              Protect Your Home, Room By Room
+        <div className="flex flex-col items-center justify-center mb-8 sm:mb-12 relative">
+          <div className="text-center">
+            <h2 className="text-2xl sm:text-3xl md:text-[42px] font-black tracking-tight leading-tight">
+              <span className="text-[#14172C]">Protect Your Home, </span>
+              <span className="bg-gradient-to-r from-[#0C7BB3] via-[#DF8B14] to-[#E85B6C] bg-clip-text text-transparent">
+                Room By Room
+              </span>
             </h2>
+            {/* Multi-color accent underline bar */}
+            <div className="mt-3 mx-auto w-56 sm:w-72 h-[2.5px] rounded-full bg-gradient-to-r from-transparent via-[#D97724] to-transparent opacity-80" />
           </div>
 
           {/* Optional arrows on small screens */}
-          <div className="hidden sm:flex lg:hidden items-center gap-2">
+          <div className="hidden sm:flex lg:hidden items-center gap-2 absolute right-0 top-1">
             <button
               onClick={scrollLeft}
               className="w-9 h-9 rounded-full border border-slate-200 bg-white text-slate-700 flex items-center justify-center shadow-xs"
@@ -250,8 +304,8 @@ export const BestsellersSection = () => {
             kits.length <= 3
               ? 'lg:grid-cols-3 max-w-5xl mx-auto'
               : kits.length === 4
-              ? 'lg:grid-cols-4 max-w-6xl mx-auto'
-              : 'lg:grid-cols-5'
+              ? 'lg:grid-cols-4 max-w-[1400px] mx-auto'
+              : 'lg:grid-cols-4'
           }`}
           style={{
             scrollbarWidth: 'none',
@@ -259,66 +313,97 @@ export const BestsellersSection = () => {
             WebkitOverflowScrolling: 'touch'
           }}
         >
-          {kits.map((item) => (
-            <div
-              key={item.id}
-              className={`w-[260px] sm:w-[280px] lg:w-auto shrink-0 snap-start rounded-3xl overflow-hidden flex flex-col justify-between shadow-sm hover:shadow-md transition-all duration-300 ${item.cardBg}`}
-            >
-              {/* Product Image Section */}
-              <Link 
-                to={`/product/${item.slug}`} 
-                className="block overflow-hidden relative group aspect-[4/3] sm:aspect-square bg-white flex items-center justify-center p-2.5 sm:p-3"
+          {kits.map((item, idx) => {
+            const theme = getRoomTheme(item, idx);
+            const IconComponent = theme.Icon;
+
+            return (
+              <div
+                key={item.id}
+                style={{ background: theme.cardBg }}
+                className="w-[285px] sm:w-[310px] lg:w-auto shrink-0 snap-start rounded-[32px] p-2.5 sm:p-3 shadow-[0_10px_30px_rgba(15,23,42,0.06)] hover:shadow-[0_16px_40px_rgba(15,23,42,0.12)] transition-all duration-300 flex flex-col justify-between group"
               >
-                <img
-                  src={item.image}
-                  alt={item.title}
-                  className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
-                  loading="lazy"
-                />
-              </Link>
-
-              {/* Bottom Card Content */}
-              <div className="p-4 sm:p-5 flex flex-col flex-1 justify-between">
-                <div>
-                  <Link to={`/product/${item.slug}`}>
-                    <h3 className="font-extrabold text-slate-900 text-base sm:text-lg leading-tight hover:text-slate-800 transition-colors">
-                      {item.title}
-                    </h3>
-                  </Link>
-
-                  <p className="text-xs sm:text-[13px] text-slate-800 font-medium leading-snug mt-2 line-clamp-2">
-                    {item.subtitle}
-                  </p>
-
-                  <div className="mt-3">
-                    <span className="text-xs sm:text-[13px] font-bold text-[#c92a2a] block">
-                      {item.saveText}
-                    </span>
+                {/* Top Arched Product Image Area */}
+                <div className="relative">
+                  {/* Top-Left Room Category Icon Badge */}
+                  <div
+                    style={{ backgroundColor: theme.accentColor }}
+                    className="absolute top-3.5 left-3.5 z-20 w-13 h-13 sm:w-14 sm:h-14 rounded-full border-[3.5px] border-white shadow-md flex items-center justify-center text-white"
+                  >
+                    <IconComponent size={24} strokeWidth={2} />
                   </div>
+
+                  <Link
+                    to={`/product/${item.slug}`}
+                    className="relative h-72 sm:h-80 w-full rounded-t-[24px] rounded-tr-[115px] overflow-hidden block bg-white"
+                  >
+                    <img
+                      src={item.image}
+                      alt={item.title}
+                      className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                      loading="lazy"
+                    />
+
+                    {/* Smooth Curved Wave Cutout at Bottom of Image */}
+                    <svg
+                      className="absolute -bottom-[1px] left-0 w-full h-10 sm:h-12 pointer-events-none"
+                      viewBox="0 0 500 60"
+                      preserveAspectRatio="none"
+                      style={{ color: theme.waveColor, fill: 'currentColor' }}
+                    >
+                      <path d="M0,30 C140,-10 340,70 500,25 L500,60 L0,60 Z" />
+                    </svg>
+                  </Link>
                 </div>
 
-                <div className="mt-3">
-                  <div className="flex items-baseline gap-2">
-                    <span className="text-lg sm:text-xl font-black text-slate-900">
-                      ₹ {item.price.toLocaleString('en-IN')}.00
-                    </span>
-                    <span className="text-xs sm:text-sm text-slate-600 line-through font-normal">
-                      ₹ {item.originalPrice.toLocaleString('en-IN')}.00
-                    </span>
+                {/* Bottom Card Content */}
+                <div className="px-3.5 sm:px-4 pt-3 pb-3 flex flex-col flex-1 justify-between">
+                  <div>
+                    <Link to={`/product/${item.slug}`}>
+                      <h3 className="font-extrabold text-[#14172C] text-lg sm:text-[20px] leading-snug hover:opacity-80 transition-opacity line-clamp-2">
+                        {item.title}
+                      </h3>
+                    </Link>
+
+                    {/* 5 Gold Stars Row */}
+                    <div className="flex items-center gap-1 mt-2">
+                      {[1, 2, 3, 4, 5].map((s) => (
+                        <Star
+                          key={s}
+                          size={16}
+                          fill="currentColor"
+                          className="text-[#F59E0B]"
+                        />
+                      ))}
+                    </div>
+
+                    {/* Price + Strikethrough MRP */}
+                    <div className="flex items-baseline gap-2.5 mt-3">
+                      <span className="text-xl sm:text-[25px] font-black text-[#14172C] tracking-tight">
+                        ₹{Number(item.price).toLocaleString('en-IN')}.00
+                      </span>
+                      {item.originalPrice && (
+                        <span className="text-xs sm:text-[15px] text-slate-400 line-through font-medium">
+                          ₹{Number(item.originalPrice).toLocaleString('en-IN')}.00
+                        </span>
+                      )}
+                    </div>
                   </div>
 
+                  {/* Matching Solid Pill Add to Cart Button */}
                   <button
                     onClick={(e) => handleAddToCart(item, e)}
-                    className="w-full mt-3.5 sm:mt-4 py-2.5 sm:py-3 bg-white hover:bg-slate-50 text-slate-900 font-bold text-sm sm:text-base rounded-xl transition-all duration-150 shadow-xs border border-white/60 active:scale-[0.98] text-center cursor-pointer"
+                    style={{ backgroundColor: theme.accentColor }}
+                    className="w-full mt-4 py-3 sm:py-3.5 px-5 rounded-full hover:opacity-95 active:scale-[0.98] text-white font-bold text-sm sm:text-[15px] tracking-wide flex items-center justify-center gap-2.5 transition-all duration-200 shadow-md cursor-pointer"
                   >
-                    Add to Cart
+                    <ShoppingCart size={18} strokeWidth={2.2} />
+                    <span>Add to Cart</span>
                   </button>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
-
       </div>
     </section>
   );
