@@ -6,7 +6,55 @@ import { Breadcrumbs } from '../components/common/Breadcrumbs';
 import { ProductGridSkeleton } from '../components/common/LoadingSkeleton';
 import { productService } from '../services/productService';
 import { useCart } from '../context/CartContext';
-import { Sparkles, PackageOpen, ChevronLeft, ChevronRight } from 'lucide-react';
+import {
+  Sparkles,
+  PackageOpen,
+  ChevronLeft,
+  ChevronRight,
+  ShoppingCart,
+  CookingPot,
+  Sofa,
+  ShowerHead
+} from 'lucide-react';
+
+const BUNDLE_THEMES = {
+  blue: {
+    cardBg: '#E7F1FC',
+    imagePanelBg: 'linear-gradient(135deg, #6E91BA 0%, #5278A6 100%)',
+    buttonBg: 'linear-gradient(90deg, #1E3E66 0%, #0E1F38 100%)',
+    priceColor: '#124682',
+    Icon: Sparkles
+  },
+  cream: {
+    cardBg: '#FCF4EC',
+    imagePanelBg: 'linear-gradient(135deg, #EAD7C3 0%, #DEC3A7 100%)',
+    buttonBg: 'linear-gradient(90deg, #355679 0%, #24405E 100%)',
+    priceColor: '#13213C',
+    Icon: CookingPot
+  },
+  slate: {
+    cardBg: '#E7F0FA',
+    imagePanelBg: 'linear-gradient(135deg, #274469 0%, #152842 100%)',
+    buttonBg: 'linear-gradient(90deg, #1B304D 0%, #0F1C2E 100%)',
+    priceColor: '#132747',
+    Icon: Sofa
+  }
+};
+
+const getBundleTheme = (bundle, idx) => {
+  const text = `${bundle.name || ''} ${bundle.slug || ''}`.toLowerCase();
+  if (text.includes('kitchen') || text.includes('foam') || text.includes('degreas')) {
+    return BUNDLE_THEMES.cream;
+  }
+  if (text.includes('sofa') || text.includes('fabric') || text.includes('living')) {
+    return BUNDLE_THEMES.slate;
+  }
+  if (text.includes('glass') || text.includes('ceramic') || text.includes('bathroom')) {
+    return BUNDLE_THEMES.blue;
+  }
+  const order = [BUNDLE_THEMES.blue, BUNDLE_THEMES.cream, BUNDLE_THEMES.slate];
+  return order[idx % order.length];
+};
 
 const defaultValueBundles = [
   {
@@ -140,13 +188,13 @@ export const ShopPage = () => {
 
   const scrollBundlesLeft = () => {
     if (bundleScrollRef.current) {
-      bundleScrollRef.current.scrollBy({ left: -520, behavior: 'smooth' });
+      bundleScrollRef.current.scrollBy({ left: -440, behavior: 'smooth' });
     }
   };
 
   const scrollBundlesRight = () => {
     if (bundleScrollRef.current) {
-      bundleScrollRef.current.scrollBy({ left: 520, behavior: 'smooth' });
+      bundleScrollRef.current.scrollBy({ left: 440, behavior: 'smooth' });
     }
   };
 
@@ -196,16 +244,24 @@ export const ShopPage = () => {
         {/* BEST VALUE BUNDLES SECTION AT TOP */}
         {bundlesList.length > 0 && (
           <div className="mt-4 mb-12 relative">
-            <h2 className="text-2xl sm:text-3xl md:text-[34px] font-extrabold text-slate-950 text-center tracking-tight mb-7">
-              Best Value Bundles
-            </h2>
+            {/* Heading + Two-Tone Underline */}
+            <div className="flex flex-col items-center justify-center mb-8">
+              <h2 className="text-2xl sm:text-3xl md:text-[38px] font-black tracking-tight text-center leading-tight">
+                <span className="text-[#121D33]">Best Value </span>
+                <span className="text-[#235893]">Bundles</span>
+              </h2>
+              <div className="mt-2.5 flex items-center justify-center">
+                <span className="w-14 sm:w-16 h-[3px] bg-[#121D33] rounded-l-full" />
+                <span className="w-14 sm:w-16 h-[3px] bg-[#3E7BBE] rounded-r-full" />
+              </div>
+            </div>
 
             <div className="relative group/bundles">
               {/* Left Floating Arrow */}
               <button
                 onClick={scrollBundlesLeft}
                 aria-label="Previous Bundles"
-                className="flex absolute left-1 sm:left-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white/90 hover:bg-white text-slate-800 shadow-md items-center justify-center transition active:scale-95 cursor-pointer"
+                className="flex lg:hidden absolute left-1 sm:left-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white/95 hover:bg-white text-slate-800 shadow-md items-center justify-center transition active:scale-95 cursor-pointer"
               >
                 <ChevronLeft size={20} />
               </button>
@@ -214,74 +270,95 @@ export const ShopPage = () => {
               <button
                 onClick={scrollBundlesRight}
                 aria-label="Next Bundles"
-                className="flex absolute right-1 sm:right-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-white/90 hover:bg-white text-slate-800 shadow-md items-center justify-center transition active:scale-95 cursor-pointer"
+                className="flex lg:hidden absolute right-1 sm:right-2 top-1/2 -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-white/95 hover:bg-white text-slate-800 shadow-md items-center justify-center transition active:scale-95 cursor-pointer"
               >
                 <ChevronRight size={20} />
               </button>
 
-              {/* Horizontal Scrollable Cards */}
+              {/* Horizontal Scrollable on Mobile/Tablet, 3-Column Grid on Desktop */}
               <div
                 ref={bundleScrollRef}
-                className="flex items-stretch gap-5 sm:gap-6 overflow-x-auto scroll-smooth no-scrollbar pb-2 -mx-4 px-4 sm:mx-0 sm:px-0 snap-x snap-mandatory"
+                className={`flex lg:grid gap-5 sm:gap-6 overflow-x-auto lg:overflow-visible scroll-smooth no-scrollbar pb-3 -mx-4 px-4 sm:mx-0 sm:px-0 snap-x snap-mandatory ${
+                  bundlesList.length <= 3 ? 'lg:grid-cols-3' : 'lg:grid-cols-3'
+                }`}
                 style={{
                   scrollbarWidth: 'none',
                   msOverflowStyle: 'none',
                   WebkitOverflowScrolling: 'touch'
                 }}
               >
-                {bundlesList.map((bundle) => (
-                  <div
-                    key={bundle.id}
-                    className="w-[330px] sm:w-[480px] md:w-[540px] min-h-[230px] sm:min-h-[250px] shrink-0 snap-start rounded-2xl sm:rounded-3xl bg-[#FDE07D] overflow-hidden flex flex-row items-stretch shadow-xs hover:shadow-md transition-shadow duration-300"
-                  >
-                    {/* Left Content Area (Yellow Panel) */}
-                    <div className="w-[60%] sm:w-[62%] p-5 sm:p-7 flex flex-col justify-between">
-                      <div>
-                        <Link to={`/product/${bundle.slug}`}>
-                          <h3 className="text-lg sm:text-2xl font-extrabold text-slate-950 leading-snug hover:opacity-80 transition-opacity line-clamp-2">
-                            {bundle.name}
-                          </h3>
-                        </Link>
-                        <p className="text-xs sm:text-[13px] text-slate-800 mt-2 leading-relaxed line-clamp-2">
-                          {bundle.subtitle}
-                        </p>
-                      </div>
+                {bundlesList.map((bundle, idx) => {
+                  const theme = getBundleTheme(bundle, idx);
+                  const IconComponent = theme.Icon;
 
-                      <div className="mt-4">
-                        <div className="flex items-baseline gap-2.5 mb-3.5">
-                          {bundle.originalPrice && (
-                            <span className="text-sm sm:text-lg text-slate-600 line-through font-medium">
-                              ₹{Number(bundle.originalPrice).toLocaleString('en-IN')}
-                            </span>
-                          )}
-                          <span className="text-lg sm:text-2xl font-black text-slate-950">
-                            ₹{Number(bundle.price).toLocaleString('en-IN')}
-                          </span>
+                  return (
+                    <div
+                      key={bundle.id}
+                      style={{ backgroundColor: theme.cardBg }}
+                      className="w-[340px] sm:w-[420px] lg:w-auto min-h-[260px] sm:min-h-[280px] shrink-0 lg:shrink snap-start rounded-[28px] overflow-hidden flex flex-row items-stretch shadow-[0_10px_28px_rgba(15,23,42,0.07)] hover:shadow-[0_16px_36px_rgba(15,23,42,0.12)] transition-all duration-300 relative group"
+                    >
+                      {/* Left Content Area */}
+                      <div className="w-[54%] sm:w-[55%] p-5 sm:p-6 flex flex-col justify-between z-10">
+                        <div>
+                          {/* Circular Dark Navy Category Icon Badge */}
+                          <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-[#13223B] text-white flex items-center justify-center shadow-md mb-3.5">
+                            <IconComponent size={23} strokeWidth={1.8} />
+                          </div>
+
+                          {/* Product Title */}
+                          <Link to={`/product/${bundle.slug}`}>
+                            <h3 className="text-base sm:text-[21px] font-extrabold text-[#121D33] leading-[1.22] hover:opacity-80 transition-opacity line-clamp-3">
+                              {bundle.name}
+                            </h3>
+                          </Link>
                         </div>
 
-                        <button
-                          onClick={() => handleAddBundleToCart(bundle)}
-                          className="px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl bg-white hover:bg-slate-50 active:scale-[0.98] text-slate-950 font-bold text-xs sm:text-sm shadow-xs transition cursor-pointer"
-                        >
-                          Add to cart
-                        </button>
-                      </div>
-                    </div>
+                        {/* Price + Pill Add to Cart Button */}
+                        <div className="mt-4">
+                          <div className="flex items-baseline gap-2.5 mb-3">
+                            {bundle.originalPrice && (
+                              <span className="text-xs sm:text-[15px] text-slate-500 line-through font-semibold">
+                                ₹{Number(bundle.originalPrice).toLocaleString('en-IN')}
+                              </span>
+                            )}
+                            <span
+                              style={{ color: theme.priceColor }}
+                              className="text-xl sm:text-[26px] font-black tracking-tight"
+                            >
+                              ₹{Number(bundle.price).toLocaleString('en-IN')}
+                            </span>
+                          </div>
 
-                    {/* Right Image Area */}
-                    <Link
-                      to={`/product/${bundle.slug}`}
-                      className="w-[40%] sm:w-[38%] relative overflow-hidden bg-white block"
-                    >
-                      <img
-                        src={bundle.image}
-                        alt={bundle.name}
-                        className="w-full h-full object-cover object-center hover:scale-105 transition-transform duration-500"
-                        loading="lazy"
-                      />
-                    </Link>
-                  </div>
-                ))}
+                          <button
+                            onClick={() => handleAddBundleToCart(bundle)}
+                            style={{ background: theme.buttonBg }}
+                            className="w-full sm:w-auto min-w-[145px] sm:min-w-[165px] px-5 py-2.5 sm:py-3 rounded-full hover:opacity-95 active:scale-[0.98] text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-md transition cursor-pointer"
+                          >
+                            <ShoppingCart size={16} strokeWidth={2.2} />
+                            <span>Add to cart</span>
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Right Arched Image Panel */}
+                      <Link
+                        to={`/product/${bundle.slug}`}
+                        style={{ background: theme.imagePanelBg }}
+                        className="w-[46%] sm:w-[45%] relative rounded-l-[120px] overflow-hidden flex items-center justify-center p-2 sm:p-3 block"
+                      >
+                        {/* Subtle outer decorative arc line */}
+                        <div className="pointer-events-none absolute -left-3 inset-y-2 w-12 rounded-l-[130px] border-l border-slate-900/15" />
+
+                        <img
+                          src={bundle.image}
+                          alt={bundle.name}
+                          className="w-full h-full object-cover rounded-l-[110px] group-hover:scale-105 transition-transform duration-500"
+                          loading="lazy"
+                        />
+                      </Link>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           </div>
