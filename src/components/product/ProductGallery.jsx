@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ChevronLeft, ChevronRight, X, ChevronUp, ChevronDown } from 'lucide-react';
+import { ChevronLeft, ChevronRight, X, ChevronUp, ChevronDown, Maximize2 } from 'lucide-react';
 
 export const ProductGallery = ({ images = [], productName = "Product" }) => {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -10,6 +10,11 @@ export const ProductGallery = ({ images = [], productName = "Product" }) => {
   const galleryImages = images.length > 0 ? images : [
     "https://cdn.shopify.com/s/files/1/0831/5037/2921/files/GharShineBathroomCleaningTrio.png?v=1791689722"
   ];
+
+  // Reset activeIndex when images change
+  useEffect(() => {
+    setActiveIndex(0);
+  }, [images]);
 
   const handlePrev = (e) => {
     e?.stopPropagation();
@@ -52,119 +57,101 @@ export const ProductGallery = ({ images = [], productName = "Product" }) => {
 
   const scrollThumbnails = (direction) => {
     if (thumbListRef.current) {
-      const scrollAmount = direction === 'up' ? -160 : 160;
+      const scrollAmount = direction === 'up' ? -150 : 150;
       thumbListRef.current.scrollBy({ top: scrollAmount, behavior: 'smooth' });
     }
   };
 
   return (
-    <div className="flex flex-col-reverse md:flex-row gap-3.5 lg:gap-4 items-start w-full">
-      
-      {/* Thumbnail Strip with scrolling controls on laptop */}
-      <div className="relative flex md:flex-col items-center shrink-0 w-full md:w-20 lg:w-24">
-        
-        {/* Desktop Up Scroll Indicator */}
-        {galleryImages.length > 5 && (
-          <button
-            onClick={() => scrollThumbnails('up')}
-            className="hidden md:flex items-center justify-center w-full py-1 text-slate-400 hover:text-slate-800 transition cursor-pointer"
-            aria-label="Scroll thumbnails up"
-          >
-            <ChevronUp size={16} />
-          </button>
-        )}
+    <div className="flex flex-col-reverse md:flex-row gap-3.5 lg:gap-4 items-stretch w-full">
+      {/* Vertical Thumbnail Strip with Up/Down Arrows */}
+      <div className="relative flex md:flex-col items-center justify-between shrink-0 w-full md:w-20 lg:w-22">
+        {/* Desktop Up Scroll Button */}
+        <button
+          onClick={() => scrollThumbnails('up')}
+          className="hidden md:flex items-center justify-center w-full py-1 text-[#13223B] hover:opacity-70 transition cursor-pointer"
+          aria-label="Scroll thumbnails up"
+        >
+          <ChevronUp size={18} strokeWidth={2.5} />
+        </button>
 
         <div
           ref={thumbListRef}
-          className="flex md:flex-col gap-2 overflow-x-auto md:overflow-y-auto no-scrollbar w-full md:max-h-[480px] lg:max-h-[530px] py-1 px-0.5"
+          className="flex md:flex-col gap-2.5 overflow-x-auto md:overflow-y-auto no-scrollbar w-full md:max-h-[440px] lg:max-h-[480px] py-1 px-0.5"
         >
           {galleryImages.map((img, idx) => (
             <button
               key={idx}
               ref={(el) => (thumbRefs.current[idx] = el)}
               onClick={() => setActiveIndex(idx)}
-              className={`relative w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 rounded-2xl overflow-hidden border-2 transition-all shrink-0 bg-white p-1 flex items-center justify-center cursor-pointer ${
+              className={`relative w-16 h-16 md:w-18 md:h-18 lg:w-20 lg:h-20 rounded-2xl overflow-hidden border-2 transition-all shrink-0 bg-[#F6F5F2] cursor-pointer ${
                 activeIndex === idx
-                  ? 'border-[#087F8C] shadow-sm ring-2 ring-[#087F8C]/20 opacity-100'
-                  : 'border-slate-200/80 hover:border-slate-400 opacity-70 hover:opacity-100'
+                  ? 'border-[#1D63B8] shadow-xs ring-2 ring-[#1D63B8]/20 opacity-100'
+                  : 'border-transparent hover:border-slate-300 opacity-80 hover:opacity-100'
               }`}
             >
               <img
                 src={img}
                 alt={`${productName} thumbnail ${idx + 1}`}
-                className="w-full h-full object-contain"
+                className="w-full h-full object-cover"
                 loading="lazy"
               />
             </button>
           ))}
         </div>
 
-        {/* Desktop Down Scroll Indicator */}
-        {galleryImages.length > 5 && (
-          <button
-            onClick={() => scrollThumbnails('down')}
-            className="hidden md:flex items-center justify-center w-full py-1 text-slate-400 hover:text-slate-800 transition cursor-pointer"
-            aria-label="Scroll thumbnails down"
-          >
-            <ChevronDown size={16} />
-          </button>
-        )}
+        {/* Desktop Down Scroll Button */}
+        <button
+          onClick={() => scrollThumbnails('down')}
+          className="hidden md:flex items-center justify-center w-full py-1 text-[#13223B] hover:opacity-70 transition cursor-pointer"
+          aria-label="Scroll thumbnails down"
+        >
+          <ChevronDown size={18} strokeWidth={2.5} />
+        </button>
       </div>
 
       {/* Main Active Image Container */}
       <div
         onClick={() => setIsLightboxOpen(true)}
-        className="relative flex-1 w-full aspect-square md:max-h-[480px] lg:max-h-[530px] rounded-3xl overflow-hidden bg-white border border-slate-200/90 shadow-2xs group select-none cursor-pointer flex items-center justify-center p-3 sm:p-5"
+        className="relative flex-1 w-full aspect-[4/3.6] md:h-[490px] lg:h-[530px] rounded-[28px] overflow-hidden bg-[#F5F3EF] border border-slate-100 shadow-xs group select-none cursor-pointer flex items-center justify-center"
       >
-        {/* Main Product Image (Centered, Uncropped, Crisp) */}
-        <div className="w-full h-full flex items-center justify-center overflow-hidden">
-          <img
-            src={galleryImages[activeIndex]}
-            alt={`${productName} image ${activeIndex + 1}`}
-            className="w-full h-full object-contain max-h-[440px] lg:max-h-[490px] transition-all duration-300"
-          />
-        </div>
+        <img
+          src={galleryImages[activeIndex]}
+          alt={`${productName} image ${activeIndex + 1}`}
+          className="w-full h-full object-cover transition-transform duration-500"
+        />
 
-        {/* Left / Right Arrow buttons */}
+        {/* Circular Left / Right Arrow buttons */}
         {galleryImages.length > 1 && (
           <>
             <button
               onClick={handlePrev}
               aria-label="Previous image"
-              className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-xl bg-white/90 hover:bg-white text-slate-800 border border-slate-200 shadow-md flex items-center justify-center transition z-10 cursor-pointer"
+              className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/95 hover:bg-white text-[#13223B] shadow-md flex items-center justify-center transition z-10 cursor-pointer active:scale-95"
             >
-              <ChevronLeft size={18} />
+              <ChevronLeft size={19} strokeWidth={2.2} />
             </button>
             <button
               onClick={handleNext}
               aria-label="Next image"
-              className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-xl bg-white/90 hover:bg-white text-slate-800 border border-slate-200 shadow-md flex items-center justify-center transition z-10 cursor-pointer"
+              className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/95 hover:bg-white text-[#13223B] shadow-md flex items-center justify-center transition z-10 cursor-pointer active:scale-95"
             >
-              <ChevronRight size={18} />
+              <ChevronRight size={19} strokeWidth={2.2} />
             </button>
           </>
         )}
 
-        {/* Bottom Pagination Dots on mobile */}
-        {galleryImages.length > 1 && (
-          <div className="absolute bottom-3 inset-x-0 flex md:hidden items-center justify-center gap-1.5 z-10 pointer-events-none">
-            {galleryImages.slice(0, 8).map((_, idx) => (
-              <span
-                key={idx}
-                className={`transition-all rounded-full ${
-                  activeIndex === idx
-                    ? 'w-2.5 h-2.5 bg-slate-900 shadow-xs'
-                    : 'w-1.5 h-1.5 bg-slate-400/80'
-                }`}
-              />
-            ))}
-          </div>
-        )}
-
-        {/* Counter Badge */}
-        <div className="absolute bottom-3 right-3 bg-black/60 backdrop-blur-md px-2.5 py-1 rounded-lg text-white text-[11px] font-bold">
-          {activeIndex + 1} / {galleryImages.length}
-        </div>
+        {/* Expand Fullscreen Icon Button (Bottom Right) */}
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            setIsLightboxOpen(true);
+          }}
+          aria-label="Expand image"
+          className="absolute bottom-4 right-4 w-10 h-10 rounded-full bg-white/95 hover:bg-white text-[#13223B] shadow-md flex items-center justify-center transition z-10 cursor-pointer active:scale-95"
+        >
+          <Maximize2 size={17} strokeWidth={2.2} />
+        </button>
       </div>
 
       {/* Full-Screen Lightbox Modal on Click */}
@@ -233,7 +220,6 @@ export const ProductGallery = ({ images = [], productName = "Product" }) => {
           </div>
         </div>
       )}
-
     </div>
   );
 };

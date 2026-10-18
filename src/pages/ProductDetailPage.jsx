@@ -1,286 +1,414 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { productService } from '../services/productService';
 import { ProductGallery } from '../components/product/ProductGallery';
 import { ProductTabs } from '../components/product/ProductTabs';
-import { PincodeChecker } from '../components/product/PincodeChecker';
-import { BundleUpsellBox } from '../components/product/BundleUpsellBox';
-import { TieredSavingsBar } from '../components/product/TieredSavingsBar';
 import { ProductVideoDemo } from '../components/product/ProductVideoDemo';
-import { ProductsYouMayLike } from '../components/product/ProductsYouMayLike';
-import { RatingStars } from '../components/common/RatingStars';
 import { Breadcrumbs } from '../components/common/Breadcrumbs';
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
-import { formatPrice } from '../utils/formatters';
 import {
+  ShoppingCart,
   ShoppingBag,
-  Zap,
   Heart,
-  ShieldCheck,
-  Truck,
-  Droplets,
-  Share2,
+  Sparkles,
+  Plus,
   Check,
-  Gift,
-  ChevronDown,
-  ChevronUp
+  ArrowRight,
+  ChevronLeft,
+  ChevronRight,
+  Layers,
+  Gem,
+  Sofa
 } from 'lucide-react';
-import { useToast } from '../context/ToastContext';
+
+const SURFACE_TAG_ICONS = [Sparkles, Layers, Gem, Sofa];
+
+const MINI_CARD_THEMES = [
+  'linear-gradient(180deg, #E2F1FC 0%, #D2E8FA 100%)',
+  'linear-gradient(180deg, #E3F3EC 0%, #CBE8DC 100%)',
+  'linear-gradient(180deg, #EFE5FA 0%, #E2D2F7 100%)'
+];
 
 export const ProductDetailPage = () => {
   const { slug } = useParams();
   const navigate = useNavigate();
+  const routineScrollRef = useRef(null);
+
   const [product, setProduct] = useState(null);
-  const [relatedProducts, setRelatedProducts] = useState([]);
+  const [allProducts, setAllProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [quantity, setQuantity] = useState(1);
-  const [isCopied, setIsCopied] = useState(false);
-  const [isReadMoreOpen, setIsReadMoreOpen] = useState(false);
 
-  const { addToCart } = useCart();
+  const { cartItems, addToCart } = useCart();
   const { isInWishlist, toggleWishlist } = useWishlist();
-  const { addToast } = useToast();
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    const fetchProduct = async () => {
+    setQuantity(1);
+
+    const fetchProductData = async () => {
       setLoading(true);
-      const res = await productService.getProductBySlug(slug);
-      if (res.success) {
-        setProduct(res.data);
-        document.title = `${res.data.name} | GharShine`;
-        
-        // Fetch related products for "Products You May Like"
-        const rel = await productService.getRelatedProducts(res.data.relatedProducts);
-        if (rel.success) {
-          setRelatedProducts(rel.data);
-        }
+      const [prodRes, listRes] = await Promise.all([
+        productService.getProductBySlug(slug),
+        productService.getProducts()
+      ]);
+
+      if (prodRes.success && prodRes.data) {
+        setProduct(prodRes.data);
+        document.title = `${prodRes.data.name} | GharShine`;
       } else {
         navigate('/shop');
+        return;
+      }
+
+      if (listRes.success && Array.isArray(listRes.data)) {
+        setAllProducts(listRes.data);
       }
       setLoading(false);
     };
 
-    fetchProduct();
+    fetchProductData();
   }, [slug, navigate]);
 
   if (loading || !product) {
     return (
       <div className="min-h-[60vh] flex items-center justify-center">
-        <div className="w-10 h-10 border-4 border-[#087F8C] border-t-transparent rounded-full animate-spin" />
+        <div className="w-10 h-10 border-4 border-[#112239] border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
 
   const isWishlisted = isInWishlist(product.id);
-  const savings = Math.max(0, (product.originalPrice || product.price) - product.price);
-  const rewardPoints = Math.round(product.price * 0.1);
+  const originalPrice =
+    product.originalPrice && product.originalPrice > product.price
+      ? product.originalPrice
+      : Math.round(product.price * 1.4);
+  const discountPercent = Math.round(((originalPrice - product.price) / originalPrice) * 100);
 
   const handleAddToCart = () => {
     addToCart(product, quantity, true);
   };
 
-  const handleBuyNow = () => {
-    addToCart(product, quantity, false);
-    navigate('/cart');
+  const handleQuickAddItem = (item, e) => {
+    e?.preventDefault();
+    e?.stopPropagation();
+    addToCart(item, 1, true);
   };
 
-  const handleShare = () => {
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(window.location.href);
-      setIsCopied(true);
-      addToast('Product link copied to clipboard!', 'info');
-      setTimeout(() => setIsCopied(false), 2000);
+  const isItemInCart = (itemId) => {
+    return cartItems.some((ci) => ci.product.id === itemId || ci.product.slug === itemId);
+  };
+
+  // Filter other products (excluding current product)
+  const otherProducts = allProducts.filter(
+    (p) => p && p.id !== product.id && p.slug !== product.slug
+  );
+
+  // Top 3 companion cards shown under the Add to Cart button
+  const threeCompanionCards = otherProducts.slice(0, 3);
+
+  // Products for "Complete Your Cleaning Routine" horizontal bar
+  const routineProducts = otherProducts.length > 0 ? otherProducts : allProducts;
+
+  // Build surface pills row matching reference screenshot
+  const rawSurfaces =
+    Array.isArray(product.surface) && product.surface.length > 0
+      ? product.surface
+      : ['Multi-Surface', 'Glass', 'Stone', 'Fabric'];
+  const surfacePills = rawSurfaces.slice(0, 4);
+
+  const scrollRoutine = (dir) => {
+    if (routineScrollRef.current) {
+      routineScrollRef.current.scrollBy({
+        left: dir === 'left' ? -300 : 300,
+        behavior: 'smooth'
+      });
     }
   };
 
   return (
-    <div className="min-h-screen bg-white py-6 sm:py-10 pb-24 sm:pb-10">
-      <div className="max-w-[1360px] mx-auto px-4 sm:px-6">
-        
+    <div className="min-h-screen bg-[#FCFBF9] py-6 sm:py-9 pb-24 sm:pb-16">
+      <div className="max-w-[1360px] mx-auto px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb Navigation */}
         <Breadcrumbs
           items={[
             { label: 'Shop', url: '/shop' },
-            { label: product.category, url: `/shop?category=${product.category}` },
+            {
+              label: product.category || 'Combos',
+              url: `/shop?category=${encodeURIComponent(product.category || 'Combos')}`
+            },
             { label: product.name }
           ]}
         />
 
-        {/* Top Product Hero Split */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 pt-4 items-start">
-          
-          {/* Left Column: Interactive Image Gallery (Balanced for Laptop & Desktop) */}
-          <div className="lg:col-span-6 xl:col-span-7 lg:sticky lg:top-24">
+        {/* MAIN PRODUCT HERO SPLIT */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 pt-3 items-start">
+          {/* LEFT: Vertical Thumbnails + Main Rounded Gallery */}
+          <div className="lg:col-span-7">
             <ProductGallery
-              images={product.images || [product.thumbnail]}
+              images={product.images?.length > 0 ? product.images : [product.thumbnail]}
               productName={product.name}
             />
           </div>
 
-          {/* Right Column: Buying Options & Details */}
-          <div className="lg:col-span-6 xl:col-span-5 space-y-4">
-            
-            {/* Badges & Surface tags */}
-            <div className="flex items-center justify-between gap-2">
-              <div className="flex items-center gap-2 flex-wrap">
-                {product.badge && (
-                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-[#087F8C] text-white shadow-xs">
-                    {product.badge}
-                  </span>
-                )}
-                <span className="text-xs font-bold text-[#087F8C] uppercase tracking-wider bg-[#E8F8F8] px-2.5 py-0.5 rounded-md">
-                  {product.surface ? product.surface.join(' • ') : product.category}
-                </span>
-                <span className="text-[11px] text-amber-700 font-bold bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200/60">
-                  🔥 14 viewing now
-                </span>
-              </div>
+          {/* RIGHT: Product Details, Actions & 3 Companion Mini Cards */}
+          <div className="lg:col-span-5 flex flex-col justify-between space-y-5">
+            {/* Top Pill Tags Row */}
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold bg-[#112239] text-white shadow-2xs">
+                <Sparkles size={13} />
+                <span>{product.isCombo ? 'Combo Set' : product.category || 'Premium Care'}</span>
+              </span>
 
-              <button
-                onClick={handleShare}
-                className="text-slate-400 hover:text-slate-700 p-1.5 rounded-lg hover:bg-slate-50 transition cursor-pointer"
-                title="Share product"
-                aria-label="Share product"
-              >
-                {isCopied ? <Check size={16} className="text-emerald-600" /> : <Share2 size={16} />}
-              </button>
+              {surfacePills.map((surf, idx) => {
+                const TagIcon = SURFACE_TAG_ICONS[idx % SURFACE_TAG_ICONS.length];
+                return (
+                  <span
+                    key={surf}
+                    className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold bg-[#EEF2F7] text-[#1E2D45]"
+                  >
+                    <TagIcon size={12} className="text-[#39557A]" />
+                    <span>{surf}</span>
+                  </span>
+                );
+              })}
             </div>
 
             {/* Product Title */}
-            <h1 className="text-2xl sm:text-3xl font-black text-slate-900 leading-tight">
+            <h1 className="text-2xl sm:text-3xl lg:text-[34px] font-black text-[#111C30] leading-[1.18] tracking-tight">
               {product.name}
             </h1>
 
-            {/* Ratings & Reviews */}
+            {/* Price + Strikethrough MRP + Pink Discount Pill */}
+            <div className="flex items-center gap-3.5">
+              <span className="text-3xl sm:text-[36px] font-black text-[#111C30] tracking-tight">
+                ₹{Number(product.price).toLocaleString('en-IN')}
+              </span>
+              {originalPrice > product.price && (
+                <span className="text-lg sm:text-xl text-slate-400 line-through font-semibold">
+                  ₹{Number(originalPrice).toLocaleString('en-IN')}
+                </span>
+              )}
+              {discountPercent > 0 && (
+                <span className="px-3 py-1 rounded-full bg-[#FDE8E9] text-[#C83745] text-xs sm:text-[13px] font-extrabold">
+                  {discountPercent}% OFF
+                </span>
+              )}
+            </div>
+
+            {/* Divider line */}
+            <div className="border-t border-slate-200/80" />
+
+            {/* Quantity Selector + Dark Navy Add to Cart + Wishlist Heart Button */}
             <div className="flex items-center gap-3">
-              <RatingStars rating={product.rating} reviewCount={product.reviewCount} size={15} />
-              <span className="text-xs text-emerald-700 font-semibold bg-emerald-50 px-2 py-0.5 rounded-md">
-                Verified Formula
-              </span>
-            </div>
-
-            {/* Dynamic Product Description */}
-            <div className="text-xs sm:text-[13px] text-slate-600 leading-relaxed space-y-1">
-              <p>
-                {product.shortDescription || (product.description ? product.description.slice(0, 160) : 'Premium surface care and nano-barrier protection formula.')}
-              </p>
-              {product.description && product.description.length > 160 && (
-                <>
-                  {isReadMoreOpen && (
-                    <p className="pt-1 text-slate-600 animate-in fade-in">
-                      {product.description}
-                    </p>
-                  )}
-                  <button
-                    onClick={() => setIsReadMoreOpen(!isReadMoreOpen)}
-                    className="text-xs font-bold text-slate-900 underline hover:text-[#087F8C] cursor-pointer pt-0.5 inline-flex items-center gap-1"
-                  >
-                    <span>{isReadMoreOpen ? 'Show less' : 'Read more'}</span>
-                    {isReadMoreOpen ? <ChevronUp size={13} /> : <ChevronDown size={13} />}
-                  </button>
-                </>
-              )}
-            </div>
-
-            {/* "Add more to your bundle" Widget */}
-            <BundleUpsellBox currentProduct={product} />
-
-            {/* Price Display with Save badge */}
-            <div className="flex items-baseline gap-3 pt-1">
-              <span className="text-2xl sm:text-3xl font-extrabold text-slate-900">
-                {formatPrice(product.price)}
-              </span>
-              {product.originalPrice && (
-                <span className="text-base sm:text-lg text-slate-400 line-through">
-                  {formatPrice(product.originalPrice)}
-                </span>
-              )}
-              {savings > 0 && (
-                <span className="px-2.5 py-1 rounded-md bg-[#1D8354] text-white text-xs font-bold shadow-2xs">
-                  Save {formatPrice(savings)}
-                </span>
-              )}
-            </div>
-
-            {/* Quantity Selector + Add to Cart */}
-            <div className="flex items-center gap-3 pt-1">
-              {/* Quantity Counter */}
-              <div className="flex items-center border border-slate-300 rounded-xl overflow-hidden bg-slate-50 h-12">
+              {/* Quantity Box */}
+              <div className="flex items-center justify-between border border-slate-200 rounded-2xl bg-white h-13 sm:h-14 px-2 w-32 sm:w-36 shadow-2xs">
                 <button
                   onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                  className="px-3.5 h-full text-slate-600 hover:bg-slate-200 transition text-sm font-bold cursor-pointer"
+                  className="w-9 h-9 rounded-xl text-[#112239] hover:bg-slate-100 transition text-lg font-bold flex items-center justify-center cursor-pointer"
                   aria-label="Decrease quantity"
                 >
-                  -
+                  −
                 </button>
-                <span className="px-4 text-xs font-bold text-slate-800">
+                <span className="text-sm sm:text-base font-extrabold text-[#112239]">
                   {quantity}
                 </span>
                 <button
                   onClick={() => setQuantity((q) => q + 1)}
-                  className="px-3.5 h-full text-slate-600 hover:bg-slate-200 transition text-sm font-bold cursor-pointer"
+                  className="w-9 h-9 rounded-xl text-[#112239] hover:bg-slate-100 transition text-lg font-bold flex items-center justify-center cursor-pointer"
                   aria-label="Increase quantity"
                 >
                   +
                 </button>
               </div>
 
-              {/* Add To Cart Primary Button (Deep Teal) */}
+              {/* Primary Dark Navy Add to Cart Button */}
               <button
                 onClick={handleAddToCart}
-                className="flex-1 h-12 bg-[#107082] hover:bg-[#0c5c6b] active:scale-[0.98] text-white font-extrabold rounded-xl text-sm sm:text-base transition flex items-center justify-center gap-2 shadow-xs cursor-pointer"
+                className="flex-1 h-13 sm:h-14 bg-[#112239] hover:bg-[#1a3150] active:scale-[0.99] text-white font-bold rounded-2xl text-sm sm:text-base transition flex items-center justify-center gap-2.5 shadow-md cursor-pointer"
               >
-                <span>Add To Cart</span>
+                <ShoppingCart size={19} strokeWidth={2.2} />
+                <span>Add to Cart</span>
+              </button>
+
+              {/* Wishlist Heart Button */}
+              <button
+                onClick={() => toggleWishlist(product)}
+                aria-label="Toggle Wishlist"
+                className={`w-13 h-13 sm:w-14 sm:h-14 rounded-2xl border flex items-center justify-center transition shadow-2xs cursor-pointer shrink-0 ${
+                  isWishlisted
+                    ? 'bg-rose-50 border-rose-200 text-rose-600'
+                    : 'bg-white border-slate-200 text-[#112239] hover:bg-slate-50'
+                }`}
+              >
+                <Heart size={20} fill={isWishlisted ? 'currentColor' : 'none'} />
               </button>
             </div>
 
-            {/* Buy It Now (Solid Black Button) */}
-            <button
-              onClick={handleBuyNow}
-              className="w-full h-12 bg-black hover:bg-slate-800 active:scale-[0.98] text-white rounded-xl text-sm font-black transition flex items-center justify-center gap-2 cursor-pointer shadow-sm"
-            >
-              <span>Buy It Now</span>
-            </button>
+            {/* 3 Pastel Companion Product Cards with '+' Button */}
+            {threeCompanionCards.length > 0 && (
+              <div className="grid grid-cols-3 gap-3 sm:gap-3.5 pt-2">
+                {threeCompanionCards.map((item, idx) => {
+                  const added = isItemInCart(item.id);
+                  const bgGradient = MINI_CARD_THEMES[idx % MINI_CARD_THEMES.length];
 
-            {/* Tiered Milestone Savings Progress Bar */}
-            <TieredSavingsBar currentProductPrice={product.price} />
+                  return (
+                    <div
+                      key={item.id}
+                      style={{ background: bgGradient }}
+                      className="relative aspect-[3/3.6] rounded-[22px] p-2.5 overflow-hidden flex items-center justify-center group shadow-2xs hover:shadow-md transition-all"
+                    >
+                      <Link
+                        to={`/product/${item.slug}`}
+                        className="w-full h-full flex items-center justify-center"
+                        title={item.name}
+                      >
+                        <img
+                          src={item.thumbnail || item.images?.[0]}
+                          alt={item.name}
+                          className="w-full h-full object-cover rounded-2xl group-hover:scale-105 transition-transform duration-300"
+                          loading="lazy"
+                        />
+                      </Link>
 
-            {/* Trust Strip */}
-            <div className="text-center py-1">
-              <span className="text-xs font-bold text-slate-700 tracking-wide">
-                COD Available • Free Shipping • 3-5 Day Delivery
-              </span>
-            </div>
-
-            {/* Rewards points alert */}
-            <div className="p-3 rounded-xl bg-emerald-50/80 border border-emerald-200/70 text-xs font-bold text-emerald-800 flex items-center gap-2">
-              <Gift size={16} className="text-emerald-600 shrink-0" />
-              <span>Earn {rewardPoints} points on purchase of this product.</span>
-            </div>
-
-            {/* Delivery Pincode Checker */}
-            <div className="pt-1">
-              <PincodeChecker />
-            </div>
-
+                      {/* Floating Bottom-Right '+' Add Button */}
+                      <button
+                        onClick={(e) => handleQuickAddItem(item, e)}
+                        title={`Add ${item.name} to cart`}
+                        className={`absolute bottom-2.5 right-2.5 w-9 h-9 sm:w-10 sm:h-10 rounded-xl shadow-md flex items-center justify-center transition active:scale-95 cursor-pointer ${
+                          added
+                            ? 'bg-emerald-600 text-white'
+                            : 'bg-white hover:bg-slate-50 text-[#112239]'
+                        }`}
+                      >
+                        {added ? <Check size={17} strokeWidth={2.5} /> : <Plus size={18} strokeWidth={2.5} />}
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
-
         </div>
 
-        {/* Product In Action / Advertising Video Section */}
+        {/* COMPLETE YOUR CLEANING ROUTINE BANNER SECTION */}
+        {routineProducts.length > 0 && (
+          <div className="mt-10 sm:mt-12 rounded-[32px] bg-[#FAF1E6] p-6 sm:p-8 relative">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+              {/* Left Heading + Circle Arrow CTA */}
+              <div className="lg:col-span-3 flex lg:flex-col items-center lg:items-start justify-between gap-4">
+                <h2 className="text-xl sm:text-2xl lg:text-[26px] font-black text-[#111C30] leading-[1.2] tracking-tight">
+                  Complete
+                  <br className="hidden sm:inline" /> Your Cleaning
+                  <br className="hidden sm:inline" /> Routine
+                </h2>
+
+                <Link
+                  to="/shop"
+                  aria-label="Explore all routine products"
+                  className="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-[#112239] hover:bg-[#1d3557] text-white flex items-center justify-center shadow-md transition active:scale-95 shrink-0"
+                >
+                  <ArrowRight size={20} />
+                </Link>
+              </div>
+
+              {/* Right Horizontal Carousel of 4 White Cards */}
+              <div className="lg:col-span-9 relative">
+                {/* Left Scroll Arrow */}
+                <button
+                  onClick={() => scrollRoutine('left')}
+                  aria-label="Scroll routine left"
+                  className="flex absolute -left-3 sm:-left-4 top-1/2 -translate-y-1/2 z-20 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white hover:bg-slate-50 text-[#112239] shadow-md items-center justify-center transition active:scale-95 cursor-pointer"
+                >
+                  <ChevronLeft size={18} />
+                </button>
+
+                {/* Right Scroll Arrow */}
+                <button
+                  onClick={() => scrollRoutine('right')}
+                  aria-label="Scroll routine right"
+                  className="flex absolute -right-3 sm:-right-4 top-1/2 -translate-y-1/2 z-20 w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-white hover:bg-slate-50 text-[#112239] shadow-md items-center justify-center transition active:scale-95 cursor-pointer"
+                >
+                  <ChevronRight size={18} />
+                </button>
+
+                <div
+                  ref={routineScrollRef}
+                  className="flex lg:grid lg:grid-cols-4 gap-4 sm:gap-5 overflow-x-auto lg:overflow-visible scroll-smooth no-scrollbar py-1 px-1"
+                  style={{
+                    scrollbarWidth: 'none',
+                    msOverflowStyle: 'none',
+                    WebkitOverflowScrolling: 'touch'
+                  }}
+                >
+                  {routineProducts.slice(0, 4).map((rp) => {
+                    const rpOriginal =
+                      rp.originalPrice && rp.originalPrice > rp.price
+                        ? rp.originalPrice
+                        : Math.round(rp.price * 1.4);
+
+                    return (
+                      <div
+                        key={rp.id}
+                        className="w-[210px] sm:w-[230px] lg:w-auto shrink-0 lg:shrink bg-white rounded-[22px] p-4 shadow-xs hover:shadow-md transition-all flex flex-col justify-between group"
+                      >
+                        <Link
+                          to={`/product/${rp.slug}`}
+                          className="h-32 sm:h-36 w-full flex items-center justify-center overflow-hidden rounded-xl bg-white mb-3"
+                          title={rp.name}
+                        >
+                          <img
+                            src={rp.thumbnail || rp.images?.[0]}
+                            alt={rp.name}
+                            className="h-full w-full object-contain group-hover:scale-105 transition-transform duration-300"
+                            loading="lazy"
+                          />
+                        </Link>
+
+                        <Link to={`/product/${rp.slug}`} className="mb-2 block">
+                          <h4 className="text-xs font-bold text-[#111C30] line-clamp-1 hover:text-[#1D63B8] transition-colors">
+                            {rp.name}
+                          </h4>
+                        </Link>
+
+                        <div className="flex items-center justify-between gap-2 pt-1">
+                          <div className="flex items-baseline gap-1.5">
+                            <span className="text-base sm:text-lg font-black text-[#111C30]">
+                              ₹{Number(rp.price).toLocaleString('en-IN')}
+                            </span>
+                            <span className="text-xs text-slate-400 line-through font-medium">
+                              ₹{Number(rpOriginal).toLocaleString('en-IN')}
+                            </span>
+                          </div>
+
+                          <button
+                            onClick={(e) => handleQuickAddItem(rp, e)}
+                            aria-label={`Add ${rp.name} to cart`}
+                            className="w-9 h-9 rounded-xl bg-[#112239] hover:bg-[#1d3557] active:scale-95 text-white flex items-center justify-center shadow-xs transition cursor-pointer shrink-0"
+                          >
+                            <ShoppingCart size={15} strokeWidth={2.2} />
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Detailed Product Tabs & Specifications */}
+        <div className="mt-10">
+          <ProductTabs product={product} />
+        </div>
+
+        {/* Product In Action Video Section */}
         <ProductVideoDemo
           title="See GharShine In Action • Real Video Demonstration"
           subtitle="Watch how our nano-barrier technology prevents hard water scaling, oil stains, and turmeric marks."
         />
-
-        {/* Detailed Tabs & Specifications */}
-        <ProductTabs product={product} />
-
-        {/* "Products You May Like" Section */}
-        <ProductsYouMayLike products={relatedProducts} />
-
       </div>
 
       {/* Sticky Bottom Add-to-Cart Bar on Mobile */}
@@ -289,20 +417,19 @@ export const ProductDetailPage = () => {
           <span className="text-xs font-bold text-slate-900 truncate block">
             {product.name}
           </span>
-          <span className="text-xs font-extrabold text-[#107082]">
-            {formatPrice(product.price)}
+          <span className="text-xs font-extrabold text-[#112239]">
+            ₹{Number(product.price).toLocaleString('en-IN')}
           </span>
         </div>
 
         <button
           onClick={handleAddToCart}
-          className="px-5 py-2.5 bg-[#107082] text-white rounded-xl text-xs font-black shrink-0 shadow-md flex items-center gap-1.5 cursor-pointer"
+          className="px-5 py-2.5 bg-[#112239] text-white rounded-xl text-xs font-black shrink-0 shadow-md flex items-center gap-1.5 cursor-pointer"
         >
           <ShoppingBag size={15} />
           <span>Add to Cart</span>
         </button>
       </div>
-
     </div>
   );
 };
