@@ -26,16 +26,22 @@ export const ProductGallery = ({ images = [], productName = "Product" }) => {
     setActiveIndex((prev) => (prev + 1) % galleryImages.length);
   };
 
-  // Scroll active thumbnail into view
+  // Scroll active thumbnail inside the thumbnail strip container only (never scroll the page window)
   useEffect(() => {
     try {
+      const container = thumbListRef.current;
       const el = thumbRefs.current?.[activeIndex];
-      if (el && typeof el.scrollIntoView === 'function') {
-        el.scrollIntoView({
-          behavior: 'smooth',
-          block: 'nearest',
-          inline: 'nearest'
-        });
+      if (container && el && activeIndex > 0) {
+        const isDesktop = window.innerWidth >= 768;
+        if (isDesktop) {
+          const targetTop = el.offsetTop - container.clientHeight / 2 + el.clientHeight / 2;
+          container.scrollTo({ top: Math.max(0, targetTop), behavior: 'smooth' });
+        } else {
+          const targetLeft = el.offsetLeft - container.clientWidth / 2 + el.clientWidth / 2;
+          container.scrollTo({ left: Math.max(0, targetLeft), behavior: 'smooth' });
+        }
+      } else if (container && activeIndex === 0) {
+        container.scrollTo({ top: 0, left: 0 });
       }
     } catch {
       // safe fallback
@@ -63,7 +69,7 @@ export const ProductGallery = ({ images = [], productName = "Product" }) => {
   };
 
   return (
-    <div className="flex flex-col-reverse md:flex-row gap-3.5 lg:gap-4 items-stretch w-full">
+    <div className="flex flex-col-reverse md:flex-row gap-3.5 lg:gap-4 items-start md:items-stretch w-full">
       {/* Vertical Thumbnail Strip with Up/Down Arrows */}
       <div className="relative flex md:flex-col items-center justify-between shrink-0 w-full md:w-20 lg:w-22">
         {/* Desktop Up Scroll Button */}
@@ -115,7 +121,7 @@ export const ProductGallery = ({ images = [], productName = "Product" }) => {
       {/* Main Active Image Container */}
       <div
         onClick={() => setIsLightboxOpen(true)}
-        className="relative flex-1 w-full aspect-square md:h-[500px] lg:h-[540px] rounded-[28px] overflow-hidden bg-[#F5F3EF] border border-slate-100 shadow-xs group select-none cursor-pointer flex items-center justify-center"
+        className="relative w-full md:flex-1 aspect-square md:aspect-auto md:h-[500px] lg:h-[540px] rounded-[28px] overflow-hidden bg-[#F5F3EF] border border-slate-100 shadow-xs group select-none cursor-pointer flex items-center justify-center"
       >
         <img
           src={galleryImages[activeIndex]}

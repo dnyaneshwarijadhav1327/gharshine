@@ -31,7 +31,7 @@ export const ProductDetailPage = () => {
   const { isInWishlist, toggleWishlist } = useWishlist();
 
   useEffect(() => {
-    window.scrollTo(0, 0);
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
     setQuantity(1);
     setIsReadMoreOpen(false);
 
@@ -54,6 +54,13 @@ export const ProductDetailPage = () => {
 
     fetchProductData();
   }, [slug, navigate]);
+
+  // Ensure mobile and desktop always start at the top once product content mounts
+  useEffect(() => {
+    if (!loading && product) {
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    }
+  }, [loading, product?.id]);
 
   if (loading || !product) {
     return (
