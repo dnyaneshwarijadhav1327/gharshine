@@ -9,17 +9,21 @@ export const HeroSection = () => {
 
   const slides = [
     {
-      id: 'gharshine-cleaning-bundle',
-      desktopImage: '/images/hero-cleaning-bundle.png',
-      mobileImage: '/images/hero-cleaning-bundle-mobile.jpg',
-      alt: 'GharShine - Choose Your Perfect Cleaning Bundle - Complete protection for every surface.',
-      link: '/combo-builder'
+      id: 'gharshine-diwali-cleaner-home',
+      image: '/images/hero-banner-1.jpg',
+      alt: 'GharShine - This Diwali Bring Home a Cleaner & Brighter Home',
+      link: '/shop'
     },
     {
-      id: 'gharshine-diwali-festive',
-      desktopImage: '/images/hero-diwali-festive.png',
-      mobileImage: '/images/hero-diwali-festive-mobile.jpg',
-      alt: 'GharShine - This Diwali, Let Your Home Shine! Nano-coating solutions for Indian homes.',
+      id: 'gharshine-diwali-special-offer',
+      image: '/images/hero-banner-2.jpg',
+      alt: 'GharShine - Diwali Special Offer: Buy Sofa & Fabric Stain Repellent, Get Fabric Cleaner Free',
+      link: '/product/sofa-fabric-stain-repellent-combo'
+    },
+    {
+      id: 'gharshine-cleaner-home-healthier-you',
+      image: '/images/hero-banner-3.jpg',
+      alt: 'GharShine - A Cleaner Home for a Healthier You - Complete Surface Protection Collection',
       link: '/shop'
     }
   ];
@@ -84,7 +88,7 @@ export const HeroSection = () => {
         <ChevronRight size={22} />
       </button>
 
-      {/* Main Full-Bleed Slides Wrapper with Responsive Desktop and Mobile Pictures */}
+      {/* Main Full-Bleed Slides Wrapper */}
       <div className="relative w-full sm:h-full max-w-[2560px] mx-auto overflow-hidden">
         <div
           className="flex sm:h-full transition-transform duration-700 ease-out"
@@ -93,17 +97,12 @@ export const HeroSection = () => {
           {slides.map((slide, idx) => (
             <div key={slide.id} className="w-full sm:h-full shrink-0 relative">
               <Link to={slide.link} className="block w-full sm:h-full cursor-pointer">
-                <picture className="w-full sm:h-full block">
-                  {/* Dedicated 9:16 portrait banner on mobile devices (< 640px) */}
-                  <source media="(max-width: 640px)" srcSet={slide.mobileImage} />
-                  {/* Widescreen landscape banner on tablet and desktop screens */}
-                  <img
-                    src={slide.desktopImage}
-                    alt={slide.alt}
-                    className="w-full h-auto sm:h-full object-cover object-center block"
-                    loading={idx === 0 ? 'eager' : 'lazy'}
-                  />
-                </picture>
+                <img
+                  src={slide.image}
+                  alt={slide.alt}
+                  className="w-full h-auto sm:h-full object-cover object-center block"
+                  loading={idx === 0 ? 'eager' : 'lazy'}
+                />
               </Link>
             </div>
           ))}
