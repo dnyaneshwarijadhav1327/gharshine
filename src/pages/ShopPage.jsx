@@ -22,6 +22,8 @@ const BUNDLE_THEMES = [
     cardBorder: '#B9E6E9',
     waveColor: '#CBEFF1',
     iconBg: '#007C89',
+    archBg: 'linear-gradient(145deg, #B8E9EC 0%, #7CCAD2 100%)',
+    arcBorder: 'rgba(0, 124, 137, 0.32)',
     buttonBg: 'linear-gradient(90deg, #007E8B 0%, #006B76 100%)',
     priceColor: '#006B76',
     Icon: Sparkles
@@ -31,6 +33,8 @@ const BUNDLE_THEMES = [
     cardBorder: '#F5D0A9',
     waveColor: '#FCDCB8',
     iconBg: '#F57214',
+    archBg: 'linear-gradient(145deg, #FAD6B3 0%, #F4B378 100%)',
+    arcBorder: 'rgba(245, 114, 20, 0.32)',
     buttonBg: 'linear-gradient(90deg, #F97A1F 0%, #EE6305 100%)',
     priceColor: '#D95800',
     Icon: CookingPot
@@ -40,6 +44,8 @@ const BUNDLE_THEMES = [
     cardBorder: '#D2BDFA',
     waveColor: '#DEC8FD',
     iconBg: '#5E3BEE',
+    archBg: 'linear-gradient(145deg, #D8C7FC 0%, #B396F8 100%)',
+    arcBorder: 'rgba(94, 59, 238, 0.32)',
     buttonBg: 'linear-gradient(90deg, #6543F4 0%, #5230DF 100%)',
     priceColor: '#4E2AD7',
     Icon: Sofa
@@ -282,72 +288,88 @@ export const ShopPage = () => {
                       background: bundle.cardBg,
                       borderColor: bundle.cardBorder
                     }}
-                    className="w-[325px] sm:w-[390px] lg:w-auto min-h-[210px] sm:min-h-[225px] shrink-0 lg:shrink snap-start rounded-[24px] border-[1.5px] p-5 sm:p-6 overflow-hidden flex flex-col justify-between shadow-[0_8px_24px_rgba(15,23,42,0.06)] hover:shadow-[0_14px_32px_rgba(15,23,42,0.11)] transition-all duration-300 relative group"
+                    className="w-[335px] sm:w-[400px] lg:w-auto min-h-[265px] sm:min-h-[285px] shrink-0 lg:shrink snap-start rounded-[26px] border-[1.5px] overflow-hidden flex flex-row items-stretch shadow-[0_10px_28px_rgba(15,23,42,0.07)] hover:shadow-[0_16px_36px_rgba(15,23,42,0.12)] transition-all duration-300 relative group"
                   >
                     {/* Soft Decorative Corner Waves inside Card */}
                     <svg
                       className="pointer-events-none absolute inset-0 w-full h-full z-0"
-                      viewBox="0 0 400 220"
+                      viewBox="0 0 400 260"
                       preserveAspectRatio="none"
                     >
                       <path
-                        d="M0,145 C65,165 110,195 140,220 L0,220 Z"
+                        d="M0,180 C65,200 110,230 140,260 L0,260 Z"
                         fill={bundle.waveColor}
                         opacity="0.55"
                       />
-                      <path
-                        d="M330,0 C365,65 340,155 280,220 L400,220 L400,0 Z"
-                        fill={bundle.waveColor}
-                        opacity="0.65"
-                      />
                     </svg>
 
-                    {/* Top Row: Left Circular Colored Icon + Right Product Title & Price */}
-                    <div className="relative z-10 flex items-center gap-4 sm:gap-5">
-                      {/* Circular Icon Badge */}
-                      <Link
-                        to={`/product/${bundle.slug}`}
-                        style={{ backgroundColor: bundle.iconBg }}
-                        className="w-15 h-15 sm:w-17 sm:h-17 rounded-full text-white flex items-center justify-center shadow-md shrink-0 group-hover:scale-105 transition-transform"
-                      >
-                        <IconComponent size={28} strokeWidth={1.9} />
-                      </Link>
+                    {/* Left Column: Circular Colored Icon + Product Title + Price + Pill Button */}
+                    <div className="w-[54%] sm:w-[55%] p-5 sm:p-6 flex flex-col justify-between z-10">
+                      <div>
+                        {/* Circular Colored Category Icon Badge */}
+                        <div
+                          style={{ backgroundColor: bundle.iconBg }}
+                          className="w-12 h-12 sm:w-14 sm:h-14 rounded-full text-white flex items-center justify-center shadow-md mb-3.5"
+                        >
+                          <IconComponent size={24} strokeWidth={1.9} />
+                        </div>
 
-                      {/* Product Info Bars / Text */}
-                      <div className="flex-1 min-w-0 space-y-2">
+                        {/* Product Title */}
                         <Link to={`/product/${bundle.slug}`}>
-                          <h3 className="text-sm sm:text-[17px] font-extrabold text-[#0E1F3A] leading-snug hover:opacity-80 transition-opacity line-clamp-2">
+                          <h3 className="text-sm sm:text-[18px] font-extrabold text-[#0E1F3A] leading-[1.25] hover:opacity-80 transition-opacity line-clamp-3">
                             {bundle.name}
                           </h3>
                         </Link>
+                      </div>
 
-                        <div className="flex items-baseline gap-2.5">
-                          <span
-                            style={{ color: bundle.priceColor }}
-                            className="text-lg sm:text-xl font-black tracking-tight"
-                          >
-                            ₹{Number(bundle.price).toLocaleString('en-IN')}
-                          </span>
+                      {/* Price + Pill Add to Cart Button with Cart & Right Arrow */}
+                      <div className="mt-4">
+                        <div className="flex items-baseline gap-2 mb-3 flex-wrap">
                           {bundle.originalPrice && (
-                            <span className="text-xs sm:text-sm text-slate-400 line-through font-semibold">
+                            <span className="text-xs sm:text-sm text-slate-500 line-through font-semibold">
                               ₹{Number(bundle.originalPrice).toLocaleString('en-IN')}
                             </span>
                           )}
+                          <span
+                            style={{ color: bundle.priceColor }}
+                            className="text-xl sm:text-[24px] font-black tracking-tight"
+                          >
+                            ₹{Number(bundle.price).toLocaleString('en-IN')}
+                          </span>
                         </div>
+
+                        <button
+                          onClick={() => handleAddBundleToCart(bundle)}
+                          style={{ background: bundle.buttonBg }}
+                          className="w-full px-4 sm:px-5 py-2.5 sm:py-3 rounded-full hover:opacity-95 active:scale-[0.98] text-white font-bold text-xs sm:text-sm flex items-center justify-between gap-2 shadow-md transition cursor-pointer"
+                        >
+                          <ShoppingCart size={16} strokeWidth={2.2} className="shrink-0" />
+                          <span className="truncate">Add to cart</span>
+                          <ChevronRight size={16} strokeWidth={2.4} className="shrink-0" />
+                        </button>
                       </div>
                     </div>
 
-                    {/* Bottom Centered Pill Add to Cart Button with Cart Icon and Right Arrow */}
-                    <div className="relative z-10 mt-5 flex justify-center">
-                      <button
-                        onClick={() => handleAddBundleToCart(bundle)}
-                        style={{ background: bundle.buttonBg }}
-                        className="min-w-[175px] sm:min-w-[200px] h-11 sm:h-12 px-6 rounded-full hover:opacity-95 active:scale-[0.98] text-white font-bold text-xs sm:text-sm flex items-center justify-between gap-3 shadow-md transition cursor-pointer"
+                    {/* Right Curved Arch Product Image Container (Front of Card) */}
+                    <div className="w-[46%] sm:w-[45%] relative flex items-stretch z-10">
+                      {/* Decorative thin outer arc line */}
+                      <div
+                        style={{ borderColor: bundle.arcBorder }}
+                        className="pointer-events-none absolute -left-2.5 top-2 bottom-2 w-full rounded-l-[140px] border-l-[1.5px] z-10"
+                      />
+
+                      <Link
+                        to={`/product/${bundle.slug}`}
+                        style={{ background: bundle.archBg }}
+                        className="w-full h-full relative rounded-l-[135px] overflow-hidden flex items-center justify-center block"
                       >
-                        <ShoppingCart size={18} strokeWidth={2.1} />
-                        <span>Add to cart</span>
-                        <ChevronRight size={17} strokeWidth={2.4} />
-                      </button>
+                        <img
+                          src={bundle.image}
+                          alt={bundle.name}
+                          className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                          loading="lazy"
+                        />
+                      </Link>
                     </div>
                   </div>
                 );
