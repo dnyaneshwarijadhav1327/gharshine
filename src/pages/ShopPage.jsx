@@ -45,19 +45,19 @@ const BUNDLE_THEMES = [
 
 const initialValueBundles = [
   {
-    id: 'bundle-sofa-fabric',
-    key: 'sofa',
-    name: 'Sofa & Fabric Stain Repellent Combo',
-    slug: 'sofa-fabric-stain-repellent-combo',
-    price: 1999,
-    originalPrice: 2799,
-    image: 'https://cdn.shopify.com/s/files/1/0831/5037/2921/files/GharshineSofaProtectorCombo.png?v=1791652689',
-    cardBg: '#E6EFFA',
-    archBg: 'linear-gradient(145deg, #274469 0%, #13253E 100%)',
-    arcBorder: 'rgba(39, 68, 105, 0.45)',
-    buttonBg: 'linear-gradient(90deg, #1A2F4B 0%, #0E1B2D 100%)',
-    priceColor: '#132747',
-    Icon: Sofa
+    id: 'gid://shopify/Product/10384996728889',
+    key: 'ultimate-invisel-combo',
+    name: 'Ultimate Invisel Combo- All Protector and All Cleaners Combo for the Complete House',
+    slug: 'ultimate-invisel-combo-all-protector-and-all-cleaners-combo-for-the-complete-house',
+    price: 6499,
+    originalPrice: 8449,
+    image: 'https://cdn.shopify.com/s/files/1/0831/5037/2921/files/GharShineCleaningCollectionDisplay_1.png?v=1792382351',
+    cardBg: '#E4F0FB',
+    archBg: 'linear-gradient(145deg, #7B9DC4 0%, #587BA6 100%)',
+    arcBorder: 'rgba(88, 123, 166, 0.35)',
+    buttonBg: 'linear-gradient(90deg, #1E3E66 0%, #0D1E36 100%)',
+    priceColor: '#124682',
+    Icon: Sparkles
   }
 ];
 
@@ -109,46 +109,10 @@ export const ShopPage = () => {
       if (res.success) {
         setProductsList(res.data);
 
-        // Sync Best Value Bundles with live Shopify products + any products in 'Best Value Bundles' collection
+        // Sync Best Value Bundles strictly with products in 'Best Value Bundles' collection in Shopify
         if (Array.isArray(res.data) && res.data.length > 0) {
-          const usedSlugs = new Set();
-
-          const updatedDefault = initialValueBundles.map((slot) => {
-            const match = res.data.find((p) => {
-              if (!p) return false;
-              const pName = (p.name || '').toLowerCase();
-              const pSlug = (p.slug || '').toLowerCase();
-
-              if (slot.key === 'sofa') {
-                return (
-                  pSlug.includes('sofa-fabric') ||
-                  (pName.includes('sofa') && pName.includes('fabric'))
-                );
-              }
-              return false;
-            });
-
-            if (match) {
-              usedSlugs.add(match.slug);
-              return {
-                ...slot,
-                id: match.id,
-                name: match.name || slot.name,
-                slug: match.slug || slot.slug,
-                price: Number(match.price) || slot.price,
-                originalPrice: match.originalPrice
-                  ? Number(match.originalPrice)
-                  : slot.originalPrice,
-                image: match.thumbnail || match.images?.[0] || slot.image
-              };
-            }
-            usedSlugs.add(slot.slug);
-            return slot;
-          });
-
-          // Find any additional products assigned to 'Best Value Bundles' collection in Shopify
-          const extraBundleProducts = res.data.filter((p) => {
-            if (!p || usedSlugs.has(p.slug)) return false;
+          const bundleCollectionProducts = res.data.filter((p) => {
+            if (!p) return false;
             const colls = p.collectionTitles || [];
             const handles = p.collectionHandles || [];
             return (
@@ -157,24 +121,26 @@ export const ShopPage = () => {
             );
           });
 
-          const extraFormatted = extraBundleProducts.map((p, idx) => {
-            const themeTemplate = BUNDLE_THEMES[idx % BUNDLE_THEMES.length];
-            const priceNum = Number(p.price) || 999;
-            return {
-              ...themeTemplate,
-              id: p.id,
-              key: `extra-bundle-${p.slug || idx}`,
-              name: p.name,
-              slug: p.slug,
-              price: priceNum,
-              originalPrice: p.originalPrice
-                ? Number(p.originalPrice)
-                : Math.round(priceNum * 1.3),
-              image: p.thumbnail || p.images?.[0] || 'https://cdn.shopify.com/s/files/1/0831/5037/2921/files/GharShineCleaningCollectionDisplay_1.png?v=1792382351'
-            };
-          });
+          if (bundleCollectionProducts.length > 0) {
+            const formattedBundles = bundleCollectionProducts.map((p, idx) => {
+              const themeTemplate = BUNDLE_THEMES[idx % BUNDLE_THEMES.length];
+              const priceNum = Number(p.price) || 999;
+              return {
+                ...themeTemplate,
+                id: p.id,
+                key: `bundle-${p.slug || idx}`,
+                name: p.name,
+                slug: p.slug,
+                price: priceNum,
+                originalPrice: p.originalPrice
+                  ? Number(p.originalPrice)
+                  : Math.round(priceNum * 1.3),
+                image: p.thumbnail || p.images?.[0] || 'https://cdn.shopify.com/s/files/1/0831/5037/2921/files/GharShineCleaningCollectionDisplay_1.png?v=1792382351'
+              };
+            });
 
-          setBundlesList([...updatedDefault, ...extraFormatted]);
+            setBundlesList(formattedBundles);
+          }
         }
       }
       setLoading(false);
