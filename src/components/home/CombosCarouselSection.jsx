@@ -8,7 +8,12 @@ import {
   Sparkles,
   CookingPot,
   Sofa,
-  ShowerHead
+  ShowerHead,
+  X,
+  Play,
+  Pause,
+  Volume2,
+  VolumeX
 } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { formatPrice } from '../../utils/formatters';
@@ -69,7 +74,8 @@ const CARD_THEMES = {
     accentColor: '#0061A8',
     accentHover: '#004E87',
     Icon: Sparkles,
-    insetImage: '/images/concern-shower-glass.jpg'
+    insetImage: '/images/concern-shower-glass.jpg',
+    demoLabel: 'Hydrophobic Glass & Ceramic Shield Demo'
   },
   orange: {
     cardBg: 'linear-gradient(180deg, #FFF1DF 0%, #FFF6EC 100%)',
@@ -77,7 +83,8 @@ const CARD_THEMES = {
     accentColor: '#EA6B00',
     accentHover: '#CC5D00',
     Icon: CookingPot,
-    insetImage: '/images/concern-kitchen-tiles.jpg'
+    insetImage: '/images/concern-kitchen-tiles.jpg',
+    demoLabel: '60-Second Heavy Grease & Oil Dissolve Demo'
   },
   green: {
     cardBg: 'linear-gradient(180deg, #E7F5EC 0%, #EFF9F2 100%)',
@@ -85,7 +92,8 @@ const CARD_THEMES = {
     accentColor: '#0E5A31',
     accentHover: '#094223',
     Icon: Sofa,
-    insetImage: '/images/concern-sofa-spills.jpg'
+    insetImage: '/images/concern-sofa-spills.jpg',
+    demoLabel: 'Liquid & Spill Repellent Fabric Barrier Demo'
   },
   purple: {
     cardBg: 'linear-gradient(180deg, #F1EAFF 0%, #F6F2FF 100%)',
@@ -93,7 +101,8 @@ const CARD_THEMES = {
     accentColor: '#5E2B97',
     accentHover: '#4A2078',
     Icon: ShowerHead,
-    insetImage: '/images/concern-marble-counter.jpg'
+    insetImage: '/images/concern-marble-counter.jpg',
+    demoLabel: 'Deep Limescale & Marble Nano-Seal Demo'
   }
 };
 
@@ -118,7 +127,13 @@ const getCardTheme = (item, idx) => {
 export const CombosCarouselSection = () => {
   const { addToCart } = useCart();
   const scrollContainerRef = useRef(null);
+  const modalVideoRef = useRef(null);
+
   const [items, setItems] = useState(fallbackCombos);
+  const [activeVideoItem, setActiveVideoItem] = useState(null);
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [isMuted, setIsMuted] = useState(true);
+  const [sliderPos, setSliderPos] = useState(50);
 
   useEffect(() => {
     let isMounted = true;
@@ -142,21 +157,20 @@ export const CombosCarouselSection = () => {
               return false;
             }
 
-            // Exclude products assigned to 'protect your home room by room' collection (they belong in the Room By Room section)
+            // Exclude products assigned exclusively to 'protect your home room by room' or 'best value bundles'
             const isRoomCollection =
               (p.collectionTitles || []).some((c) => c.includes('protect your home') || c.includes('room by room')) ||
               (p.collectionHandles || []).some((h) => h.includes('protect-your-home') || h.includes('room-by-room'));
 
-            const isBestSellerCollection =
-              (p.collectionTitles || []).some(
-                (c) => c.includes('best seller') || c.includes('bestseller') || c.includes('best value bundle')
-              ) ||
-              (p.collectionHandles || []).some(
-                (h) => h.includes('best-seller') || h.includes('bestseller') || h.includes('best-value-bundle')
-              );
+            const isBestValueBundleCollection =
+              (p.collectionTitles || []).some((c) => c.includes('best value bundle')) ||
+              (p.collectionHandles || []).some((h) => h.includes('best-value-bundle'));
 
-            // If it belongs to Room By Room collection and NOT explicitly to Best Seller collection, exclude from Combos
-            if (isRoomCollection && !isBestSellerCollection) {
+            const isBestSellerCollection =
+              (p.collectionTitles || []).some((c) => c.includes('best seller') || c.includes('bestseller')) ||
+              (p.collectionHandles || []).some((h) => h.includes('best-seller') || h.includes('bestseller'));
+
+            if ((isRoomCollection || isBestValueBundleCollection) && !isBestSellerCollection) {
               return false;
             }
 
@@ -166,7 +180,7 @@ export const CombosCarouselSection = () => {
               name.includes('combo') ||
               p.category?.toLowerCase() === 'combos' ||
               p.tags?.includes('combo') ||
-              (p.collectionTitles && p.collectionTitles.some((c) => c.includes('combo') || c.includes('bundle')))
+              (p.collectionTitles && p.collectionTitles.some((c) => c.includes('combo')))
             );
           });
 
@@ -177,6 +191,8 @@ export const CombosCarouselSection = () => {
               slug: p.slug,
               subtitle: p.shortDescription || p.category || '',
               image: p.thumbnail || p.images?.[0] || 'https://cdn.shopify.com/s/files/1/0831/5037/2921/files/GharShineBathroomCareDuo.png?v=1791650202',
+              images: p.images || [],
+              videoUrl: p.videoUrl || null,
               accentCorner: idx % 2 === 0 ? 'top-right' : 'bottom-left',
               accentColor: idx % 2 === 0 ? '#52D1DC' : '#D3F49A',
               rating: Math.round(Number(p.rating) || 5),
@@ -186,7 +202,6 @@ export const CombosCarouselSection = () => {
               isCombo: true
             }));
 
-            // Only use genuine live products; fallbackCombos only if formatted is short
             const seenSlugs = new Set(formatted.map((f) => f.slug));
             const seenNames = new Set(formatted.map((f) => f.name?.toLowerCase()));
             const remainingFallbacks = fallbackCombos.filter(
@@ -204,6 +219,23 @@ export const CombosCarouselSection = () => {
       isMounted = false;
     };
   }, []);
+
+  // Animate before/after split automatically while video demo modal is playing
+  useEffect(() => {
+    if (!activeVideoItem || activeVideoItem.videoUrl || !isPlaying) return;
+    let frameId;
+    let start = performance.now();
+
+    const step = (now) => {
+      const elapsed = (now - start) / 1000;
+      const pos = 50 + Math.sin(elapsed * 1.8) * 38;
+      setSliderPos(pos);
+      frameId = requestAnimationFrame(step);
+    };
+
+    frameId = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(frameId);
+  }, [activeVideoItem, isPlaying]);
 
   const scrollLeft = () => {
     if (scrollContainerRef.current) {
@@ -229,6 +261,32 @@ export const CombosCarouselSection = () => {
       isCombo: true
     };
     addToCart(productData, 1, true);
+  };
+
+  const openVideoDemo = (item, theme, e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsPlaying(true);
+    setSliderPos(50);
+    setActiveVideoItem({ ...item, theme });
+  };
+
+  const toggleModalPlay = () => {
+    if (modalVideoRef.current) {
+      if (isPlaying) {
+        modalVideoRef.current.pause();
+      } else {
+        modalVideoRef.current.play();
+      }
+    }
+    setIsPlaying((prev) => !prev);
+  };
+
+  const toggleModalMute = () => {
+    if (modalVideoRef.current) {
+      modalVideoRef.current.muted = !isMuted;
+    }
+    setIsMuted((prev) => !prev);
   };
 
   return (
@@ -324,28 +382,35 @@ export const CombosCarouselSection = () => {
                     </svg>
                   </Link>
 
-                  {/* Circular Before/After Split Inset on Bottom-Right */}
-                  <Link
-                    to={`/product/${item.slug}`}
-                    className="absolute -bottom-3 right-2 z-20 w-24 h-24 sm:w-26 sm:h-26 rounded-full border-[3px] border-white shadow-lg overflow-hidden block bg-slate-200"
+                  {/* Active Clickable Video / Before-After Demo Button on Bottom-Right */}
+                  <button
+                    type="button"
+                    onClick={(e) => openVideoDemo(item, theme, e)}
+                    aria-label={`Watch ${item.name} video demonstration`}
+                    title="Click to watch protection demo"
+                    className="absolute -bottom-3 right-2 z-20 w-24 h-24 sm:w-26 sm:h-26 rounded-full border-[3px] border-white shadow-lg overflow-hidden block bg-slate-200 cursor-pointer hover:scale-108 active:scale-95 transition-transform duration-200 group/vid"
                   >
                     <img
                       src={theme.insetImage}
                       alt={`${item.name} comparison`}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover group-hover/vid:scale-110 transition-transform duration-300"
                       loading="lazy"
                     />
-                    {/* Split vertical line + tiny center arrow badge */}
+                    {/* Split vertical line + active pulsing play button badge */}
                     <div className="absolute inset-y-0 left-1/2 w-[2px] -translate-x-1/2 bg-white/90" />
+                    <span
+                      style={{ backgroundColor: theme.accentColor }}
+                      className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 rounded-full opacity-40 animate-ping pointer-events-none"
+                    />
                     <div
                       style={{ backgroundColor: theme.accentColor }}
-                      className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-6 h-6 rounded-full text-white flex items-center justify-center shadow-xs"
+                      className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-7 h-7 rounded-full text-white flex items-center justify-center shadow-md ring-2 ring-white/80 group-hover/vid:scale-115 transition-transform"
                     >
-                      <svg width="8" height="10" viewBox="0 0 8 10" fill="currentColor">
+                      <svg width="9" height="11" viewBox="0 0 8 10" fill="currentColor" className="ml-0.5">
                         <path d="M1 1L7 5L1 9V1Z" />
                       </svg>
                     </div>
-                  </Link>
+                  </button>
                 </div>
 
                 {/* Card Body Content */}
@@ -404,6 +469,202 @@ export const CombosCarouselSection = () => {
           })}
         </div>
       </div>
+
+      {/* Interactive Video & Live Before/After Demo Modal */}
+      {activeVideoItem && (
+        <div
+          onClick={() => setActiveVideoItem(null)}
+          className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 sm:p-6 animate-in fade-in"
+        >
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="relative w-full max-w-2xl rounded-3xl bg-white shadow-2xl overflow-hidden border border-slate-100"
+          >
+            {/* Modal Top Header */}
+            <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100 bg-slate-50/70">
+              <div className="min-w-0 pr-3">
+                <span
+                  style={{ backgroundColor: activeVideoItem.theme?.accentColor || '#0061A8' }}
+                  className="inline-block px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider text-white mb-1"
+                >
+                  {activeVideoItem.theme?.demoLabel || 'Live Protection Demo'}
+                </span>
+                <h3 className="text-base sm:text-lg font-extrabold text-[#111C30] truncate">
+                  {activeVideoItem.name}
+                </h3>
+              </div>
+
+              <button
+                onClick={() => setActiveVideoItem(null)}
+                aria-label="Close video modal"
+                className="w-9 h-9 rounded-full bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 flex items-center justify-center transition cursor-pointer shrink-0"
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            {/* Video / Interactive Before-After Viewport */}
+            <div className="relative aspect-video w-full bg-slate-950 overflow-hidden select-none">
+              {activeVideoItem.videoUrl ? (
+                activeVideoItem.videoUrl.includes('youtube') || activeVideoItem.videoUrl.includes('vimeo') ? (
+                  <iframe
+                    src={activeVideoItem.videoUrl}
+                    title={activeVideoItem.name}
+                    className="w-full h-full border-0"
+                    allow="autoplay; encrypted-media; picture-in-picture"
+                    allowFullScreen
+                  />
+                ) : (
+                  <video
+                    ref={modalVideoRef}
+                    src={activeVideoItem.videoUrl}
+                    poster={activeVideoItem.image}
+                    autoPlay
+                    loop
+                    playsInline
+                    muted={isMuted}
+                    onClick={toggleModalPlay}
+                    className="w-full h-full object-cover cursor-pointer"
+                  />
+                )
+              ) : (
+                /* Interactive Live Before / After Protection Player */
+                <div
+                  onClick={() => setIsPlaying((p) => !p)}
+                  onMouseMove={(e) => {
+                    if (!isPlaying) {
+                      const rect = e.currentTarget.getBoundingClientRect();
+                      const x = Math.max(5, Math.min(95, ((e.clientX - rect.left) / rect.width) * 100));
+                      setSliderPos(x);
+                    }
+                  }}
+                  onTouchMove={(e) => {
+                    const touch = e.touches[0];
+                    if (touch) {
+                      const rect = e.currentTarget.getBoundingClientRect();
+                      const x = Math.max(5, Math.min(95, ((touch.clientX - rect.left) / rect.width) * 100));
+                      setIsPlaying(false);
+                      setSliderPos(x);
+                    }
+                  }}
+                  className="relative w-full h-full cursor-pointer"
+                >
+                  {/* Protected "AFTER" Full Layer */}
+                  <img
+                    src={activeVideoItem.theme?.insetImage || activeVideoItem.image}
+                    alt="After GharShine protection"
+                    className="w-full h-full object-cover brightness-105 contrast-105"
+                  />
+
+                  {/* Unprotected "BEFORE" Clipped Layer */}
+                  <div
+                    style={{ width: `${sliderPos}%` }}
+                    className="absolute inset-y-0 left-0 overflow-hidden"
+                  >
+                    <img
+                      src={activeVideoItem.theme?.insetImage || activeVideoItem.image}
+                      alt="Before protection"
+                      className="w-full h-full object-cover grayscale-[45%] brightness-75 blur-[0.6px]"
+                      style={{ width: '100vw', maxWidth: '42rem' }}
+                    />
+                  </div>
+
+                  {/* Labels */}
+                  <span className="absolute top-3 left-3 px-3 py-1 rounded-full bg-black/65 backdrop-blur-xs text-white text-[11px] font-bold uppercase tracking-wider">
+                    Before (Unprotected)
+                  </span>
+                  <span
+                    style={{ backgroundColor: activeVideoItem.theme?.accentColor || '#0061A8' }}
+                    className="absolute top-3 right-3 px-3 py-1 rounded-full text-white text-[11px] font-bold uppercase tracking-wider shadow-sm"
+                  >
+                    After GharShine Shield
+                  </span>
+
+                  {/* Vertical Split Line & Handle */}
+                  <div
+                    style={{ left: `${sliderPos}%` }}
+                    className="absolute inset-y-0 w-[3px] -translate-x-1/2 bg-white shadow-[0_0_12px_rgba(0,0,0,0.6)]"
+                  >
+                    <div
+                      style={{ backgroundColor: activeVideoItem.theme?.accentColor || '#0061A8' }}
+                      className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 rounded-full border-2 border-white text-white flex items-center justify-center shadow-lg"
+                    >
+                      {isPlaying ? <Pause size={16} /> : <Play size={16} className="ml-0.5" />}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Bottom Player Controls Bar */}
+              <div className="absolute bottom-3 inset-x-3 flex items-center justify-between pointer-events-none">
+                <button
+                  type="button"
+                  onClick={toggleModalPlay}
+                  className="pointer-events-auto px-3.5 py-1.5 rounded-full bg-black/70 hover:bg-black/85 text-white text-xs font-bold flex items-center gap-1.5 backdrop-blur-xs transition cursor-pointer"
+                >
+                  {isPlaying ? <Pause size={14} /> : <Play size={14} />}
+                  <span>{isPlaying ? 'Pause Demo' : 'Play Demo'}</span>
+                </button>
+
+                {activeVideoItem.videoUrl ? (
+                  <button
+                    type="button"
+                    onClick={toggleModalMute}
+                    className="pointer-events-auto w-8 h-8 rounded-full bg-black/70 hover:bg-black/85 text-white flex items-center justify-center backdrop-blur-xs transition cursor-pointer"
+                  >
+                    {isMuted ? <VolumeX size={15} /> : <Volume2 size={15} />}
+                  </button>
+                ) : (
+                  <span className="px-3 py-1 rounded-full bg-black/60 text-white/90 text-[11px] font-medium backdrop-blur-xs">
+                    Tap to pause or drag to compare
+                  </span>
+                )}
+              </div>
+            </div>
+
+            {/* Modal Footer with Price + Add to Cart + View Product */}
+            <div className="p-4 sm:p-5 bg-white flex flex-wrap items-center justify-between gap-3">
+              <div>
+                <div className="flex items-baseline gap-2">
+                  <span className="text-xl sm:text-2xl font-black text-[#111C30]">
+                    {formatPrice(activeVideoItem.price)}
+                  </span>
+                  {activeVideoItem.originalPrice && (
+                    <span className="text-xs sm:text-sm text-slate-400 line-through font-semibold">
+                      {formatPrice(activeVideoItem.originalPrice)}
+                    </span>
+                  )}
+                </div>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  Nano-barrier surface protection tested for Indian homes
+                </p>
+              </div>
+
+              <div className="flex items-center gap-2.5">
+                <Link
+                  to={`/product/${activeVideoItem.slug}`}
+                  onClick={() => setActiveVideoItem(null)}
+                  className="px-4 py-2.5 rounded-full border border-slate-200 hover:bg-slate-50 text-xs sm:text-sm font-bold text-[#111C30] transition"
+                >
+                  View Product
+                </Link>
+                <button
+                  onClick={() => {
+                    handleAddToCart(activeVideoItem);
+                    setActiveVideoItem(null);
+                  }}
+                  style={{ backgroundColor: activeVideoItem.theme?.accentColor || '#0061A8' }}
+                  className="px-5 py-2.5 rounded-full hover:opacity-95 text-white text-xs sm:text-sm font-bold flex items-center gap-2 shadow-md transition cursor-pointer"
+                >
+                  <ShoppingCart size={16} />
+                  <span>Add to Cart</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 };
+

@@ -116,6 +116,21 @@ export function formatShopifyProduct(node) {
     checkRoom('glass', 'Bathroom');
     checkRoom('tile', 'Bathroom');
 
+    const rawMedia = (node.media?.edges || []).map(e => e.node).filter(Boolean);
+    let videoUrl = null;
+    for (const m of rawMedia) {
+      if (m.mediaContentType === 'VIDEO' && Array.isArray(m.sources) && m.sources.length > 0) {
+        const mp4 = m.sources.find(s => s.mimeType?.includes('mp4')) || m.sources[0];
+        if (mp4?.url) {
+          videoUrl = mp4.url;
+          break;
+        }
+      } else if (m.mediaContentType === 'EXTERNAL_VIDEO' && m.embedUrl) {
+        videoUrl = m.embedUrl;
+        break;
+      }
+    }
+
     return {
       id: node.id || `shopify-${Date.now()}`,
       name: node.title || 'GharShine Product',
@@ -140,6 +155,7 @@ export function formatShopifyProduct(node) {
       stockStatus: node.availableForSale ? 'in_stock' : 'out_of_stock',
       thumbnail: thumbnail,
       images: images.length > 0 ? images : [thumbnail],
+      videoUrl: videoUrl,
       shortDescription: node.description?.slice(0, 150) || 'Premium home surface protection formula.',
       description: node.description || 'Premium home surface cleaning and nano-barrier formula.',
       features: [
@@ -192,6 +208,22 @@ export const SHOPIFY_QUERIES = {
                 }
               }
             }
+            media(first: 10) {
+              edges {
+                node {
+                  mediaContentType
+                  ... on Video {
+                    sources {
+                      url
+                      mimeType
+                    }
+                  }
+                  ... on ExternalVideo {
+                    embedUrl
+                  }
+                }
+              }
+            }
             collections(first: 10) {
               edges {
                 node {
@@ -233,6 +265,22 @@ export const SHOPIFY_QUERIES = {
           edges {
             node {
               url
+            }
+          }
+        }
+        media(first: 10) {
+          edges {
+            node {
+              mediaContentType
+              ... on Video {
+                sources {
+                  url
+                  mimeType
+                }
+              }
+              ... on ExternalVideo {
+                embedUrl
+              }
             }
           }
         }
