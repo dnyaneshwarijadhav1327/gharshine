@@ -82,7 +82,7 @@ export const Header = () => {
                 <img
                   src="/images/gharshine-logo.png"
                   alt="GharShine"
-                  className="h-11 sm:h-13 w-auto object-contain mix-blend-multiply"
+                  className="h-14 sm:h-16 md:h-18 -my-1.5 w-auto object-contain mix-blend-multiply"
                 />
               </Link>
             </div>
@@ -292,7 +292,7 @@ export const Header = () => {
                 <img
                   src="/images/gharshine-logo.png"
                   alt="GharShine"
-                  className="h-10 w-auto object-contain mix-blend-multiply"
+                  className="h-12 sm:h-14 w-auto object-contain mix-blend-multiply"
                 />
               </Link>
               <button
