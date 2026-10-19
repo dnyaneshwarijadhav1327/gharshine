@@ -18,27 +18,30 @@ import {
 
 const BUNDLE_THEMES = [
   {
-    cardBg: '#E4F0FB',
-    archBg: 'linear-gradient(145deg, #7B9DC4 0%, #587BA6 100%)',
-    arcBorder: 'rgba(88, 123, 166, 0.35)',
-    buttonBg: 'linear-gradient(90deg, #1E3E66 0%, #0D1E36 100%)',
-    priceColor: '#124682',
+    cardBg: 'linear-gradient(135deg, #F3FCFC 0%, #DEF5F6 100%)',
+    cardBorder: '#B9E6E9',
+    waveColor: '#CBEFF1',
+    iconBg: '#007C89',
+    buttonBg: 'linear-gradient(90deg, #007E8B 0%, #006B76 100%)',
+    priceColor: '#006B76',
     Icon: Sparkles
   },
   {
-    cardBg: '#FDF4EB',
-    archBg: 'linear-gradient(145deg, #EAD8C5 0%, #DBC1A6 100%)',
-    arcBorder: 'rgba(180, 148, 115, 0.45)',
-    buttonBg: 'linear-gradient(90deg, #3A5C80 0%, #243F5C 100%)',
-    priceColor: '#13213C',
+    cardBg: 'linear-gradient(135deg, #FFFDF9 0%, #FDEBD6 100%)',
+    cardBorder: '#F5D0A9',
+    waveColor: '#FCDCB8',
+    iconBg: '#F57214',
+    buttonBg: 'linear-gradient(90deg, #F97A1F 0%, #EE6305 100%)',
+    priceColor: '#D95800',
     Icon: CookingPot
   },
   {
-    cardBg: '#E6EFFA',
-    archBg: 'linear-gradient(145deg, #274469 0%, #13253E 100%)',
-    arcBorder: 'rgba(39, 68, 105, 0.45)',
-    buttonBg: 'linear-gradient(90deg, #1A2F4B 0%, #0E1B2D 100%)',
-    priceColor: '#132747',
+    cardBg: 'linear-gradient(135deg, #FAF8FF 0%, #EAE0FF 100%)',
+    cardBorder: '#D2BDFA',
+    waveColor: '#DEC8FD',
+    iconBg: '#5E3BEE',
+    buttonBg: 'linear-gradient(90deg, #6543F4 0%, #5230DF 100%)',
+    priceColor: '#4E2AD7',
     Icon: Sofa
   }
 ];
@@ -52,12 +55,7 @@ const initialValueBundles = [
     price: 6499,
     originalPrice: 8449,
     image: 'https://cdn.shopify.com/s/files/1/0831/5037/2921/files/GharShineCleaningCollectionDisplay_1.png?v=1792382351',
-    cardBg: '#E4F0FB',
-    archBg: 'linear-gradient(145deg, #7B9DC4 0%, #587BA6 100%)',
-    arcBorder: 'rgba(88, 123, 166, 0.35)',
-    buttonBg: 'linear-gradient(90deg, #1E3E66 0%, #0D1E36 100%)',
-    priceColor: '#124682',
-    Icon: Sparkles
+    ...BUNDLE_THEMES[0]
   }
 ];
 
@@ -203,42 +201,71 @@ export const ShopPage = () => {
         {/* Breadcrumb Navigation */}
         <Breadcrumbs items={[{ label: 'Shop All Products' }]} />
 
-        {/* BEST VALUE BUNDLES SECTION (EXACT 3 CARDS AT TOP) */}
-        <div className="mt-4 mb-12 relative">
-          {/* Heading + Two-Tone Underline */}
-          <div className="flex flex-col items-center justify-center mb-8">
+        {/* BEST VALUE BUNDLES SECTION */}
+        <div className="mt-4 mb-12 relative rounded-3xl bg-gradient-to-b from-[#FAFDFD] via-white to-[#F9FCFC] py-7 px-3 sm:px-6 overflow-hidden">
+          {/* Decorative Soft Botanical Corner Accents */}
+          <div className="pointer-events-none absolute -top-10 -left-10 w-52 h-52 rounded-full bg-[#DCEEEE]/55 blur-xl" />
+          <svg
+            className="pointer-events-none absolute bottom-0 left-0 w-28 sm:w-36 h-28 sm:h-36 text-[#2D6A4F]/80 z-0"
+            viewBox="0 0 160 160"
+            fill="none"
+          >
+            <path
+              d="M10,160 C15,115 45,85 75,65 C55,105 40,135 25,160 Z"
+              fill="#3B7A57"
+              opacity="0.75"
+            />
+            <path
+              d="M0,160 C5,125 25,95 45,75 C35,115 20,140 10,160 Z"
+              fill="#1E4D2B"
+              opacity="0.85"
+            />
+            <path
+              d="M28,160 C45,125 78,102 110,92 C82,122 58,145 42,160 Z"
+              fill="#68A357"
+              opacity="0.65"
+            />
+          </svg>
+
+          {/* Heading + Two-Tone Navy & Teal Underline with Dot */}
+          <div className="relative z-10 flex flex-col items-center justify-center mb-8">
             <h2 className="text-2xl sm:text-3xl md:text-[38px] font-black tracking-tight text-center leading-tight">
-              <span className="text-[#121D33]">Best Value </span>
-              <span className="text-[#235893]">Bundles</span>
+              <span className="text-[#0E1F3A]">Best Value </span>
+              <span className="text-[#058894]">Bundles</span>
             </h2>
             <div className="mt-2.5 flex items-center justify-center">
-              <span className="w-14 sm:w-16 h-[3px] bg-[#121D33] rounded-l-full" />
-              <span className="w-14 sm:w-16 h-[3px] bg-[#3E7BBE] rounded-r-full" />
+              <span className="w-14 sm:w-16 h-[3px] bg-[#0E1F3A] rounded-l-full" />
+              <span className="w-14 sm:w-16 h-[3px] bg-[#058894]" />
+              <span className="w-1.5 h-1.5 rounded-full bg-[#058894] -ml-0.5" />
             </div>
           </div>
 
-          <div className="relative">
+          <div className="relative z-10">
             {/* Mobile Scroll Arrows */}
-            <button
-              onClick={scrollBundlesLeft}
-              aria-label="Previous Bundles"
-              className="flex lg:hidden absolute left-1 top-1/2 -translate-y-1/2 z-20 w-9 h-9 rounded-full bg-white/95 hover:bg-white text-slate-800 shadow-md items-center justify-center transition active:scale-95 cursor-pointer"
-            >
-              <ChevronLeft size={18} />
-            </button>
+            {bundlesList.length > 1 && (
+              <>
+                <button
+                  onClick={scrollBundlesLeft}
+                  aria-label="Previous Bundles"
+                  className="flex lg:hidden absolute left-1 top-1/2 -translate-y-1/2 z-20 w-9 h-9 rounded-full bg-white/95 hover:bg-white text-slate-800 shadow-md items-center justify-center transition active:scale-95 cursor-pointer"
+                >
+                  <ChevronLeft size={18} />
+                </button>
 
-            <button
-              onClick={scrollBundlesRight}
-              aria-label="Next Bundles"
-              className="flex lg:hidden absolute right-1 top-1/2 -translate-y-1/2 z-20 w-9 h-9 rounded-full bg-white/95 hover:bg-white text-slate-800 shadow-md items-center justify-center transition active:scale-95 cursor-pointer"
-            >
-              <ChevronRight size={18} />
-            </button>
+                <button
+                  onClick={scrollBundlesRight}
+                  aria-label="Next Bundles"
+                  className="flex lg:hidden absolute right-1 top-1/2 -translate-y-1/2 z-20 w-9 h-9 rounded-full bg-white/95 hover:bg-white text-slate-800 shadow-md items-center justify-center transition active:scale-95 cursor-pointer"
+                >
+                  <ChevronRight size={18} />
+                </button>
+              </>
+            )}
 
             {/* Cards Row: Horizontal Swipe on Mobile, 3-Column Grid on Laptop/Desktop */}
             <div
               ref={bundleScrollRef}
-              className="flex lg:grid lg:grid-cols-3 gap-5 sm:gap-6 overflow-x-auto lg:overflow-visible scroll-smooth no-scrollbar pb-3 -mx-4 px-4 sm:mx-0 sm:px-0 snap-x snap-mandatory"
+              className="flex lg:grid lg:grid-cols-3 gap-5 sm:gap-6 overflow-x-auto lg:overflow-visible scroll-smooth no-scrollbar pb-3 -mx-2 px-2 sm:mx-0 sm:px-0 snap-x snap-mandatory"
               style={{
                 scrollbarWidth: 'none',
                 msOverflowStyle: 'none',
@@ -251,72 +278,76 @@ export const ShopPage = () => {
                 return (
                   <div
                     key={bundle.id}
-                    style={{ backgroundColor: bundle.cardBg }}
-                    className="w-[335px] sm:w-[400px] lg:w-auto min-h-[265px] sm:min-h-[285px] shrink-0 lg:shrink snap-start rounded-[28px] overflow-hidden flex flex-row items-stretch shadow-[0_10px_28px_rgba(15,23,42,0.07)] hover:shadow-[0_16px_36px_rgba(15,23,42,0.12)] transition-all duration-300 relative group"
+                    style={{
+                      background: bundle.cardBg,
+                      borderColor: bundle.cardBorder
+                    }}
+                    className="w-[325px] sm:w-[390px] lg:w-auto min-h-[210px] sm:min-h-[225px] shrink-0 lg:shrink snap-start rounded-[24px] border-[1.5px] p-5 sm:p-6 overflow-hidden flex flex-col justify-between shadow-[0_8px_24px_rgba(15,23,42,0.06)] hover:shadow-[0_14px_32px_rgba(15,23,42,0.11)] transition-all duration-300 relative group"
                   >
-                    {/* Left Text & Button Column */}
-                    <div className="w-[53%] sm:w-[54%] p-5 sm:p-6 flex flex-col justify-between z-10">
-                      <div>
-                        {/* Circular Dark Navy Category Icon Badge */}
-                        <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-[#13223B] text-white flex items-center justify-center shadow-md mb-3.5">
-                          <IconComponent size={23} strokeWidth={1.8} />
-                        </div>
+                    {/* Soft Decorative Corner Waves inside Card */}
+                    <svg
+                      className="pointer-events-none absolute inset-0 w-full h-full z-0"
+                      viewBox="0 0 400 220"
+                      preserveAspectRatio="none"
+                    >
+                      <path
+                        d="M0,145 C65,165 110,195 140,220 L0,220 Z"
+                        fill={bundle.waveColor}
+                        opacity="0.55"
+                      />
+                      <path
+                        d="M330,0 C365,65 340,155 280,220 L400,220 L400,0 Z"
+                        fill={bundle.waveColor}
+                        opacity="0.65"
+                      />
+                    </svg>
 
-                        {/* Product Title */}
+                    {/* Top Row: Left Circular Colored Icon + Right Product Title & Price */}
+                    <div className="relative z-10 flex items-center gap-4 sm:gap-5">
+                      {/* Circular Icon Badge */}
+                      <Link
+                        to={`/product/${bundle.slug}`}
+                        style={{ backgroundColor: bundle.iconBg }}
+                        className="w-15 h-15 sm:w-17 sm:h-17 rounded-full text-white flex items-center justify-center shadow-md shrink-0 group-hover:scale-105 transition-transform"
+                      >
+                        <IconComponent size={28} strokeWidth={1.9} />
+                      </Link>
+
+                      {/* Product Info Bars / Text */}
+                      <div className="flex-1 min-w-0 space-y-2">
                         <Link to={`/product/${bundle.slug}`}>
-                          <h3 className="text-base sm:text-[20px] font-extrabold text-[#121D33] leading-[1.22] hover:opacity-80 transition-opacity line-clamp-3">
+                          <h3 className="text-sm sm:text-[17px] font-extrabold text-[#0E1F3A] leading-snug hover:opacity-80 transition-opacity line-clamp-2">
                             {bundle.name}
                           </h3>
                         </Link>
-                      </div>
 
-                      {/* Price + Pill Add to Cart Button */}
-                      <div className="mt-4">
-                        <div className="flex items-baseline gap-2.5 mb-3">
-                          {bundle.originalPrice && (
-                            <span className="text-xs sm:text-[15px] text-slate-500 line-through font-semibold">
-                              ₹{Number(bundle.originalPrice).toLocaleString('en-IN')}
-                            </span>
-                          )}
+                        <div className="flex items-baseline gap-2.5">
                           <span
                             style={{ color: bundle.priceColor }}
-                            className="text-xl sm:text-[26px] font-black tracking-tight"
+                            className="text-lg sm:text-xl font-black tracking-tight"
                           >
                             ₹{Number(bundle.price).toLocaleString('en-IN')}
                           </span>
+                          {bundle.originalPrice && (
+                            <span className="text-xs sm:text-sm text-slate-400 line-through font-semibold">
+                              ₹{Number(bundle.originalPrice).toLocaleString('en-IN')}
+                            </span>
+                          )}
                         </div>
-
-                        <button
-                          onClick={() => handleAddBundleToCart(bundle)}
-                          style={{ background: bundle.buttonBg }}
-                          className="w-full sm:w-auto min-w-[145px] sm:min-w-[165px] px-5 py-2.5 sm:py-3 rounded-full hover:opacity-95 active:scale-[0.98] text-white font-bold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-md transition cursor-pointer"
-                        >
-                          <ShoppingCart size={16} strokeWidth={2.2} />
-                          <span>Add to cart</span>
-                        </button>
                       </div>
                     </div>
 
-                    {/* Right Curved Arch Image Container */}
-                    <div className="w-[47%] sm:w-[46%] relative flex items-stretch">
-                      {/* Decorative thin outer arc line */}
-                      <div
-                        style={{ borderColor: bundle.arcBorder }}
-                        className="pointer-events-none absolute -left-2.5 top-2 bottom-2 w-full rounded-l-[140px] border-l-[1.5px] z-10"
-                      />
-
-                      <Link
-                        to={`/product/${bundle.slug}`}
-                        style={{ background: bundle.archBg }}
-                        className="w-full h-full relative rounded-l-[135px] overflow-hidden flex items-center justify-center block"
+                    {/* Bottom Centered Pill Add to Cart Button with Cart Icon and Right Arrow */}
+                    <div className="relative z-10 mt-5 flex justify-center">
+                      <button
+                        onClick={() => handleAddBundleToCart(bundle)}
+                        style={{ background: bundle.buttonBg }}
+                        className="min-w-[175px] sm:min-w-[200px] h-11 sm:h-12 px-6 rounded-full hover:opacity-95 active:scale-[0.98] text-white font-bold text-xs sm:text-sm flex items-center justify-between gap-3 shadow-md transition cursor-pointer"
                       >
-                        <img
-                          src={bundle.image}
-                          alt={bundle.name}
-                          className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
-                          loading="lazy"
-                        />
-                      </Link>
+                        <ShoppingCart size={18} strokeWidth={2.1} />
+                        <span>Add to cart</span>
+                        <ChevronRight size={17} strokeWidth={2.4} />
+                      </button>
                     </div>
                   </div>
                 );
