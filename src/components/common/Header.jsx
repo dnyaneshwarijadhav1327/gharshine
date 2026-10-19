@@ -77,12 +77,13 @@ export const Header = () => {
             <div className="flex items-center gap-6">
               <Link
                 to="/"
-                className="group flex items-center gap-1.5 focus:outline-none"
+                className="group flex items-center focus:outline-none"
               >
-                <span className="text-2xl sm:text-3xl font-black tracking-tight text-[#087F8C]">
-                  Ghar<span className="text-slate-900">Shine</span>
-                </span>
-                <Sparkles size={16} className="text-[#65D5D8] fill-[#65D5D8] -mt-2" />
+                <img
+                  src="/images/gharshine-logo.png"
+                  alt="GharShine"
+                  className="h-11 sm:h-13 w-auto object-contain mix-blend-multiply"
+                />
               </Link>
             </div>
 
@@ -287,12 +288,13 @@ export const Header = () => {
           <div className="relative w-full max-w-xs sm:max-w-sm bg-white h-full shadow-2xl flex flex-col z-10 animate-in slide-in-from-right duration-300">
             {/* Drawer Header */}
             <div className="p-4 border-b border-slate-100 flex items-center justify-between bg-[#F8FAFA]">
-              <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-lg bg-[#087F8C] flex items-center justify-center text-white">
-                  <Sparkles size={16} className="text-[#65D5D8]" />
-                </div>
-                <span className="font-bold text-slate-900">GharShine</span>
-              </div>
+              <Link to="/" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center">
+                <img
+                  src="/images/gharshine-logo.png"
+                  alt="GharShine"
+                  className="h-10 w-auto object-contain mix-blend-multiply"
+                />
+              </Link>
               <button
                 onClick={() => setIsMobileMenuOpen(false)}
                 className="p-1.5 text-slate-400 hover:text-slate-700 rounded-lg hover:bg-white transition"

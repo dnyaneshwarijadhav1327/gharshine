@@ -73,13 +73,12 @@ export const Footer = () => {
           
           {/* Brand Col */}
           <div className="lg:col-span-2 space-y-4">
-            <Link to="/" className="inline-flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-xl bg-[#087F8C] flex items-center justify-center text-white">
-                <Sparkles size={18} className="text-[#65D5D8]" />
-              </div>
-              <span className="text-xl font-black tracking-tight text-slate-900">
-                Ghar<span className="text-[#087F8C]">Shine</span>
-              </span>
+            <Link to="/" className="inline-flex items-center">
+              <img
+                src="/images/gharshine-logo.png"
+                alt="GharShine"
+                className="h-12 sm:h-14 w-auto object-contain mix-blend-multiply"
+              />
             </Link>
             
             <p className="text-xs sm:text-sm text-slate-500 max-w-sm leading-relaxed">
