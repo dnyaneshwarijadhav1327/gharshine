@@ -16,15 +16,8 @@ import {
   Sofa
 } from 'lucide-react';
 
-const initialValueBundles = [
+const BUNDLE_THEMES = [
   {
-    id: 'bundle-glass-ceramics',
-    key: 'glass',
-    name: 'Glass & Ceramics Cleaning and Protection Combo',
-    slug: 'abc',
-    price: 1599,
-    originalPrice: 2239,
-    image: 'https://cdn.shopify.com/s/files/1/0831/5037/2921/files/GharShineBathroomCareDuo.png?v=1791650202',
     cardBg: '#E4F0FB',
     archBg: 'linear-gradient(145deg, #7B9DC4 0%, #587BA6 100%)',
     arcBorder: 'rgba(88, 123, 166, 0.35)',
@@ -33,13 +26,6 @@ const initialValueBundles = [
     Icon: Sparkles
   },
   {
-    id: 'bundle-kitchen-foam',
-    key: 'kitchen',
-    name: 'Kitchen Foam Cleaner',
-    slug: 'kitchen-foam-cleaner',
-    price: 1699,
-    originalPrice: 2379,
-    image: 'https://cdn.shopify.com/s/files/1/0831/5037/2921/files/WhatsAppImage2026-10-10at23.23.25_1.jpg?v=1791654877',
     cardBg: '#FDF4EB',
     archBg: 'linear-gradient(145deg, #EAD8C5 0%, #DBC1A6 100%)',
     arcBorder: 'rgba(180, 148, 115, 0.45)',
@@ -47,6 +33,17 @@ const initialValueBundles = [
     priceColor: '#13213C',
     Icon: CookingPot
   },
+  {
+    cardBg: '#E6EFFA',
+    archBg: 'linear-gradient(145deg, #274469 0%, #13253E 100%)',
+    arcBorder: 'rgba(39, 68, 105, 0.45)',
+    buttonBg: 'linear-gradient(90deg, #1A2F4B 0%, #0E1B2D 100%)',
+    priceColor: '#132747',
+    Icon: Sofa
+  }
+];
+
+const initialValueBundles = [
   {
     id: 'bundle-sofa-fabric',
     key: 'sofa',
@@ -116,26 +113,12 @@ export const ShopPage = () => {
         if (Array.isArray(res.data) && res.data.length > 0) {
           const usedSlugs = new Set();
 
-          const updatedThree = initialValueBundles.map((slot) => {
+          const updatedDefault = initialValueBundles.map((slot) => {
             const match = res.data.find((p) => {
               if (!p) return false;
               const pName = (p.name || '').toLowerCase();
               const pSlug = (p.slug || '').toLowerCase();
 
-              if (slot.key === 'glass') {
-                return (
-                  pSlug === 'abc' ||
-                  (pName.includes('glass') && pName.includes('ceramic')) ||
-                  pSlug.includes('glass-ceramics')
-                );
-              }
-              if (slot.key === 'kitchen') {
-                return (
-                  pSlug.includes('kitchen-foam') ||
-                  pName.includes('kitchen foam') ||
-                  pSlug.includes('kitchen-protector')
-                );
-              }
               if (slot.key === 'sofa') {
                 return (
                   pSlug.includes('sofa-fabric') ||
@@ -175,7 +158,7 @@ export const ShopPage = () => {
           });
 
           const extraFormatted = extraBundleProducts.map((p, idx) => {
-            const themeTemplate = initialValueBundles[idx % initialValueBundles.length];
+            const themeTemplate = BUNDLE_THEMES[idx % BUNDLE_THEMES.length];
             const priceNum = Number(p.price) || 999;
             return {
               ...themeTemplate,
@@ -187,11 +170,11 @@ export const ShopPage = () => {
               originalPrice: p.originalPrice
                 ? Number(p.originalPrice)
                 : Math.round(priceNum * 1.3),
-              image: p.thumbnail || p.images?.[0] || themeTemplate.image
+              image: p.thumbnail || p.images?.[0] || 'https://cdn.shopify.com/s/files/1/0831/5037/2921/files/GharShineCleaningCollectionDisplay_1.png?v=1792382351'
             };
           });
 
-          setBundlesList([...updatedThree, ...extraFormatted]);
+          setBundlesList([...updatedDefault, ...extraFormatted]);
         }
       }
       setLoading(false);
