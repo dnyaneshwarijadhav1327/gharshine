@@ -137,7 +137,7 @@ export const CombosCarouselSection = () => {
               slug.includes('sacred-shringar') ||
               slug.includes('complete-bathroom-care') ||
               slug.includes('stonearmor') ||
-              name.includes('invisel')
+              slug === 'kitchen-protector-kit'
             ) {
               return false;
             }
@@ -148,8 +148,12 @@ export const CombosCarouselSection = () => {
               (p.collectionHandles || []).some((h) => h.includes('protect-your-home') || h.includes('room-by-room'));
 
             const isBestSellerCollection =
-              (p.collectionTitles || []).some((c) => c.includes('best seller') || c.includes('bestseller')) ||
-              (p.collectionHandles || []).some((h) => h.includes('best-seller') || h.includes('bestseller'));
+              (p.collectionTitles || []).some(
+                (c) => c.includes('best seller') || c.includes('bestseller') || c.includes('best value bundle')
+              ) ||
+              (p.collectionHandles || []).some(
+                (h) => h.includes('best-seller') || h.includes('bestseller') || h.includes('best-value-bundle')
+              );
 
             // If it belongs to Room By Room collection and NOT explicitly to Best Seller collection, exclude from Combos
             if (isRoomCollection && !isBestSellerCollection) {
@@ -162,7 +166,7 @@ export const CombosCarouselSection = () => {
               name.includes('combo') ||
               p.category?.toLowerCase() === 'combos' ||
               p.tags?.includes('combo') ||
-              (p.collectionTitles && p.collectionTitles.some((c) => c.includes('combo')))
+              (p.collectionTitles && p.collectionTitles.some((c) => c.includes('combo') || c.includes('bundle')))
             );
           });
 

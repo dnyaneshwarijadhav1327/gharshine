@@ -112,8 +112,10 @@ export const ShopPage = () => {
       if (res.success) {
         setProductsList(res.data);
 
-        // Sync the exact 3 Best Value Bundles with live Shopify products if present
+        // Sync Best Value Bundles with live Shopify products + any products in 'Best Value Bundles' collection
         if (Array.isArray(res.data) && res.data.length > 0) {
+          const usedSlugs = new Set();
+
           const updatedThree = initialValueBundles.map((slot) => {
             const match = res.data.find((p) => {
               if (!p) return false;
@@ -144,6 +146,7 @@ export const ShopPage = () => {
             });
 
             if (match) {
+              usedSlugs.add(match.slug);
               return {
                 ...slot,
                 id: match.id,
@@ -156,10 +159,39 @@ export const ShopPage = () => {
                 image: match.thumbnail || match.images?.[0] || slot.image
               };
             }
+            usedSlugs.add(slot.slug);
             return slot;
           });
 
-          setBundlesList(updatedThree);
+          // Find any additional products assigned to 'Best Value Bundles' collection in Shopify
+          const extraBundleProducts = res.data.filter((p) => {
+            if (!p || usedSlugs.has(p.slug)) return false;
+            const colls = p.collectionTitles || [];
+            const handles = p.collectionHandles || [];
+            return (
+              colls.some((c) => c.includes('best value bundle') || c.includes('value bundle')) ||
+              handles.some((h) => h.includes('best-value-bundle') || h.includes('value-bundle'))
+            );
+          });
+
+          const extraFormatted = extraBundleProducts.map((p, idx) => {
+            const themeTemplate = initialValueBundles[idx % initialValueBundles.length];
+            const priceNum = Number(p.price) || 999;
+            return {
+              ...themeTemplate,
+              id: p.id,
+              key: `extra-bundle-${p.slug || idx}`,
+              name: p.name,
+              slug: p.slug,
+              price: priceNum,
+              originalPrice: p.originalPrice
+                ? Number(p.originalPrice)
+                : Math.round(priceNum * 1.3),
+              image: p.thumbnail || p.images?.[0] || themeTemplate.image
+            };
+          });
+
+          setBundlesList([...updatedThree, ...extraFormatted]);
         }
       }
       setLoading(false);
@@ -254,7 +286,7 @@ export const ShopPage = () => {
               <ChevronRight size={18} />
             </button>
 
-            {/* 3 Cards Row: Horizontal Swipe on Mobile, 3-Column Grid on Laptop/Desktop */}
+            {/* Cards Row: Horizontal Swipe on Mobile, 3-Column Grid on Laptop/Desktop */}
             <div
               ref={bundleScrollRef}
               className="flex lg:grid lg:grid-cols-3 gap-5 sm:gap-6 overflow-x-auto lg:overflow-visible scroll-smooth no-scrollbar pb-3 -mx-4 px-4 sm:mx-0 sm:px-0 snap-x snap-mandatory"
@@ -264,7 +296,7 @@ export const ShopPage = () => {
                 WebkitOverflowScrolling: 'touch'
               }}
             >
-              {bundlesList.slice(0, 3).map((bundle) => {
+              {bundlesList.map((bundle) => {
                 const IconComponent = bundle.Icon;
 
                 return (
