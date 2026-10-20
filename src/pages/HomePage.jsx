@@ -8,7 +8,6 @@ import { BuildYourOwnCombo } from '../components/home/BuildYourOwnCombo';
 import { WhyChooseUsSection } from '../components/home/WhyChooseUsSection';
 import { CustomerReviewsSection } from '../components/home/CustomerReviewsSection';
 import { FAQSection } from '../components/home/FAQSection';
-import { NewsletterSection } from '../components/home/NewsletterSection';
 
 export const HomePage = () => {
   useEffect(() => {
@@ -44,9 +43,6 @@ export const HomePage = () => {
 
       {/* 11. FAQ */}
       <FAQSection />
-
-      {/* 12. Newsletter */}
-      <NewsletterSection />
     </div>
   );
 };
