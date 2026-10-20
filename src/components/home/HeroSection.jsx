@@ -11,13 +11,15 @@ export const HeroSection = () => {
   const slides = [
     {
       id: 'gharshine-diwali-free-offer',
-      image: '/images/hero-dynamic-1.jpg',
+      desktopImage: '/images/hero-dynamic-1.jpg',
+      mobileImage: '/images/hero-dynamic-1-mobile.jpg',
       alt: 'GharShine - Diwali Special Offer: Buy Sofa & Fabric Stain Repellent, Get Fabric Cleaner Free',
       link: '/product/sofa-fabric-stain-repellent-combo'
     },
     {
       id: 'gharshine-nano-coatings-collection',
-      image: '/images/hero-dynamic-2.jpg',
+      desktopImage: '/images/hero-dynamic-2.jpg',
+      mobileImage: '/images/hero-dynamic-2-mobile.jpg',
       alt: 'GharShine - The Magic of Nano-Coatings Complete Home Surface Cleaners & Protectors',
       link: '/shop'
     }
@@ -95,16 +97,19 @@ export const HeroSection = () => {
           {slides.map((slide, idx) => (
             <div key={slide.id} className="w-full shrink-0 relative">
               <Link to={slide.link} className="block w-full cursor-pointer">
-                <img
-                  src={slide.image}
-                  alt={slide.alt}
-                  width="2300"
-                  height="1000"
-                  decoding="sync"
-                  fetchPriority={idx === 0 ? 'high' : 'auto'}
-                  className="w-full h-[360px] sm:h-[440px] md:h-auto md:max-h-[calc(100vh-112px)] object-cover object-center block"
-                  loading={idx === 0 ? 'eager' : 'lazy'}
-                />
+                <picture className="w-full block">
+                  <source media="(max-width: 767px)" srcSet={slide.mobileImage} />
+                  <img
+                    src={slide.desktopImage}
+                    alt={slide.alt}
+                    width="2300"
+                    height="1000"
+                    decoding="sync"
+                    fetchPriority={idx === 0 ? 'high' : 'auto'}
+                    className="w-full h-[360px] sm:h-[440px] md:h-auto md:max-h-[calc(100vh-112px)] object-cover object-center block"
+                    loading={idx === 0 ? 'eager' : 'lazy'}
+                  />
+                </picture>
               </Link>
             </div>
           ))}
