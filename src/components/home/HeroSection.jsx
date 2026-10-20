@@ -62,69 +62,71 @@ export const HeroSection = () => {
 
   return (
     <section
-      className="relative w-full overflow-hidden bg-white select-none group"
+      className="relative w-full bg-[#FAF8F5] select-none py-0 sm:py-3 md:py-4"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
     >
-      {/* Side Arrow Navigation Buttons */}
-      <button
-        onClick={handlePrev}
-        aria-label="Previous Banner"
-        className="absolute left-1.5 sm:left-5 top-1/2 -translate-y-1/2 z-30 w-8 sm:w-12 h-8 sm:h-12 rounded-full bg-black/45 hover:bg-black/75 active:scale-95 text-white flex items-center justify-center backdrop-blur-xs transition-all cursor-pointer shadow-lg"
-      >
-        <ChevronLeft size={22} />
-      </button>
+      {/* Slightly Minimized Container so Full Banner Fits Above the Fold on First Page */}
+      <div className="relative w-full max-w-[1160px] xl:max-w-[1260px] mx-auto sm:px-4 md:px-6">
+        <div className="relative w-full overflow-hidden sm:rounded-2xl md:rounded-3xl shadow-xs sm:shadow-md bg-white">
+          {/* Side Arrow Navigation Buttons */}
+          <button
+            onClick={handlePrev}
+            aria-label="Previous Banner"
+            className="absolute left-2 sm:left-3.5 top-1/2 -translate-y-1/2 z-30 w-8 sm:w-10 h-8 sm:h-10 rounded-full bg-black/45 hover:bg-black/75 active:scale-95 text-white flex items-center justify-center backdrop-blur-xs transition-all cursor-pointer shadow-md"
+          >
+            <ChevronLeft size={20} />
+          </button>
 
-      <button
-        onClick={handleNext}
-        aria-label="Next Banner"
-        className="absolute right-1.5 sm:right-5 top-1/2 -translate-y-1/2 z-30 w-8 sm:w-12 h-8 sm:h-12 rounded-full bg-black/45 hover:bg-black/75 active:scale-95 text-white flex items-center justify-center backdrop-blur-xs transition-all cursor-pointer shadow-lg"
-      >
-        <ChevronRight size={22} />
-      </button>
+          <button
+            onClick={handleNext}
+            aria-label="Next Banner"
+            className="absolute right-2 sm:right-3.5 top-1/2 -translate-y-1/2 z-30 w-8 sm:w-10 h-8 sm:h-10 rounded-full bg-black/45 hover:bg-black/75 active:scale-95 text-white flex items-center justify-center backdrop-blur-xs transition-all cursor-pointer shadow-md"
+          >
+            <ChevronRight size={20} />
+          </button>
 
-      {/* Dynamic Responsive Full-Bleed Slides Wrapper */}
-      <div className="relative w-full max-w-[2560px] mx-auto overflow-hidden">
-        <div
-          className="flex transition-transform duration-700 ease-in-out"
-          style={{ transform: `translateX(-${currentSlide * 100}%)` }}
-        >
-          {slides.map((slide, idx) => {
-            const isActive = currentSlide === idx;
-            return (
-              <div key={slide.id} className="w-full shrink-0 relative overflow-hidden">
+          {/* Slides Track */}
+          <div
+            className="flex transition-transform duration-500 ease-out"
+            style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+          >
+            {slides.map((slide, idx) => (
+              <div key={slide.id} className="w-full shrink-0 relative">
                 <Link to={slide.link} className="block w-full cursor-pointer">
                   <img
                     src={slide.image}
                     alt={slide.alt}
-                    className={`w-full h-auto block object-contain transition-transform duration-[4500ms] ease-out ${
-                      isActive ? 'scale-[1.015]' : 'scale-100'
-                    }`}
+                    width="2048"
+                    height="1152"
+                    decoding="sync"
+                    fetchPriority={idx === 0 ? 'high' : 'auto'}
+                    className="w-full h-auto sm:max-h-[calc(100vh-145px)] object-contain mx-auto block"
                     loading={idx === 0 ? 'eager' : 'lazy'}
                   />
                 </Link>
               </div>
-            );
-          })}
-        </div>
+            ))}
+          </div>
 
-        {/* Dynamic Carousel Indicator Dots */}
-        <div className="absolute bottom-2.5 sm:bottom-5 inset-x-0 z-20 flex items-center justify-center gap-2.5">
-          {slides.map((_, i) => (
-            <button
-              key={i}
-              onClick={() => setCurrentSlide(i)}
-              aria-label={`Go to slide ${i + 1}`}
-              className={`h-2 sm:h-2.5 rounded-full transition-all duration-300 cursor-pointer shadow-md ${
-                currentSlide === i
-                  ? 'w-7 sm:w-10 bg-[#1B263B] ring-2 ring-white/95'
-                  : 'w-2 sm:w-2.5 bg-slate-800/45 hover:bg-slate-800/75'
-              }`}
-            />
-          ))}
+          {/* Dynamic Carousel Indicator Dots */}
+          <div className="absolute bottom-2 sm:bottom-3.5 inset-x-0 z-20 flex items-center justify-center gap-2">
+            {slides.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setCurrentSlide(i)}
+                aria-label={`Go to slide ${i + 1}`}
+                className={`h-2 sm:h-2.5 rounded-full transition-all duration-300 cursor-pointer shadow-md ${
+                  currentSlide === i
+                    ? 'w-7 sm:w-9 bg-[#1B263B] ring-2 ring-white/95'
+                    : 'w-2 sm:w-2.5 bg-slate-800/45 hover:bg-slate-800/75'
+                }`}
+              />
+            ))}
+          </div>
         </div>
       </div>
     </section>
