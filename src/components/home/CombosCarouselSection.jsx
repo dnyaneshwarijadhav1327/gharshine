@@ -59,8 +59,10 @@ const CARD_THEMES = {
     accentColor: '#0061A8',
     accentHover: '#004E87',
     Icon: Sparkles,
-    insetImage: '/images/concern-shower-glass.jpg',
-    demoLabel: 'Hydrophobic Glass & Ceramic Shield Demo'
+    beforeImage: '/images/demo-glass-before.jpg',
+    afterImage: '/images/demo-glass-after.jpg',
+    insetImage: '/images/demo-glass-before.jpg',
+    demoLabel: 'Hard Water Limescale Removal & Nano-Shield Demo'
   },
   orange: {
     cardBg: 'linear-gradient(180deg, #FFF1DF 0%, #FFF6EC 100%)',
@@ -68,8 +70,10 @@ const CARD_THEMES = {
     accentColor: '#EA6B00',
     accentHover: '#CC5D00',
     Icon: CookingPot,
-    insetImage: '/images/concern-kitchen-tiles.jpg',
-    demoLabel: '60-Second Heavy Grease & Oil Dissolve Demo'
+    beforeImage: '/images/demo-kitchen-before.jpg',
+    afterImage: '/images/demo-kitchen-after.jpg',
+    insetImage: '/images/demo-kitchen-before.jpg',
+    demoLabel: 'Heavy Oil & Burnt Grease Clean & Protect Demo'
   },
   green: {
     cardBg: 'linear-gradient(180deg, #E7F5EC 0%, #EFF9F2 100%)',
@@ -77,8 +81,10 @@ const CARD_THEMES = {
     accentColor: '#0E5A31',
     accentHover: '#094223',
     Icon: Sofa,
-    insetImage: '/images/concern-sofa-spills.jpg',
-    demoLabel: 'Liquid & Spill Repellent Fabric Barrier Demo'
+    beforeImage: '/images/demo-sofa-before.jpg',
+    afterImage: '/images/demo-sofa-after.jpg',
+    insetImage: '/images/demo-sofa-before.jpg',
+    demoLabel: 'Liquid & Chai Spill Repellent Fabric Barrier Demo'
   },
   purple: {
     cardBg: 'linear-gradient(180deg, #F1EAFF 0%, #F6F2FF 100%)',
@@ -86,8 +92,10 @@ const CARD_THEMES = {
     accentColor: '#5E2B97',
     accentHover: '#4A2078',
     Icon: ShowerHead,
-    insetImage: '/images/concern-marble-counter.jpg',
-    demoLabel: 'Deep Limescale & Marble Nano-Seal Demo'
+    beforeImage: '/images/demo-marble-before.jpg',
+    afterImage: '/images/demo-marble-after.jpg',
+    insetImage: '/images/demo-marble-before.jpg',
+    demoLabel: 'Deep Turmeric Stain & Marble Nano-Seal Demo'
   }
 };
 
@@ -375,24 +383,38 @@ export const CombosCarouselSection = () => {
                     type="button"
                     onClick={(e) => openVideoDemo(item, theme, e)}
                     aria-label={`Watch ${item.name} video demonstration`}
-                    title="Click to watch protection demo"
+                    title="Click to watch before & after demo"
                     className="absolute -bottom-3 right-2 z-20 w-24 h-24 sm:w-26 sm:h-26 rounded-full border-[3px] border-white shadow-lg overflow-hidden block bg-slate-200 cursor-pointer hover:scale-108 active:scale-95 transition-transform duration-200 group/vid"
                   >
-                    <img
-                      src={theme.insetImage}
-                      alt={`${item.name} comparison`}
-                      className="w-full h-full object-cover group-hover/vid:scale-110 transition-transform duration-300"
-                      loading="lazy"
-                    />
+                    <div className="relative w-full h-full">
+                      {/* Left half: Before (Dirty/Stained) */}
+                      <div className="absolute inset-y-0 left-0 w-1/2 overflow-hidden">
+                        <img
+                          src={theme.beforeImage || theme.insetImage}
+                          alt="Before"
+                          className="w-24 h-24 sm:w-26 sm:h-26 object-cover max-w-none group-hover/vid:scale-110 transition-transform duration-300"
+                          loading="lazy"
+                        />
+                      </div>
+                      {/* Right half: After (Clean/Protected) */}
+                      <div className="absolute inset-y-0 right-0 w-1/2 overflow-hidden">
+                        <img
+                          src={theme.afterImage || theme.insetImage}
+                          alt="After"
+                          className="w-24 h-24 sm:w-26 sm:h-26 object-cover max-w-none -ml-12 sm:-ml-13 group-hover/vid:scale-110 transition-transform duration-300"
+                          loading="lazy"
+                        />
+                      </div>
+                    </div>
                     {/* Split vertical line + active pulsing play button badge */}
-                    <div className="absolute inset-y-0 left-1/2 w-[2px] -translate-x-1/2 bg-white/90" />
+                    <div className="absolute inset-y-0 left-1/2 w-[2px] -translate-x-1/2 bg-white/95 z-10" />
                     <span
                       style={{ backgroundColor: theme.accentColor }}
-                      className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 rounded-full opacity-40 animate-ping pointer-events-none"
+                      className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-8 h-8 rounded-full opacity-40 animate-ping pointer-events-none z-10"
                     />
                     <div
                       style={{ backgroundColor: theme.accentColor }}
-                      className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-7 h-7 rounded-full text-white flex items-center justify-center shadow-md ring-2 ring-white/80 group-hover/vid:scale-115 transition-transform"
+                      className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-7 h-7 rounded-full text-white flex items-center justify-center shadow-md ring-2 ring-white/90 group-hover/vid:scale-115 transition-transform z-10"
                     >
                       <svg width="9" height="11" viewBox="0 0 8 10" fill="currentColor" className="ml-0.5">
                         <path d="M1 1L7 5L1 9V1Z" />
@@ -537,22 +559,22 @@ export const CombosCarouselSection = () => {
                   }}
                   className="relative w-full h-full cursor-pointer"
                 >
-                  {/* Protected "AFTER" Full Layer */}
+                  {/* Protected Clean "AFTER" Full Layer */}
                   <img
-                    src={activeVideoItem.theme?.insetImage || activeVideoItem.image}
-                    alt="After GharShine protection"
+                    src={activeVideoItem.theme?.afterImage || activeVideoItem.theme?.insetImage || activeVideoItem.image}
+                    alt="After GharShine cleaning & protection"
                     className="w-full h-full object-cover brightness-105 contrast-105"
                   />
 
-                  {/* Unprotected "BEFORE" Clipped Layer */}
+                  {/* Unprotected Dirty/Stained "BEFORE" Clipped Layer */}
                   <div
                     style={{ width: `${sliderPos}%` }}
                     className="absolute inset-y-0 left-0 overflow-hidden"
                   >
                     <img
-                      src={activeVideoItem.theme?.insetImage || activeVideoItem.image}
-                      alt="Before protection"
-                      className="w-full h-full object-cover grayscale-[45%] brightness-75 blur-[0.6px]"
+                      src={activeVideoItem.theme?.beforeImage || activeVideoItem.theme?.insetImage || activeVideoItem.image}
+                      alt="Before cleaning"
+                      className="w-full h-full object-cover"
                       style={{ width: '100vw', maxWidth: '42rem' }}
                     />
                   </div>

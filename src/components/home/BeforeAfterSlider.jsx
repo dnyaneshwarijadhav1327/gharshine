@@ -3,34 +3,44 @@ import { Sparkles, MoveHorizontal } from 'lucide-react';
 
 const comparisons = [
   {
-    id: 'glass',
-    surface: 'Shower Glass Partition',
-    concern: 'Hard Water Borewell Scaling',
-    beforeLabel: 'Untreated (Cloudy scaling & soap scum)',
-    afterLabel: 'Protected with GharShine NanoShield',
-    beforeImage: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1200&q=70&sat=-80&con=30',
-    afterImage: 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=1200&q=90',
-    stat: '98% Limescale Repellence'
-  },
-  {
     id: 'sofa',
     surface: 'Fabric Living Room Sofa',
     concern: 'Chai & Curry Spills',
-    beforeLabel: 'Untreated (Liquid soaks into yarn fibers)',
+    beforeLabel: 'Untreated (Liquid & chai stains soak into fibers)',
     afterLabel: 'Protected with HydroBarrier Guard',
-    beforeImage: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1200&q=70&sat=-40&con=-20',
-    afterImage: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1200&q=90',
+    beforeImage: '/images/demo-sofa-before.jpg',
+    afterImage: '/images/demo-sofa-after.jpg',
     stat: '100% Instant Liquid Beading'
+  },
+  {
+    id: 'glass',
+    surface: 'Shower Glass Partition',
+    concern: 'Hard Water Borewell Scaling',
+    beforeLabel: 'Untreated (Cloudy limescale crust & mineral drip streaks)',
+    afterLabel: 'Protected with GharShine NanoShield',
+    beforeImage: '/images/demo-glass-before.jpg',
+    afterImage: '/images/demo-glass-after.jpg',
+    stat: '98% Limescale Repellence'
   },
   {
     id: 'marble',
     surface: 'Italian Marble Island',
     concern: 'Turmeric & Lemon Acid Etch',
-    beforeLabel: 'Untreated (Yellow haldi absorption & dull etch)',
+    beforeLabel: 'Untreated (Yellow haldi absorption & sticky cup rings)',
     afterLabel: 'Sealed with StoneArmor Sub-Surface',
-    beforeImage: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=70&sat=-60',
-    afterImage: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=90',
+    beforeImage: '/images/demo-marble-before.jpg',
+    afterImage: '/images/demo-marble-after.jpg',
     stat: '18-Month Deep Defense'
+  },
+  {
+    id: 'kitchen',
+    surface: 'Kitchen Backsplash Tiles',
+    concern: 'Heavy Cooking Oil & Burnt Grease',
+    beforeLabel: 'Untreated (Burnt grease splatters & soiled grout lines)',
+    afterLabel: 'Protected with BioDegrease Shield',
+    beforeImage: '/images/demo-kitchen-before.jpg',
+    afterImage: '/images/demo-kitchen-after.jpg',
+    stat: '60-Second Wipe Clean'
   }
 ];
 
