@@ -160,18 +160,6 @@ export const Header = () => {
                 )}
               </div>
 
-              {/* How To Use Dropdown */}
-              <NavLink
-                to="/how-to-use"
-                className={({ isActive }) =>
-                  `text-sm font-medium transition-colors ${
-                    isActive ? 'text-[#087F8C] font-bold' : 'text-slate-700 hover:text-[#087F8C]'
-                  }`
-                }
-              >
-                How To Use ⌵
-              </NavLink>
-
               <NavLink
                 to="/combo-builder"
                 className={({ isActive }) =>
@@ -353,14 +341,6 @@ export const Header = () => {
               </div>
 
               {/* Other Pages */}
-              <Link
-                to="/how-to-use"
-                className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-[#F4F8F7] transition"
-              >
-                <Layers size={18} className="text-slate-500" />
-                <span>How To Use Guide</span>
-              </Link>
-
               <Link
                 to="/about"
                 className="flex items-center gap-3 p-2.5 rounded-xl hover:bg-[#F4F8F7] transition"

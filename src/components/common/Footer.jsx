@@ -155,11 +155,6 @@ export const Footer = () => {
                   Deep Cleaners & Scale Removers
                 </Link>
               </li>
-              <li>
-                <Link to="/how-to-use" className="hover:text-[#087F8C] transition">
-                  How To Use Guides
-                </Link>
-              </li>
             </ul>
           </div>
 

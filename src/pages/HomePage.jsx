@@ -4,7 +4,6 @@ import { TrustStrip } from '../components/home/TrustStrip';
 import { ConcernSection } from '../components/home/ConcernSection';
 import { CombosCarouselSection } from '../components/home/CombosCarouselSection';
 import { BestsellersSection } from '../components/home/BestsellersSection';
-import { HowItWorksSection } from '../components/home/HowItWorksSection';
 import { BuildYourOwnCombo } from '../components/home/BuildYourOwnCombo';
 import { WhyChooseUsSection } from '../components/home/WhyChooseUsSection';
 import { CustomerReviewsSection } from '../components/home/CustomerReviewsSection';
@@ -34,10 +33,7 @@ export const HomePage = () => {
       {/* 5. Best Sellers */}
       <BestsellersSection />
 
-      {/* 6. How It Works */}
-      <HowItWorksSection />
-
-      {/* 7. Build Your Own Combo */}
+      {/* 6. Build Your Own Combo */}
       <BuildYourOwnCombo />
 
       {/* 9. Why Choose Us */}
