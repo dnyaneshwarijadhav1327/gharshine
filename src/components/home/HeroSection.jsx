@@ -4,37 +4,33 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 export const HeroSection = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
   const touchStartX = useRef(0);
   const touchEndX = useRef(0);
 
   const slides = [
     {
-      id: 'gharshine-diwali-cleaner-home',
-      image: '/images/hero-banner-1.jpg',
-      alt: 'GharShine - This Diwali Bring Home a Cleaner & Brighter Home',
-      link: '/shop'
-    },
-    {
-      id: 'gharshine-diwali-special-offer',
-      image: '/images/hero-banner-2.jpg',
+      id: 'gharshine-diwali-free-offer',
+      image: '/images/hero-dynamic-1.jpg',
       alt: 'GharShine - Diwali Special Offer: Buy Sofa & Fabric Stain Repellent, Get Fabric Cleaner Free',
       link: '/product/sofa-fabric-stain-repellent-combo'
     },
     {
-      id: 'gharshine-cleaner-home-healthier-you',
-      image: '/images/hero-banner-3.jpg',
-      alt: 'GharShine - A Cleaner Home for a Healthier You - Complete Surface Protection Collection',
+      id: 'gharshine-nano-coatings-collection',
+      image: '/images/hero-dynamic-2.jpg',
+      alt: 'GharShine - The Magic of Nano-Coatings Complete Home Surface Cleaners & Protectors',
       link: '/shop'
     }
   ];
 
-  // Auto-advance slides every 5.5 seconds
+  // Auto-advance slides every 5 seconds unless hovered/paused
   useEffect(() => {
+    if (isPaused) return;
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % slides.length);
-    }, 5500);
+    }, 5000);
     return () => clearInterval(timer);
-  }, [slides.length]);
+  }, [slides.length, isPaused]);
 
   const handlePrev = () => {
     setCurrentSlide((prev) => (prev === 0 ? slides.length - 1 : prev - 1));
@@ -66,7 +62,9 @@ export const HeroSection = () => {
 
   return (
     <section
-      className="relative w-full overflow-hidden bg-white select-none sm:h-[calc(100vh-100px)] sm:min-h-[560px]"
+      className="relative w-full overflow-hidden bg-white select-none group"
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
@@ -75,7 +73,7 @@ export const HeroSection = () => {
       <button
         onClick={handlePrev}
         aria-label="Previous Banner"
-        className="absolute left-0 sm:left-4 top-1/2 -translate-y-1/2 z-30 w-7 sm:w-11 h-12 sm:h-11 rounded-r-md sm:rounded-full bg-black/45 hover:bg-black/75 text-white flex items-center justify-center backdrop-blur-xs transition-all cursor-pointer shadow-md"
+        className="absolute left-1.5 sm:left-5 top-1/2 -translate-y-1/2 z-30 w-8 sm:w-12 h-8 sm:h-12 rounded-full bg-black/45 hover:bg-black/75 active:scale-95 text-white flex items-center justify-center backdrop-blur-xs transition-all cursor-pointer shadow-lg"
       >
         <ChevronLeft size={22} />
       </button>
@@ -83,33 +81,38 @@ export const HeroSection = () => {
       <button
         onClick={handleNext}
         aria-label="Next Banner"
-        className="absolute right-0 sm:right-4 top-1/2 -translate-y-1/2 z-30 w-7 sm:w-11 h-12 sm:h-11 rounded-l-md sm:rounded-full bg-black/45 hover:bg-black/75 text-white flex items-center justify-center backdrop-blur-xs transition-all cursor-pointer shadow-md"
+        className="absolute right-1.5 sm:right-5 top-1/2 -translate-y-1/2 z-30 w-8 sm:w-12 h-8 sm:h-12 rounded-full bg-black/45 hover:bg-black/75 active:scale-95 text-white flex items-center justify-center backdrop-blur-xs transition-all cursor-pointer shadow-lg"
       >
         <ChevronRight size={22} />
       </button>
 
-      {/* Main Full-Bleed Slides Wrapper */}
-      <div className="relative w-full sm:h-full max-w-[2560px] mx-auto overflow-hidden">
+      {/* Dynamic Responsive Full-Bleed Slides Wrapper */}
+      <div className="relative w-full max-w-[2560px] mx-auto overflow-hidden">
         <div
-          className="flex sm:h-full transition-transform duration-700 ease-out"
+          className="flex transition-transform duration-700 ease-in-out"
           style={{ transform: `translateX(-${currentSlide * 100}%)` }}
         >
-          {slides.map((slide, idx) => (
-            <div key={slide.id} className="w-full sm:h-full shrink-0 relative">
-              <Link to={slide.link} className="block w-full sm:h-full cursor-pointer">
-                <img
-                  src={slide.image}
-                  alt={slide.alt}
-                  className="w-full h-auto sm:h-full object-cover object-center block"
-                  loading={idx === 0 ? 'eager' : 'lazy'}
-                />
-              </Link>
-            </div>
-          ))}
+          {slides.map((slide, idx) => {
+            const isActive = currentSlide === idx;
+            return (
+              <div key={slide.id} className="w-full shrink-0 relative overflow-hidden">
+                <Link to={slide.link} className="block w-full cursor-pointer">
+                  <img
+                    src={slide.image}
+                    alt={slide.alt}
+                    className={`w-full h-auto block object-contain transition-transform duration-[4500ms] ease-out ${
+                      isActive ? 'scale-[1.015]' : 'scale-100'
+                    }`}
+                    loading={idx === 0 ? 'eager' : 'lazy'}
+                  />
+                </Link>
+              </div>
+            );
+          })}
         </div>
 
-        {/* Carousel Indicator Dots */}
-        <div className="absolute bottom-3 sm:bottom-6 inset-x-0 z-20 flex items-center justify-center gap-2">
+        {/* Dynamic Carousel Indicator Dots */}
+        <div className="absolute bottom-2.5 sm:bottom-5 inset-x-0 z-20 flex items-center justify-center gap-2.5">
           {slides.map((_, i) => (
             <button
               key={i}
@@ -117,14 +120,14 @@ export const HeroSection = () => {
               aria-label={`Go to slide ${i + 1}`}
               className={`h-2 sm:h-2.5 rounded-full transition-all duration-300 cursor-pointer shadow-md ${
                 currentSlide === i
-                  ? 'w-6 sm:w-9 bg-slate-900 ring-2 ring-white/90'
-                  : 'w-2 sm:w-2.5 bg-slate-700/40 hover:bg-slate-700/70'
+                  ? 'w-7 sm:w-10 bg-[#1B263B] ring-2 ring-white/95'
+                  : 'w-2 sm:w-2.5 bg-slate-800/45 hover:bg-slate-800/75'
               }`}
             />
           ))}
         </div>
       </div>
-
     </section>
   );
 };
+
