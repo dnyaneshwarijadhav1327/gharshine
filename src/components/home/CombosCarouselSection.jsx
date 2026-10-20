@@ -49,21 +49,6 @@ const fallbackCombos = [
     price: 1999,
     originalPrice: 2999,
     isCombo: true
-  },
-  {
-    id: 6,
-    name: 'Kitchen Foam Cleaner & Degreaser',
-    slug: 'kitchen-foam-cleaner',
-    subtitle: 'Dissolves heavy oil, grease & burnt residue in 60 seconds',
-    image: 'https://cdn.shopify.com/s/files/1/0831/5037/2921/files/WhatsAppImage2026-10-10at23.23.25_1.jpg?v=1791654877',
-    topBanner: 'Fast Acting Foam',
-    accentCorner: 'top-right',
-    accentColor: '#52D1DC',
-    rating: 5,
-    reviews: 215,
-    price: 749,
-    originalPrice: 1499,
-    isCombo: true
   }
 ];
 
@@ -152,7 +137,10 @@ export const CombosCarouselSection = () => {
               slug.includes('sacred-shringar') ||
               slug.includes('complete-bathroom-care') ||
               slug.includes('stonearmor') ||
-              slug === 'kitchen-protector-kit'
+              slug === 'kitchen-protector-kit' ||
+              slug === 'kitchen-foam-cleaner' ||
+              slug.includes('kitchen-foam') ||
+              name.includes('kitchen foam cleaner')
             ) {
               return false;
             }
