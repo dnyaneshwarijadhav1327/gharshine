@@ -102,7 +102,7 @@ export const HeroSection = () => {
                   height="1000"
                   decoding="sync"
                   fetchPriority={idx === 0 ? 'high' : 'auto'}
-                  className="w-full h-auto sm:max-h-[calc(100vh-132px)] object-cover object-center block"
+                  className="w-full h-auto sm:max-h-[calc(100vh-112px)] object-cover object-center block"
                   loading={idx === 0 ? 'eager' : 'lazy'}
                 />
               </Link>

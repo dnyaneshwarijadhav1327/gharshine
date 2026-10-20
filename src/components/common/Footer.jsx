@@ -77,7 +77,7 @@ export const Footer = () => {
               <img
                 src="/images/gharshine-logo.png"
                 alt="GharShine"
-                className="h-16 sm:h-20 w-auto object-contain mix-blend-multiply"
+                className="h-12 sm:h-14 w-auto object-contain"
               />
             </Link>
             
