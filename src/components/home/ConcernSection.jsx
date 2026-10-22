@@ -33,7 +33,7 @@ const defaultConcerns = [
     num: '04',
     title: 'Permanent Surface Damage',
     subtitle: "Marble stains don't go away. Once the damage is done, it's done.",
-    image: '/images/concern-marble-counter.jpg',
+    image: 'https://cdn.shopify.com/s/files/1/0831/5037/2921/files/GharShine_Marble_and_Surface_Cleaners.png?v=1792485364',
     link: '/shop?concern=marble-etching'
   }
 ];
@@ -86,9 +86,13 @@ export const ConcernSection = () => {
               );
             }
 
-            // 4. Marble Surface Damage Card -> Collection or Tag: "marble" or "stone"
+            // 4. Marble / Permanent Surface Damage Card
             if (c.id === 'permanent-surface-damage') {
               return (
+                p.slug === 'permanent-surface-damage' ||
+                (p.name || '').toLowerCase().includes('permanent surface damage') ||
+                cols.includes('permanent surface damage') ||
+                cols.includes('surface damage') ||
                 cols.includes('marble') ||
                 cols.includes('stone') ||
                 tags.includes('marble') ||
@@ -133,6 +137,7 @@ export const ConcernSection = () => {
           if (match) {
             return {
               ...c,
+              image: match.thumbnail || match.images?.[0] || c.image,
               link: `/product/${match.slug}`
             };
           }
