@@ -33,8 +33,8 @@ const defaultConcerns = [
     num: '04',
     title: 'Permanent Surface Damage',
     subtitle: "Marble stains don't go away. Once the damage is done, it's done.",
-    image: 'https://cdn.shopify.com/s/files/1/0831/5037/2921/files/GharShine_Marble_and_Surface_Cleaners.png?v=1792485364',
-    link: '/shop?concern=marble-etching'
+    image: '/images/concern-marble-counter.jpg',
+    link: '/product/permanent-surface-damage'
   }
 ];
 
@@ -137,7 +137,6 @@ export const ConcernSection = () => {
           if (match) {
             return {
               ...c,
-              image: match.thumbnail || match.images?.[0] || c.image,
               link: `/product/${match.slug}`
             };
           }
