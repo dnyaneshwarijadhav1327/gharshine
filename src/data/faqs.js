@@ -55,13 +55,13 @@ export const faqs = [
     id: "return-policy",
     category: "Orders & Shipping",
     question: "What is your return and satisfaction policy?",
-    answer: "We offer a 7-day hassle-free replacement or return policy if you receive a damaged, leaked, or incorrect bottle. Simply reach out to us at care@gharshine.com or on WhatsApp with your Order ID and photo."
+    answer: "We offer a 7-day hassle-free replacement or return policy if you receive a damaged, leaked, or incorrect bottle. Simply reach out to us at gharshine1327@gmail.com or on WhatsApp with your Order ID and photo."
   },
   {
     id: "customer-support",
     category: "General & Surface Care",
     question: "How can I contact customer support for advice?",
-    answer: "Our surface care specialists are available on WhatsApp (+91 98765 43210) and email (care@gharshine.com) from Monday to Saturday, 9:30 AM to 6:30 PM IST. You can also send photos of your surface for personalized product recommendations."
+    answer: "Our surface care specialists are available on WhatsApp (+91 98765 43210) and email (gharshine1327@gmail.com) from Monday to Saturday, 9:30 AM to 6:30 PM IST. You can also send photos of your surface for personalized product recommendations."
   }
 ];
 

@@ -21,7 +21,7 @@ export const RefundPolicyPage = () => {
           <section className="space-y-2">
             <h2 className="text-base sm:text-lg font-bold text-slate-900">1. Transit Damage or Leakage</h2>
             <p>
-              If your package arrives damaged, leaked, or with an incorrect product bottle, GharShine offers a 100% free direct replacement within 7 days of delivery. Simply message our WhatsApp support (+91 98765 43210) or email <strong>care@gharshine.com</strong> with a photo of the package and your Order ID.
+              If your package arrives damaged, leaked, or with an incorrect product bottle, GharShine offers a 100% free direct replacement within 7 days of delivery. Simply message our WhatsApp support (+91 98765 43210) or email <strong>gharshine1327@gmail.com</strong> with a photo of the package and your Order ID.
             </p>
           </section>
 

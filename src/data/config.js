@@ -8,7 +8,7 @@ export const brandConfig = {
   tagline: "Smart Surface Care for Modern Indian Homes",
   subTagline: "Clean Every Surface. Protect What Matters.",
   supportPhone: "+91 98765 43210",
-  supportEmail: "care@gharshine.com",
+  supportEmail: "gharshine1327@gmail.com",
   businessHours: "Mon - Sat: 9:30 AM to 6:30 PM IST",
   address: "GharShine Technologies Pvt Ltd, Indiranagar, Bengaluru, Karnataka - 560038, India",
   
